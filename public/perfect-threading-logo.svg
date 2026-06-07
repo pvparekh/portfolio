@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="38" viewBox="11 5 34 38" fill="none">
+  <defs>
+    <linearGradient id="ptpGold" x1="10" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8CE74"/>
+      <stop offset="0.55" stop-color="#E8A23A"/>
+      <stop offset="1" stop-color="#C97E1B"/>
+    </linearGradient>
+  </defs>
+  <path
+    fill="url(#ptpGold)"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M13 6 H29 a13 13 0 0 1 0 26 H22 V42 H13 Z M22 15 V23 H29 a4 4 0 0 1 0 -8 Z"
+  />
+</svg>
