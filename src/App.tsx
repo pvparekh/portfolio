@@ -700,8 +700,8 @@ function AboutSection() {
                 worth using.
               </p>
               <p>
-                Outside of work I'm probably either at the gym, hanging out with friends
-                and family, or watching F1.
+                Outside of work I'm probably either at the gym or hanging out with
+                friends and family.
               </p>
             </div>
 
