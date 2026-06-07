@@ -693,9 +693,9 @@ function AboutSection() {
                 .
               </p>
               <p>
-                I like hard problems, the kind that sit at the intersection of systems
-                engineering and AI. Whether it's streaming 440MB of telemetry in
-                real-time, building autonomous code reviewers, or engineering two-pass
+                I like to solve problems, especially the kind that are in between systems
+                engineering and AI. Whether it's building autonomous code reviewers, streaming 440MB of telemetry in
+                real-time, or engineering two-pass
                 LLM pipelines, I care about writing software that's fast, reliable, and
                 worth using.
               </p>
