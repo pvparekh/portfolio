@@ -18,6 +18,7 @@ import {
   Brain,
   Box,
   Database,
+  Download,
 } from 'lucide-react';
 
 /* ── Brand icon SVGs (lucide-react v1 dropped these) ── */
@@ -101,7 +102,8 @@ const EXPERIENCE = [
     role: 'Data Analytics Intern',
     period: 'June 2026 – Present',
     location: 'Parsippany, NJ' as string | null,
-    description: null as string | null,
+    description:
+      'Engineering ETL pipelines, optimizing Snowflake warehouses, and shipping Power BI dashboards across production analytics workflows.',
     current: true,
   },
   {
@@ -172,7 +174,9 @@ const SKILLS = [
 ];
 
 const TAGLINES = [
-  'Full-Stack Engineer',
+  'Software Engineer',
+  'Data Engineer',
+  'Fitness Enthusiast',
   'Formula One Fan',
   'AI Systems Builder',
   'Rutgers CS Grad',
@@ -580,6 +584,15 @@ function HeroSection() {
           >
             Get In Touch
           </button>
+          <a
+            href="/resume.pdf"
+            download="Parth_Parekh_Resume.pdf"
+            className="btn-secondary font-display font-medium text-sm px-7 py-3.5 rounded-sm border flex items-center gap-2"
+            style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}
+          >
+            Download Resume
+            <Download size={16} strokeWidth={2.5} />
+          </a>
         </motion.div>
       </motion.div>
 
@@ -638,6 +651,12 @@ function AboutSection() {
     { value: '150+', label: 'Clients Reached', sub: 'via data pipelines' },
   ];
 
+  const academics = [
+    { label: 'College', sub: 'Class of 2026', value: 'Rutgers University - New Brunswick' },
+    { label: 'Major',   sub: 'B.S.',          value: 'Computer Science' },
+    { label: 'Minor',   sub: 'concentration', value: 'Data Science' },
+  ];
+
   return (
     <section id="about" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
       <div className="max-w-6xl mx-auto">
@@ -652,33 +671,12 @@ function AboutSection() {
           </h2>
         </FadeInSection>
 
-        <div className="grid md:grid-cols-2 gap-16 items-start">
+        <div className="grid md:grid-cols-5 gap-10 items-stretch">
           {/* Bio */}
-          <FadeInSection delay={0.1}>
-            <div className="flex gap-5 items-center mb-8">
-              <div
-                className="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-display font-bold text-xl border-2"
-                style={{
-                  background: 'var(--bg-card)',
-                  borderColor: 'var(--accent-border)',
-                  color: 'var(--accent)',
-                }}
-              >
-                PP
-              </div>
-              <div>
-                <p className="font-display font-semibold text-base" style={{ color: 'var(--text-1)' }}>
-                  Parth Parekh
-                </p>
-                <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-3)' }}>
-                  Rutgers University, CS + Data Science, 2026
-                </p>
-              </div>
-            </div>
-
+          <FadeInSection delay={0.1} className="md:col-span-2">
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
               <p>
-                I'm a full-stack software engineer with a B.S. in Computer Science and a
+                I'm a Software Engineer with a B.S. in Computer Science and a
                 minor in Data Science from Rutgers University, focused on AI-powered
                 systems. Currently working as a Data Analytics Intern at{' '}
                 <a
@@ -704,9 +702,81 @@ function AboutSection() {
                 friends and family.
               </p>
             </div>
+          </FadeInSection>
 
-            {/* Social links */}
-            <div className="flex flex-wrap gap-3 mt-7">
+          {/* Profile boards */}
+          <FadeInSection delay={0.22} className="md:col-span-3">
+            <div className="grid sm:grid-cols-2 gap-5 h-full">
+              {/* Technical profile */}
+              <div
+                className="rounded-sm border h-full flex flex-col"
+                style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}
+              >
+                <div
+                  className="font-mono text-xs tracking-widest px-4 py-3 border-b flex items-center gap-2"
+                  style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
+                >
+                  <span style={{ color: 'var(--accent)' }}>◈</span>
+                  TECHNICAL PROFILE
+                </div>
+                <div className="divide-y flex-1 flex flex-col" style={{ borderColor: 'var(--border)' }}>
+                  {stats.map((s) => (
+                    <div key={s.label} className="flex-1 flex items-center justify-between px-5 py-5">
+                      <div>
+                        <div className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-2)' }}>
+                          {s.label}
+                        </div>
+                        <div className="font-mono text-xs mt-0.5" style={{ color: 'var(--text-2)', opacity: 0.75 }}>
+                          {s.sub}
+                        </div>
+                      </div>
+                      <div className="font-display font-bold text-5xl" style={{ color: 'var(--accent)' }}>
+                        {s.value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Academic profile */}
+              <div
+                className="rounded-sm border h-full flex flex-col"
+                style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}
+              >
+                <div
+                  className="font-mono text-xs tracking-widest px-4 py-3 border-b flex items-center gap-2"
+                  style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
+                >
+                  <span style={{ color: 'var(--accent)' }}>◈</span>
+                  ACADEMIC PROFILE
+                </div>
+                <div className="divide-y flex-1 flex flex-col" style={{ borderColor: 'var(--border)' }}>
+                  {academics.map((a) => (
+                    <div key={a.label} className="flex-1 flex items-center justify-between gap-3 px-5 py-5">
+                      <div className="flex-shrink-0">
+                        <div className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-2)' }}>
+                          {a.label}
+                        </div>
+                        <div className="font-mono text-xs mt-0.5" style={{ color: 'var(--text-2)', opacity: 0.75 }}>
+                          {a.sub}
+                        </div>
+                      </div>
+                      <div
+                        className="font-display font-semibold text-base text-right leading-snug"
+                        style={{ color: 'var(--accent)' }}
+                      >
+                        {a.value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </FadeInSection>
+
+          {/* Social links */}
+          <FadeInSection delay={0.3} className="md:col-span-2">
+            <div className="flex flex-wrap justify-center gap-3">
               {[
                 { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon },
                 { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon },
@@ -736,46 +806,6 @@ function AboutSection() {
                   {label}
                 </a>
               ))}
-            </div>
-          </FadeInSection>
-
-          {/* Stats board */}
-          <FadeInSection delay={0.22}>
-            <div
-              className="rounded-sm border"
-              style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}
-            >
-              <div
-                className="font-mono text-xs tracking-widest px-4 py-2.5 border-b flex items-center gap-2"
-                style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
-              >
-                <span style={{ color: 'var(--accent)' }}>◈</span>
-                TECHNICAL PROFILE / PARTH PAREKH
-              </div>
-              <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
-                {stats.map((s) => (
-                  <div key={s.label} className="flex items-center justify-between px-5 py-4">
-                    <div>
-                      <div className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-2)' }}>
-                        {s.label}
-                      </div>
-                      <div className="font-mono text-xs mt-0.5" style={{ color: 'var(--text-2)', opacity: 0.75 }}>
-                        {s.sub}
-                      </div>
-                    </div>
-                    <div className="font-display font-bold text-4xl" style={{ color: 'var(--accent)' }}>
-                      {s.value}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div
-                className="font-mono text-xs px-4 py-2.5 border-t flex items-center justify-between"
-                style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
-              >
-                <span>CS + DATA SCIENCE • CLASS OF 2026</span>
-                <span style={{ color: 'var(--accent)' }}>Rutgers University - NB</span>
-              </div>
             </div>
           </FadeInSection>
         </div>
@@ -1193,8 +1223,7 @@ function ContactSection() {
               style={{ color: 'var(--text-2)' }}
             >
               Open to full-time roles, interesting contracts, or a conversation about
-              building something new. If you have an ambitious project and need an engineer
-              who ships, reach out.
+              building something new.
             </p>
           </FadeInSection>
 
@@ -1279,7 +1308,7 @@ function Footer() {
     >
       <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
         <span className="font-mono text-xs" style={{ color: 'var(--text-3)' }}>
-          Parth Parekh © 2026 · Built with React + Framer Motion
+          Parth Parekh © 2026
         </span>
         <div
           className="font-mono text-xs flex items-center gap-2"
@@ -1289,7 +1318,7 @@ function Footer() {
             className="w-1.5 h-1.5 rounded-full"
             style={{ background: 'var(--accent)', animation: 'livePulse 2s ease-out infinite' }}
           />
-          Designed &amp; engineered from scratch
+          engineered from scratch
         </div>
       </div>
     </footer>
