@@ -99,12 +99,29 @@ const EXPERIENCE = [
     logo: '/dowc-logo.png' as string | null,
     logoBg: null as string | null,
     logoScale: null as number | null,
-    role: 'Data Analytics Intern',
-    period: 'June 2026 – Present',
+    companyPeriod: 'June 2026 – Present',
     location: 'Parsippany, NJ' as string | null,
-    description:
-      'Engineering ETL pipelines, optimizing Snowflake warehouses, and shipping Power BI dashboards across production analytics workflows.',
-    current: true,
+    roles: [
+      {
+        role: 'Junior Data Engineer',
+        period: 'Sept 2026 – Present',
+        current: true,
+        bullets: [
+          'Building and maintaining production data pipelines and platform workflows across Python, SQL, PostgreSQL, Snowflake, and Apache Airflow.',
+        ],
+      },
+      {
+        role: 'Data Analytics Intern',
+        period: 'June 2026 – Sept 2026',
+        current: false,
+        bullets: [
+          'Engineered and maintained production ETL/ELT pipelines across SFTP, PostgreSQL, SQL Server, and Apache Airflow for recurring ingestion, validation, transformation, and reporting workflows.',
+          'Designed and deployed an automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual workflow with hourly, idempotent processing.',
+          'Reverse-engineered complex Power BI DAX into validated SQL for a NetSuite accounting integration, decomposing 15+ production reports and 100+ measures.',
+          'Audited four production Airflow DAGs and developed a 400+ line config-driven SFTP-to-PostgreSQL framework that standardized loading, metadata, archiving, connection handling, and retries.',
+        ],
+      },
+    ],
   },
   {
     company: 'Perfect Threading Salon',
@@ -112,12 +129,18 @@ const EXPERIENCE = [
     logo: '/perfect-threading-logo.svg' as string | null,
     logoBg: null as string | null,
     logoScale: null as number | null,
-    role: 'Web Developer',
-    period: 'May 2025 – June 2025',
+    companyPeriod: 'May 2025 – June 2025',
     location: 'Parsippany, NJ' as string | null,
-    description:
-      'Built and deployed a full-stack booking platform with Next.js 14 and Calendly API integration, reducing receptionist workload by ~30%.',
-    current: false,
+    roles: [
+      {
+        role: 'Web Developer',
+        period: 'May 2025 – June 2025',
+        current: false,
+        bullets: [
+          'Built and deployed a full-stack booking platform with Next.js 14 and Calendly API integration, reducing receptionist workload by ~30%.',
+        ],
+      },
+    ],
   },
   {
     company: 'Marketeq Digital',
@@ -125,12 +148,19 @@ const EXPERIENCE = [
     logo: '/marketeq-logo.svg' as string | null,
     logoBg: '#FFFFFF' as string | null,
     logoScale: 1.1 as number | null,
-    role: 'Technical Business Analyst Intern',
-    period: 'Sept 2024 – Feb 2025',
+    companyPeriod: 'Sept 2024 – Feb 2025',
     location: 'Remote' as string | null,
-    description:
-      'Bridged engineering and business stakeholders, translating wireframes into user stories that enabled modular feature rollouts across 3 product teams. Mapped data flows across Strapi CMS, MongoDB, and Customer.io for personalized campaigns serving 150+ clients.',
-    current: false,
+    roles: [
+      {
+        role: 'Technical Business Analyst Intern',
+        period: 'Sept 2024 – Feb 2025',
+        current: false,
+        bullets: [
+          'Bridged engineering and business stakeholders, translating wireframes into technical requirements, user stories, and acceptance criteria that supported modular feature rollouts across 3 product teams.',
+          'Integrated internal systems with Strapi CMS, MongoDB, and Customer.io by mapping data flows and researching API-based user-data synchronization, enabling personalized newsletter delivery for 150+ users.',
+        ],
+      },
+    ],
   },
 ];
 
@@ -139,42 +169,41 @@ const SKILLS = [
     sector: '01',
     label: 'Languages',
     Icon: Code2,
-    skills: ['Python', 'TypeScript', 'JavaScript', 'Java', 'R', 'SQL'],
+    skills: ['Python', 'SQL', 'TypeScript', 'JavaScript', 'Java', 'R'],
   },
   {
     sector: '02',
+    label: 'Data Engineering',
+    Icon: Database,
+    skills: ['Apache Airflow', 'Snowflake', 'PostgreSQL', 'SQL Server', 'ETL / ELT', 'SFTP'],
+  },
+  {
+    sector: '03',
     label: 'Frontend',
     Icon: Layers,
     skills: ['React', 'Next.js 15', 'Tailwind CSS', 'Framer Motion'],
   },
   {
-    sector: '03',
+    sector: '04',
     label: 'Backend',
     Icon: Server,
     skills: ['FastAPI', 'Node.js', 'REST APIs', 'WebSockets'],
   },
   {
-    sector: '04',
+    sector: '05',
     label: 'AI / APIs',
     Icon: Brain,
     skills: ['Claude API', 'OpenAI GPT-4o', 'Prompt Engineering'],
   },
   {
-    sector: '05',
+    sector: '06',
     label: 'DevOps',
     Icon: Box,
-    skills: ['Docker', 'AWS EC2', 'GitHub Actions', 'Vercel', 'CI/CD'],
-  },
-  {
-    sector: '06',
-    label: 'Databases',
-    Icon: Database,
-    skills: ['PostgreSQL', 'Supabase', 'MongoDB'],
+    skills: ['Git', 'Docker', 'AWS EC2', 'GitHub Actions', 'Vercel', 'CI/CD'],
   },
 ];
 
 const TAGLINES = [
-  'Software Engineer',
   'Data Engineer',
   'Fitness Enthusiast',
   'Formula One Fan',
@@ -332,7 +361,7 @@ function Nav() {
             className="btn-primary font-mono text-xs tracking-widest px-4 py-2 rounded-sm font-semibold"
             style={{ background: 'var(--accent)', color: '#08080D' }}
           >
-            Hire Me
+            Connect
           </a>
         </div>
 
@@ -487,7 +516,7 @@ function HeroSection() {
             className="font-mono text-xs tracking-[0.3em] uppercase"
             style={{ color: 'var(--accent)' }}
           >
-            Available for work
+            Actively Building
           </span>
           <span
             className="w-1.5 h-1.5 rounded-full live-dot"
@@ -567,7 +596,7 @@ function HeroSection() {
         >
           <button
             onClick={() =>
-              document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })
+              document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })
             }
             className="btn-primary font-display font-semibold text-sm px-7 py-3.5 rounded-sm flex items-center gap-2"
             style={{ background: 'var(--accent)', color: '#08080D' }}
@@ -608,7 +637,7 @@ function HeroSection() {
           {[
             { label: 'DRIVER', value: 'PAREKH' },
             { label: 'TEAM',   value: "RUTGERS '26" },
-            { label: 'STACK',  value: 'FULL-STACK + AI + ANALYTICS' },
+            { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
             { label: 'STATUS', value: 'AVAILABLE' },
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-3">
@@ -647,7 +676,7 @@ function HeroSection() {
 function AboutSection() {
   const stats = [
     { value: '3', label: 'Production Apps',  sub: 'shipped end to end' },
-    { value: '3', label: 'Experiences',      sub: 'web dev to data analytics' },
+    { value: '3', label: 'Experiences',      sub: 'engineering to analytics' },
     { value: '150+', label: 'Clients Reached', sub: 'via data pipelines' },
   ];
 
@@ -676,9 +705,8 @@ function AboutSection() {
           <FadeInSection delay={0.1} className="md:col-span-2">
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
               <p>
-                I'm a Software Engineer with a B.S. in Computer Science and a
-                minor in Data Science from Rutgers University, focused on AI-powered
-                systems. Currently working as a Data Analytics Intern at{' '}
+                I'm a Data Engineer with a B.S. in Computer Science and a
+                minor in Data Science from Rutgers University, currently working at{' '}
                 <a
                   href="https://dowc.com"
                   target="_blank"
@@ -691,14 +719,12 @@ function AboutSection() {
                 .
               </p>
               <p>
-                I like to solve problems, especially the kind that are in between systems
-                engineering and AI. Whether it's building autonomous code reviewers, streaming 440MB of telemetry in
+                I like to solve problems, especially when the problem involves building systems that need to be reliable, scalable, and useful. Whether it's building autonomous code reviewers, streaming 440MB of telemetry data in
                 real-time, or engineering two-pass
-                LLM pipelines, I care about writing software that's fast, reliable, and
-                worth using.
+                LLM pipelines.
               </p>
               <p>
-                Outside of work I'm probably either at the gym or hanging out with
+                Outside of work I'm probably playing sports, working out, or hanging out with
                 friends and family.
               </p>
             </div>
@@ -991,117 +1017,203 @@ function ExperienceSection() {
           </h2>
         </FadeInSection>
 
-        <div className="relative max-w-2xl mx-auto">
-          {/* Vertical timeline line */}
+        <div className="relative max-w-3xl mx-auto">
+          {/* Company-level timeline */}
           <div
             className="absolute left-[11px] top-2 bottom-2 w-px"
             style={{ background: 'var(--border)' }}
           />
 
-          <div className="space-y-12">
-            {EXPERIENCE.map((exp, i) => (
-              <FadeInSection key={i} delay={i * 0.1}>
-                <div className="flex gap-7 relative">
-                  {/* Dot */}
-                  <div className="flex-shrink-0 relative z-10 mt-1.5">
-                    <div
-                      className="w-6 h-6 rounded-full border-2 flex items-center justify-center"
-                      style={{
-                        borderColor: exp.current ? 'var(--accent)' : 'var(--border)',
-                        background: exp.current ? 'rgba(245,158,11,0.1)' : 'var(--bg-0)',
-                      }}
-                    >
-                      {exp.current && (
-                        <div
-                          className="w-2 h-2 rounded-full live-dot"
-                          style={{ background: 'var(--accent)' }}
-                        />
-                      )}
-                    </div>
-                  </div>
+          <div className="space-y-14">
+            {EXPERIENCE.map((exp, i) => {
+              const companyIsCurrent = exp.roles.some((role) => role.current);
 
-                  {/* Content */}
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      {exp.logo && (
-                        <span
-                          className="inline-flex items-center justify-center w-7 h-7 rounded-md border flex-shrink-0 p-1"
-                          style={{
-                            borderColor: 'var(--border)',
-                            background: exp.logoBg ?? 'var(--bg-2)',
-                          }}
-                        >
-                          <img
-                            src={exp.logo}
-                            alt={`${exp.company} logo`}
-                            className="max-w-full max-h-full object-contain"
-                            style={
-                              exp.logoScale
-                                ? { transform: `scale(${exp.logoScale})` }
-                                : undefined
-                            }
+              return (
+                <FadeInSection key={exp.company} delay={i * 0.1}>
+                  <div className="flex gap-7 relative">
+                    {/* Company timeline node */}
+                    <div className="flex-shrink-0 relative z-10 mt-1.5">
+                      <div
+                        className="w-6 h-6 rounded-full border-2 flex items-center justify-center"
+                        style={{
+                          borderColor: companyIsCurrent ? 'var(--accent)' : 'var(--border)',
+                          background: companyIsCurrent
+                            ? 'rgba(245,158,11,0.1)'
+                            : 'var(--bg-0)',
+                        }}
+                      >
+                        {companyIsCurrent && (
+                          <div
+                            className="w-2 h-2 rounded-full"
+                            style={{ background: 'var(--accent)' }}
                           />
-                        </span>
-                      )}
-                      {exp.companyUrl ? (
-                        <a
-                          href={exp.companyUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-display font-semibold text-xl flex items-center gap-1 transition-colors duration-200"
-                          style={{ color: 'var(--text-1)' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-1)')}
-                        >
-                          {exp.company}
-                          <ArrowUpRight size={14} />
-                        </a>
-                      ) : (
-                        <span className="font-display font-semibold text-xl" style={{ color: 'var(--text-1)' }}>
-                          {exp.company}
-                        </span>
-                      )}
-                      {exp.current && (
-                        <span
-                          className="font-mono text-xs px-2 py-0.5 rounded-sm border"
-                          style={{
-                            borderColor: 'rgba(34,197,94,0.3)',
-                            color: '#22C55E',
-                            background: 'rgba(34,197,94,0.08)',
-                          }}
-                        >
-                          CURRENT
-                        </span>
-                      )}
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-x-3 gap-y-1 items-center mb-3">
-                      <span className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
-                        {exp.role}
-                      </span>
-                      <span className="font-mono text-xs" style={{ color: '#6B7280' }}>
-                        {exp.period}
-                      </span>
-                      {exp.location && (
-                        <span
-                          className="font-mono text-xs flex items-center gap-1"
-                          style={{ color: '#6B7280' }}
-                        >
-                          <span style={{ opacity: 0.6 }}>•</span>
-                          {exp.location}
-                        </span>
-                      )}
-                    </div>
+                    <div className="flex-1 min-w-0">
+                      {/* Company identity */}
+                      <div className="mb-5">
+                        <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
+                          {exp.logo && (
+                            <span
+                              className="inline-flex items-center justify-center w-8 h-8 rounded-md border flex-shrink-0 p-1"
+                              style={{
+                                borderColor: 'var(--border)',
+                                background: exp.logoBg ?? 'var(--bg-2)',
+                              }}
+                            >
+                              <img
+                                src={exp.logo}
+                                alt={`${exp.company} logo`}
+                                className="max-w-full max-h-full object-contain"
+                                style={
+                                  exp.logoScale
+                                    ? { transform: `scale(${exp.logoScale})` }
+                                    : undefined
+                                }
+                              />
+                            </span>
+                          )}
 
-                    {exp.description && (
-                      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
-                        {exp.description}
-                      </p>
-                    )}
+                          {exp.companyUrl ? (
+                            <a
+                              href={exp.companyUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="font-display font-bold text-2xl flex items-center gap-1 transition-colors duration-200"
+                              style={{ color: 'var(--text-1)' }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.color = 'var(--accent)')
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.color = 'var(--text-1)')
+                              }
+                            >
+                              {exp.company}
+                              <ArrowUpRight size={15} />
+                            </a>
+                          ) : (
+                            <span
+                              className="font-display font-bold text-2xl"
+                              style={{ color: 'var(--text-1)' }}
+                            >
+                              {exp.company}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 items-center pl-0 sm:pl-[42px]">
+                          <span className="font-mono text-xs" style={{ color: '#6B7280' }}>
+                            {exp.companyPeriod}
+                          </span>
+                          {exp.location && (
+                            <span
+                              className="font-mono text-xs flex items-center gap-1"
+                              style={{ color: '#6B7280' }}
+                            >
+                              <span style={{ opacity: 0.6 }}>•</span>
+                              {exp.location}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Role-level timeline inside the company */}
+                      <div className="relative ml-1 sm:ml-4 pl-7">
+                        {exp.roles.length > 1 && (
+                          <div
+                            className="absolute left-[5px] top-2 bottom-2 w-px"
+                            style={{ background: 'var(--border)' }}
+                          />
+                        )}
+
+                        <div className="space-y-8">
+                          {exp.roles.map((role, roleIndex) => (
+                            <div key={`${exp.company}-${role.role}`} className="relative">
+                              {/* Role node / connector */}
+                              <div
+                                className="absolute -left-7 top-[7px] w-3 h-3 rounded-full border-2 z-10"
+                                style={{
+                                  borderColor: role.current
+                                    ? 'var(--accent)'
+                                    : 'var(--border)',
+                                  background: role.current
+                                    ? 'var(--accent)'
+                                    : 'var(--bg-1)',
+                                  boxShadow: role.current
+                                    ? '0 0 0 4px rgba(245,158,11,0.08)'
+                                    : 'none',
+                                }}
+                              />
+
+                              <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <h3
+                                  className="font-display font-semibold text-lg"
+                                  style={{
+                                    color: role.current
+                                      ? 'var(--text-1)'
+                                      : 'var(--text-1)',
+                                  }}
+                                >
+                                  {role.role}
+                                </h3>
+
+                                {role.current && (
+                                  <span
+                                    className="font-mono text-[10px] tracking-wider px-2 py-0.5 rounded-sm border"
+                                    style={{
+                                      borderColor: 'rgba(34,197,94,0.3)',
+                                      color: '#22C55E',
+                                      background: 'rgba(34,197,94,0.08)',
+                                    }}
+                                  >
+                                    CURRENT
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="font-mono text-xs mb-3" style={{ color: '#6B7280' }}>
+                                {role.period}
+                              </div>
+
+                              {role.bullets && (
+                                <ul className="space-y-2 mt-3">
+                                  {role.bullets.map((bullet) => (
+                                    <li
+                                      key={bullet}
+                                      className="text-sm leading-relaxed flex gap-2.5"
+                                      style={{ color: 'var(--text-2)' }}
+                                    >
+                                      <span
+                                        className="mt-[0.65em] w-1 h-1 rounded-full flex-shrink-0"
+                                        style={{ background: 'var(--accent)', opacity: 0.8 }}
+                                      />
+                                      <span>{bullet}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* Subtle separator between roles, not after the last one */}
+                              {roleIndex < exp.roles.length - 1 && (
+                                <div
+                                  className="mt-7 h-px w-full"
+                                  style={{
+                                    background:
+                                      'linear-gradient(90deg, var(--border), transparent)',
+                                  }}
+                                />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </FadeInSection>
-            ))}
+                </FadeInSection>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1213,7 +1325,7 @@ function ContactSection() {
             >
               Let's build something
               <br />
-              <span style={{ color: 'var(--accent)' }}>worth launching.</span>
+              <span style={{ color: 'var(--accent)' }}>together.</span>
             </h2>
           </FadeInSection>
 
