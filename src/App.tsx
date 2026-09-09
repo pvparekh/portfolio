@@ -130,7 +130,7 @@ const EXPERIENCE = [
     logoBg: null as string | null,
     logoScale: null as number | null,
     companyPeriod: 'May 2025 – June 2025',
-    location: 'Parsippany, NJ' as string | null,
+    location: 'Contract' as string | null,
     roles: [
       {
         role: 'Web Developer',
@@ -584,7 +584,7 @@ function HeroSection() {
           className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-12 px-4"
           style={{ color: 'var(--text-3)' }}
         >
-          I build software that ships, scales, and occasionally runs at 200 mph.
+          Building reliable systems across data, software, and AI.
         </motion.p>
 
         {/* CTAs */}
@@ -695,8 +695,7 @@ function AboutSection() {
             className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-16 leading-[1.15] text-center max-w-3xl mx-auto text-balance"
             style={{ color: 'var(--text-1)' }}
           >
-            Building at the intersection of{' '}
-            <span style={{ color: 'var(--accent)' }}>precision</span> and speed.
+            Who <span style={{ color: 'var(--accent)' }}>am I?</span>
           </h2>
         </FadeInSection>
 
@@ -719,9 +718,8 @@ function AboutSection() {
                 .
               </p>
               <p>
-                I like to solve problems, especially when the problem involves building systems that need to be reliable, scalable, and useful. Whether it's building autonomous code reviewers, streaming 440MB of telemetry data in
-                real-time, or engineering two-pass
-                LLM pipelines.
+                I like to solve problems, especially ones that involve building systems that need to be reliable, scalable, and useful. Whether it's building autonomous code reviewers, streaming 440MB of telemetry data in
+                real-time, or engineering two-pass LLM pipelines.
               </p>
               <p>
                 Outside of work I'm probably playing sports, working out, or hanging out with
@@ -1422,16 +1420,6 @@ function Footer() {
         <span className="font-mono text-xs" style={{ color: 'var(--text-3)' }}>
           Parth Parekh © 2026
         </span>
-        <div
-          className="font-mono text-xs flex items-center gap-2"
-          style={{ color: 'var(--text-3)' }}
-        >
-          <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: 'var(--accent)', animation: 'livePulse 2s ease-out infinite' }}
-          />
-          engineered from scratch
-        </div>
       </div>
     </footer>
   );
