@@ -676,7 +676,7 @@ function HeroSection() {
 function AboutSection() {
   const stats = [
     { value: '3', label: 'Production Apps',  sub: 'shipped end to end' },
-    { value: '3', label: 'Experiences',      sub: 'engineering to analytics' },
+    { value: '4', label: 'Experiences',      sub: 'engineering to analytics' },
     { value: '150+', label: 'Clients Reached', sub: 'via data pipelines' },
   ];
 
