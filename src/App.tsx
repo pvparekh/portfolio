@@ -44,48 +44,88 @@ function LinkedinIcon({ size = 16 }: { size?: number }) {
 
 const PROJECTS = [
   {
-  id: 'formula-vision',
-  number: '01',
-  name: 'Formula Vision',
-  tagline: 'F1 Race Replay Platform',
-  description: 'Full-scale race replay platform with real-time telemetry visualization, lap comparison tools, and multi-driver sync, built for the fan who cares about the milliseconds.',
-  tech: ['React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Python', 'Vercel'],
-  live: 'https://formulavision.vercel.app' as string | null,
-  github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
-  accent: '#E8002D',
-  accentDim: 'rgba(232,0,45,0.07)',
-  glow: 'rgba(232,0,45,0.6)',
-  note: null, // Note removed since v2 uses static historical delivery
-},
+    id: 'formula-vision',
+    number: '01',
+    name: 'Formula Vision',
+    tagline: 'Historical F1 Data Platform + Replay Engine',
+    description:
+      'Historical Formula 1 replay and analysis platform built from real timing and telemetry. Rebuilt as a catalog-driven data product with typed Parquet contracts, immutable R2 releases, validated backfills, and a browser replay engine that turns sparse source data into smooth MAP and CHASE visualization.',
+    tech: ['Python', 'PyArrow / Parquet', 'React', 'TypeScript', 'Cloudflare R2', 'Vercel'],
+    live: 'https://formulavision.vercel.app' as string | null,
+    github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
+    docs: 'https://github.com/pvparekh/F1-Viewer/blob/main/docs/v2/ENGINEERING_OVERVIEW.md',
+    featured: true,
+    architecture: 'FASTF1 → PARQUET → R2 → BROWSER',
+    stats: [
+      { value: '100+', label: 'historical races' },
+      { value: '1M+', label: 'rows / race' },
+      { value: '12.5→60', label: 'FPS interpolation' },
+    ],
+    highlights: [
+      'Typed canonical data + lineage',
+      'Immutable, verified publication',
+      'MAP + CHASE spatial replay',
+    ],
+    accent: '#E8002D',
+    accentDim: 'rgba(232,0,45,0.07)',
+    accentBorder: 'rgba(232,0,45,0.24)',
+    glow: 'rgba(232,0,45,0.12)',
+  },
   {
     id: 'github-review-bot',
     number: '02',
     name: 'GitHub Review Bot',
-    tagline: 'AI-Powered Code Review Automation',
+    tagline: 'Autonomous Pull Request Review Agent',
     description:
-      'Production-grade GitHub App that reviews pull requests using Claude AI, posts inline comments, and integrates natively with any CI/CD pipeline. Deployed on AWS EC2.',
-    tech: ['Python', 'FastAPI', 'Claude API', 'Docker', 'AWS EC2', 'GitHub Actions'],
-    live: 'https://github.com/pvparekh/github-review-bot' as string | null,
+      'GitHub App that turns pull-request diffs into structured Claude reviews, maps findings to exact unified-diff positions, and posts inline comments plus a concise summary. Built around signed webhooks, installation-scoped auth, and non-blocking review jobs.',
+    tech: ['Python', 'FastAPI', 'Claude', 'GitHub Apps API', 'Railway'],
+    live: null as string | null,
     github: 'https://github.com/pvparekh/github-review-bot' as string | null,
+    docs: 'https://github.com/pvparekh/github-review-bot#readme',
+    featured: false,
+    architecture: 'WEBHOOK → DIFF → CLAUDE ×2 → REVIEW',
+    stats: [
+      { value: '2-pass', label: 'AI pipeline' },
+      { value: '~10s', label: 'review target' },
+      { value: 'HMAC/JWT', label: 'request auth' },
+    ],
+    highlights: [
+      'Unified-diff position mapping',
+      'Structured AI output',
+      'GitHub App auth + webhooks',
+    ],
     accent: '#F59E0B',
     accentDim: 'rgba(245,158,11,0.07)',
-    glow: 'rgba(245,158,11,0.65)',
-    note: null as string | null,
+    accentBorder: 'rgba(245,158,11,0.24)',
+    glow: 'rgba(245,158,11,0.10)',
   },
   {
     id: 'aetherflow',
     number: '03',
     name: 'AetherFlow',
-    tagline: 'AI Expense Intelligence SaaS',
+    tagline: 'Expense Intelligence + Anomaly Detection',
     description:
-      'Next-gen expense intelligence platform that uses GPT-4o to analyze spending patterns, predict cash flow, and surface actionable financial insights in real time.',
-    tech: ['Next.js 15', 'GPT-4o', 'Supabase', 'PostgreSQL', 'TypeScript', 'Tailwind'],
+      'Full-stack expense intelligence app that ingests CSV, TXT, and PDF exports, combines deterministic statistical analysis with a two-pass OpenAI pipeline, and persists user history, vendor intelligence, and anomaly workflows in Supabase.',
+    tech: ['Next.js', 'TypeScript', 'OpenAI', 'Supabase / Postgres', 'Recharts'],
     live: 'https://aetherflow-three.vercel.app' as string | null,
     github: 'https://github.com/pvparekh/aetherflow' as string | null,
+    docs: 'https://github.com/pvparekh/aetherflow#readme',
+    featured: false,
+    architecture: 'UPLOAD → STATS → AI ×2 → INSIGHTS',
+    stats: [
+      { value: '3', label: 'input formats' },
+      { value: '2-pass', label: 'AI analysis' },
+      { value: '9', label: 'expense classes' },
+    ],
+    highlights: [
+      'Z-score + MAD anomaly engine',
+      'Vendor + duplicate intelligence',
+      'Auth + persistent history',
+    ],
     accent: '#8B5CF6',
     accentDim: 'rgba(139,92,246,0.07)',
-    glow: 'rgba(139,92,246,0.6)',
-    note: null as string | null,
+    accentBorder: 'rgba(139,92,246,0.24)',
+    glow: 'rgba(139,92,246,0.10)',
   },
 ];
 
@@ -839,6 +879,93 @@ function AboutSection() {
    PROJECTS
 ───────────────────────────────────────────────────────────── */
 
+function ProjectActions({
+  project,
+}: {
+  project: (typeof PROJECTS)[0];
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {project.live && (
+        <a
+          href={project.live}
+          target="_blank"
+          rel="noreferrer"
+          className="project-action project-action-primary"
+          style={
+            {
+              '--project-accent': project.accent,
+              '--project-accent-dim': project.accentDim,
+              '--project-accent-border': project.accentBorder,
+            } as React.CSSProperties
+          }
+        >
+          <ExternalLink size={13} strokeWidth={2.2} />
+          Live
+        </a>
+      )}
+
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noreferrer"
+        className="project-action"
+      >
+        <GithubIcon size={13} />
+        Source
+      </a>
+
+      <a
+        href={project.docs}
+        target="_blank"
+        rel="noreferrer"
+        className="project-action"
+      >
+        Case study
+        <ArrowUpRight size={13} strokeWidth={2.2} />
+      </a>
+    </div>
+  );
+}
+
+function ProjectStats({
+  project,
+}: {
+  project: (typeof PROJECTS)[0];
+}) {
+  return (
+    <div className="grid grid-cols-3 border-y" style={{ borderColor: 'var(--border)' }}>
+      {project.stats.map((stat, index) => (
+        <div
+          key={stat.label}
+          className={
+            'min-w-0 py-4 '
+            + (
+              index === 0
+                ? 'pr-3'
+                : 'border-l px-3'
+            )
+          }
+          style={{ borderColor: 'var(--border)' }}
+        >
+          <div
+            className="font-display text-xl font-bold leading-none sm:text-2xl"
+            style={{ color: project.accent }}
+          >
+            {stat.value}
+          </div>
+          <div
+            className="mt-1.5 font-mono text-[9px] uppercase leading-tight tracking-[0.08em]"
+            style={{ color: 'var(--text-3)' }}
+          >
+            {stat.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function ProjectCard({
   project,
   index,
@@ -847,147 +974,309 @@ function ProjectCard({
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
+  const inView = useInView(ref, {
+    once: true,
+    margin: '-60px',
+  });
 
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 36 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.14, ease }}
-      className="flex flex-col h-full"
-    >
-      <div
-        className="project-card rounded-sm border relative overflow-hidden flex flex-col h-full"
-        style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
+  const cardStyle = {
+    background: 'var(--bg-card)',
+    borderColor: 'var(--border)',
+    '--project-accent': project.accent,
+    '--project-accent-dim': project.accentDim,
+    '--project-accent-border': project.accentBorder,
+    '--project-glow': project.glow,
+  } as React.CSSProperties;
+
+  if (project.featured) {
+    return (
+      <motion.article
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{
+          duration: 0.7,
+          delay: index * 0.08,
+          ease,
+        }}
+        className="project-card relative overflow-hidden rounded-sm border"
+        style={cardStyle}
       >
-        {/* Livery stripe */}
-        <div className="h-0.5 w-full flex-shrink-0" style={{ background: project.accent }} />
-
-        {/* Top glow */}
         <div
-          className="absolute top-0 left-0 right-0 h-20 pointer-events-none"
-          style={{ background: `linear-gradient(180deg, ${project.accentDim} 0%, transparent 100%)` }}
+          className="absolute inset-x-0 top-0 h-[2px]"
+          style={{ background: project.accent }}
         />
 
-        <div className="p-6 flex flex-col flex-1 relative z-10">
-          <div className="flex items-start justify-between mb-5">
-            <span
-              className="font-mono text-xs tracking-widest"
-              style={{ color: project.accent, opacity: 0.7 }}
+        <div className="grid lg:grid-cols-[minmax(0,1.25fr)_minmax(300px,0.75fr)]">
+          <div className="relative z-10 p-6 sm:p-8 lg:p-10">
+            <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span
+                  className="font-mono text-[10px] tracking-[0.18em]"
+                  style={{ color: project.accent }}
+                >
+                  {project.number}
+                </span>
+                <span
+                  className="h-px w-8"
+                  style={{ background: project.accent, opacity: 0.45 }}
+                />
+                <span
+                  className="font-mono text-[10px] uppercase tracking-[0.16em]"
+                  style={{ color: 'var(--text-3)' }}
+                >
+                  Featured system
+                </span>
+              </div>
+
+              <ProjectActions project={project} />
+            </div>
+
+            <h3
+              className="max-w-3xl font-display text-3xl font-bold leading-[0.95] tracking-[-0.035em] sm:text-4xl lg:text-5xl"
+              style={{ color: 'var(--text-1)' }}
             >
-              {project.number}
-            </span>
-            <div className="flex gap-2.5">
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="GitHub repository"
-                  className="p-2.5 rounded-md border transition-all duration-200"
-                  style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = project.accent;
-                    e.currentTarget.style.color = project.accent;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.color = 'var(--text-2)';
+              {project.name}
+            </h3>
+
+            <p
+              className="mt-3 font-mono text-[11px] uppercase tracking-[0.09em] sm:text-xs"
+              style={{ color: project.accent }}
+            >
+              {project.tagline}
+            </p>
+
+            <p
+              className="mt-6 max-w-3xl text-sm leading-7 sm:text-[15px]"
+              style={{ color: 'var(--text-2)' }}
+            >
+              {project.description}
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-2">
+              {project.tech.map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-sm border px-2.5 py-1 font-mono text-[10px] tracking-[0.025em]"
+                  style={{
+                    borderColor: 'var(--border)',
+                    background: 'var(--bg-2)',
+                    color: 'var(--text-2)',
                   }}
                 >
-                  <GithubIcon size={18} />
-                </a>
-              )}
-              {project.live && (
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Live site"
-                  className="live-link-glow p-2.5 rounded-md border flex items-center justify-center transition-transform duration-200 hover:scale-110"
-                  style={
-                    {
-                      borderColor: project.accent,
-                      color: project.accent,
-                      background: project.accentDim,
-                      '--glow-color': project.glow,
-                    } as React.CSSProperties
-                  }
-                >
-                  <ExternalLink size={18} strokeWidth={2.4} />
-                </a>
-              )}
+                  {tech}
+                </span>
+              ))}
             </div>
           </div>
 
-          <h3 className="font-display font-bold text-2xl mb-1" style={{ color: 'var(--text-1)' }}>
-            {project.name}
-            {project.note && (
-              <span style={{ color: project.accent }} aria-hidden="true">
-                {' '}
-                *
-              </span>
-            )}
-          </h3>
-          <p className="font-mono text-xs tracking-wide mb-4" style={{ color: project.accent }}>
-            {project.tagline}
-          </p>
-          <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-2)' }}>
-            {project.description}
-          </p>
+          <aside
+            className="relative border-t p-6 sm:p-8 lg:border-l lg:border-t-0"
+            style={{
+              borderColor: 'var(--border)',
+              background:
+                'linear-gradient(145deg, '
+                + project.accentDim
+                + ' 0%, rgba(255,255,255,0.012) 42%, transparent 100%)',
+            }}
+          >
+            <div className="font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: 'var(--text-3)' }}>
+              System profile
+            </div>
 
-          {project.note && (
-            <p
-              className="mb-6 text-xs leading-relaxed flex gap-1.5"
+            <div
+              className="mt-4 border-l-2 py-2 pl-3 font-mono text-[10px] tracking-[0.06em]"
+              style={{
+                borderColor: project.accent,
+                color: 'var(--text-2)',
+              }}
+            >
+              {project.architecture}
+            </div>
+
+            <div className="mt-6">
+              <ProjectStats project={project} />
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {project.highlights.map((highlight) => (
+                <div
+                  key={highlight}
+                  className="flex items-center gap-3 text-xs"
+                  style={{ color: 'var(--text-2)' }}
+                >
+                  <span
+                    className="h-1.5 w-1.5 flex-shrink-0"
+                    style={{
+                      background: project.accent,
+                      boxShadow: '0 0 10px ' + project.glow,
+                    }}
+                  />
+                  {highlight}
+                </div>
+              ))}
+            </div>
+          </aside>
+        </div>
+      </motion.article>
+    );
+  }
+
+  return (
+    <motion.article
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{
+        duration: 0.65,
+        delay: index * 0.08,
+        ease,
+      }}
+      className="project-card relative flex h-full flex-col overflow-hidden rounded-sm border"
+      style={cardStyle}
+    >
+      <div
+        className="absolute inset-x-0 top-0 h-[2px]"
+        style={{ background: project.accent }}
+      />
+
+      <div className="relative z-10 flex h-full flex-col p-6 sm:p-7">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span
+              className="font-mono text-[10px] tracking-[0.18em]"
+              style={{ color: project.accent }}
+            >
+              {project.number}
+            </span>
+            <span
+              className="font-mono text-[9px] uppercase tracking-[0.14em]"
               style={{ color: 'var(--text-3)' }}
             >
-              <span style={{ color: project.accent }}>*</span>
-              <span>{project.note}</span>
-            </p>
-          )}
-
-          <div className="flex flex-wrap gap-1.5 mt-auto">
-            {project.tech.map((t) => (
-              <span
-                key={t}
-                className="font-mono text-xs px-2.5 py-1 rounded-sm border"
-                style={{ borderColor: 'var(--border)', color: 'var(--text-2)', background: 'var(--bg-2)' }}
-              >
-                {t}
-              </span>
-            ))}
+              Shipped project
+            </span>
           </div>
         </div>
+
+        <h3
+          className="font-display text-2xl font-bold tracking-[-0.025em] sm:text-3xl"
+          style={{ color: 'var(--text-1)' }}
+        >
+          {project.name}
+        </h3>
+
+        <p
+          className="mt-2 font-mono text-[10px] uppercase tracking-[0.07em]"
+          style={{ color: project.accent }}
+        >
+          {project.tagline}
+        </p>
+
+        <p
+          className="mt-5 text-sm leading-6"
+          style={{ color: 'var(--text-2)' }}
+        >
+          {project.description}
+        </p>
+
+        <div className="mt-6">
+          <ProjectStats project={project} />
+        </div>
+
+        <div className="mt-6 space-y-2.5">
+          {project.highlights.map((highlight) => (
+            <div
+              key={highlight}
+              className="flex items-center gap-2.5 text-xs"
+              style={{ color: 'var(--text-2)' }}
+            >
+              <span
+                className="h-1 w-1 flex-shrink-0"
+                style={{ background: project.accent }}
+              />
+              {highlight}
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="mt-6 border-l-2 py-1.5 pl-3 font-mono text-[9px] tracking-[0.05em]"
+          style={{
+            borderColor: project.accent,
+            color: 'var(--text-3)',
+          }}
+        >
+          {project.architecture}
+        </div>
+
+        <div className="mt-7 flex flex-wrap gap-1.5">
+          {project.tech.map((tech) => (
+            <span
+              key={tech}
+              className="rounded-sm border px-2 py-1 font-mono text-[9px]"
+              style={{
+                borderColor: 'var(--border)',
+                background: 'var(--bg-2)',
+                color: 'var(--text-2)',
+              }}
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-auto pt-7">
+          <ProjectActions project={project} />
+        </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 
 function ProjectsSection() {
+  const featured = PROJECTS[0];
+  const supporting = PROJECTS.slice(1);
+
   return (
-    <section id="projects" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
-      <div className="max-w-6xl mx-auto">
+    <section
+      id="projects"
+      className="px-6 py-20 md:py-28"
+      style={{ background: 'var(--bg-0)' }}
+    >
+      <div className="mx-auto max-w-6xl">
         <FadeInSection>
           <SectionLabel label="Projects" />
+
           <h2
-            className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-4 leading-[1.15] text-center"
+            className="mx-auto max-w-3xl text-balance text-center font-display text-3xl font-bold leading-[1.08] sm:text-4xl md:text-5xl"
             style={{ color: 'var(--text-1)' }}
           >
-            Things I've <span style={{ color: 'var(--accent)' }}>built</span> and shipped.
+            Selected systems, <span style={{ color: 'var(--accent)' }}>built end to end.</span>
           </h2>
+
           <p
-            className="text-base mb-16 max-w-xl mx-auto text-center"
+            className="mx-auto mb-14 mt-5 max-w-2xl text-center text-sm leading-6 sm:text-base"
             style={{ color: 'var(--text-2)' }}
           >
-            A few projects I've designed, built, and shipped end to end.
+            Data platforms, developer tooling, and AI products where the architecture matters as much as the interface.
           </p>
         </FadeInSection>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {PROJECTS.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
-          ))}
+        <div className="space-y-5">
+          <ProjectCard
+            project={featured}
+            index={0}
+          />
+
+          <div className="grid gap-5 md:grid-cols-2">
+            {supporting.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={index + 1}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
