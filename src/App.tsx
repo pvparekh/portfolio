@@ -44,22 +44,19 @@ function LinkedinIcon({ size = 16 }: { size?: number }) {
 
 const PROJECTS = [
   {
-    id: 'formula-vision',
-    number: '01',
-    name: 'Formula Vision',
-    tagline: 'F1 Race Replay Platform',
-    description:
-      'Full-scale race replay platform with real-time telemetry visualization, lap comparison tools, and multi-driver sync, built for the fan who cares about the milliseconds.',
-    tech: ['React', 'TypeScript', 'FastAPI', 'WebSockets', 'Python', 'Render'],
-    live: 'https://formulavision.vercel.app' as string | null,
-    github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
-    accent: '#E8002D',
-    accentDim: 'rgba(232,0,45,0.07)',
-    glow: 'rgba(232,0,45,0.6)',
-    note: 'First load takes ~45s while the backend wakes up, give it a moment.' as
-      | string
-      | null,
-  },
+  id: 'formula-vision',
+  number: '01',
+  name: 'Formula Vision',
+  tagline: 'F1 Race Replay Platform',
+  description: 'Full-scale race replay platform with real-time telemetry visualization, lap comparison tools, and multi-driver sync, built for the fan who cares about the milliseconds.',
+  tech: ['React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Python', 'Vercel'],
+  live: 'https://formulavision.vercel.app' as string | null,
+  github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
+  accent: '#E8002D',
+  accentDim: 'rgba(232,0,45,0.07)',
+  glow: 'rgba(232,0,45,0.6)',
+  note: null, // Note removed since v2 uses static historical delivery
+},
   {
     id: 'github-review-bot',
     number: '02',
