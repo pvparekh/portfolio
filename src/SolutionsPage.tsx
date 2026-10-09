@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, MotionConfig, useInView, useReducedMotion } from 'framer-motion';
 import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
@@ -195,7 +195,7 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
   );
 }
 
-function SolutionsPage() {
+function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   async function copyEmail() {
@@ -207,28 +207,6 @@ function SolutionsPage() {
       setCopyStatus('failed');
     }
   }
-
-  useEffect(() => {
-    const previousTitle = document.title;
-    document.title = 'Data Solutions | Parth Parekh';
-    const values: Array<[string, string, string]> = [
-      ['name', 'description', 'Data pipelines, reporting automation, SQL modernization and system integrations built around the way your business works.'],
-      ['property', 'og:title', 'Data Solutions | Parth Parekh'],
-      ['property', 'og:description', 'Manual reporting, disconnected systems and fragile pipelines. I build focused, reliable solutions.'],
-      ['property', 'og:url', 'https://parthparekh.dev/solutions']
-    ];
-    const created: HTMLMetaElement[] = [];
-    for (const [selector, key, value] of values) {
-      let el = document.querySelector<HTMLMetaElement>('meta[' + selector + '="' + key + '"]');
-      if (!el) { el = document.createElement('meta'); el.setAttribute(selector, key); document.head.appendChild(el); created.push(el); }
-      el.content = value;
-    }
-    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    let madeCanonical = false;
-    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); madeCanonical = true; }
-    canonical.href = 'https://parthparekh.dev/solutions';
-    return () => { document.title = previousTitle; created.forEach((el) => el.remove()); if (madeCanonical) canonical?.remove(); };
-  }, []);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -346,7 +324,7 @@ function SolutionsPage() {
           </div>
         </section>
       </main>
-      <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/"><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>
+      <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/" onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onBackToPortfolio(); }}><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>
       </div>
     </MotionConfig>
   );
