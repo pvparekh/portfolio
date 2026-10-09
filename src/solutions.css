@@ -586,3 +586,64 @@
     }
   }
 }
+
+
+/* Section 00: a complete first screen on short desktop viewports.
+   The height budget accounts for the sticky header and lower telemetry rail.
+   No clipping or overflow hiding is used on text/buttons. */
+@media (min-width: 981px) and (max-height: 960px) {
+  .solutions .sol-hero-layout {
+    min-height: calc(100svh - 75px - 37px);
+    padding-top: clamp(18px, 3.1svh, 32px);
+    padding-bottom: clamp(12px, 2svh, 24px);
+    gap: clamp(24px, 3.8vw, 58px);
+    align-items: center;
+  }
+  .solutions .sol-hero h1 {
+    font-size: clamp(2.8rem, min(4.8vw, 8.2svh), 4.7rem);
+    line-height: 1.055;
+    margin-top: clamp(15px, 2.4svh, 24px);
+    letter-spacing: -.063em;
+  }
+  .solutions .sol-hero-sub {
+    margin-top: clamp(17px, 2.8svh, 26px);
+    max-width: 550px;
+    font-size: clamp(13.5px, 1.08vw, 16px);
+    line-height: 1.65;
+  }
+  .solutions .sol-actions {
+    margin-top: clamp(18px, 2.7svh, 28px);
+    gap: 11px;
+  }
+  .solutions .sol-button {
+    min-height: 46px;
+    padding: 12px 18px;
+  }
+  .solutions .sol-hero-bottom {
+    min-height: 37px;
+    padding-top: 5px;
+    padding-bottom: 12px !important;
+  }
+  .solutions .sol-flow-row { min-height: 255px; }
+  .solutions .sol-flow-node { min-height: 177px; }
+}
+@media (min-width: 981px) and (max-height: 680px) {
+  .solutions .sol-hero-layout {
+    padding-top: 14px;
+    padding-bottom: 10px;
+    gap: 24px;
+  }
+  .solutions .sol-hero h1 {
+    font-size: clamp(2.6rem, min(4.55vw, 7.8svh), 3.7rem);
+    margin-top: 13px;
+  }
+  .solutions .sol-hero-sub {
+    margin-top: 14px;
+    line-height: 1.53;
+    font-size: 13px;
+  }
+  .solutions .sol-actions { margin-top: 16px; }
+  .solutions .sol-button { min-height: 42px; padding: 10px 15px; }
+  .solutions .sol-flow-row { min-height: 218px; }
+  .solutions .sol-flow-node { min-height: 159px; }
+}
