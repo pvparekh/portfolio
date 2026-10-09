@@ -134,8 +134,8 @@ const EXPERIENCE = [
         period: 'May 2025 – June 2025',
         current: false,
         bullets: [
-          'Built and deployed a full-stack booking platform using Next.js 14.',
-          'Integrated the Calendly API into the booking workflow, reducing receptionist workload by ~30%.',
+          'Partnered with salon ownership to modernize its booking experience, building and deploying a full-stack website using Next.js 14.',
+          'Integrated the Calendly API into the booking workflow, reducing receptionist workload and call volume by ~30%.',
         ],
       },
     ],
@@ -277,7 +277,7 @@ function SectionLabel({ label }: { label: string }) {
     <div className="flex items-center justify-center gap-3 mb-5">
       <span className="h-px w-8" style={{ background: 'var(--accent)', opacity: 0.5 }} />
       <span
-        className="font-mono text-xs tracking-[0.25em] uppercase"
+        className="font-mono text-sm tracking-[0.22em] uppercase"
         style={{ color: 'var(--accent)' }}
       >
         {label}
@@ -533,9 +533,9 @@ function AboutSection() {
           </h2>
         </FadeInSection>
 
-        <div className="grid md:grid-cols-5 gap-10 items-stretch">
+        <div className="grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-8 items-stretch">
           {/* Bio */}
-          <FadeInSection delay={0.1} className="md:col-span-2">
+          <FadeInSection delay={0.1} className="md:col-span-1">
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
               <p>
                 I'm a Data Engineer with a B.S. in Computer Science and a
@@ -562,7 +562,7 @@ function AboutSection() {
           </FadeInSection>
 
           {/* Profile boards */}
-          <FadeInSection delay={0.22} className="md:col-span-3">
+          <FadeInSection delay={0.22} className="md:col-span-1">
             <div className="grid sm:grid-cols-2 gap-5 h-full">
               {/* Technical profile */}
               <div
@@ -632,7 +632,7 @@ function AboutSection() {
           </FadeInSection>
 
           {/* Social links */}
-          <FadeInSection delay={0.3} className="md:col-span-2">
+          <FadeInSection delay={0.3} className="md:col-span-1">
             <div className="flex flex-wrap justify-center gap-3">
               {[
                 { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon, download: undefined },
@@ -874,8 +874,6 @@ function ExperienceSection() {
           {EXPERIENCE.map((exp, companyIndex) => (
             <FadeInSection key={exp.company} delay={companyIndex * 0.06}>
               <article className="renaissance-company" aria-label={exp.company}>
-                <p className="renaissance-index">{String(companyIndex + 1).padStart(2, '0')} / EXPERIENCE</p>
-
                 <header className="renaissance-company-header">
                   {exp.logo && (
                     <span

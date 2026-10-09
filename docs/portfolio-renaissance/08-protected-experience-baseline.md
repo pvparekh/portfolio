@@ -51,8 +51,8 @@ const EXPERIENCE = [
         period: 'May 2025 – June 2025',
         current: false,
         bullets: [
-          'Built and deployed a full-stack booking platform using Next.js 14.',
-          'Integrated the Calendly API into the booking workflow, reducing receptionist workload by ~30%.',
+          'Partnered with salon ownership to modernize its booking experience, building and deploying a full-stack website using Next.js 14.',
+          'Integrated the Calendly API into the booking workflow, reducing receptionist workload and call volume by ~30%.',
         ],
       },
     ],
@@ -92,3 +92,7 @@ The user directly requested replacement of **only** the Junior Data Engineer and
 - Removed the user-specified Snowflake / broader modernization bullet from the Data Analytics Intern role.
 - Split the Perfect Threading Salon booking-system bullet into two factual accomplishments: booking platform delivery and Calendly integration/workload reduction. The ~30% figure was already user-provided in the original and is not independently verified.
 - All other protected professional experience entries remain unchanged.
+
+
+## User-approved refinement on 2026-10-09
+Salon bullet copy was expanded to highlight collaboration with ownership on the Next.js 14 website and Calendly integration reducing workload and call volume by ~30%. The call-volume claim is user-reported, not independently verified. No other employer experience data changed.
