@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Database, FileCheck2, GitBranch, Layers3, Mail, ShieldCheck, Workflow } from 'lucide-react';
+import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
 import './solutions.css';
 
@@ -51,7 +51,7 @@ const offerings = [
 
 const process = [
   ['01', 'Discuss', 'Tell me what is manual, broken or missing. We establish whether the project is a fit.'],
-  ['02', 'Scope', 'Agree on inputs, deliverables, acceptance checks, schedule and fixed boundaries.'],
+  ['02', 'Scope', 'Confirm data access, existing tools, any software costs, deliverables and acceptance checks.'],
   ['03', 'Build', 'Implement in reviewable stages, with clear questions and progress updates.'],
   ['04', 'Validate', 'Reconcile outputs and exercise the cases most likely to fail.'],
   ['05', 'Hand off', 'Deliver source, documentation and operating instructions based on the agreed scope.']
@@ -105,8 +105,8 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
   return (
     <article className="sol-case" id={study.id}>
       <div className="sol-case-heading">
-        <div className="sol-case-count">{String(index + 1).padStart(2, '0')} <span>/ INDEPENDENT WORK</span></div>
-        <div className="sol-case-tag">{study.classification}</div>
+        <div className="sol-case-count">{String(index + 1).padStart(2, '0')} <span>/ SELECTED WORK</span></div>
+        <div className="sol-case-tag">Independent project</div>
       </div>
       <div className="sol-case-layout">
         <div className="sol-case-lead">
@@ -147,9 +147,9 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
 function SolutionsPage() {
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = 'Data Engineering Solutions | Parth Parekh';
+    document.title = 'Data Solutions | Parth Parekh';
     const values: Array<[string, string, string]> = [
-      ['name', 'description', 'Independent data engineering, reporting automation, SQL modernization and system integrations. Discuss a scoped project with Parth Parekh.'],
+      ['name', 'description', 'Data pipelines, reporting automation, SQL modernization and system integrations built around the way your business works.'],
       ['property', 'og:title', 'Data Engineering Solutions | Parth Parekh'],
       ['property', 'og:description', 'Manual reporting, disconnected systems and fragile pipelines. I build focused, reliable solutions.'],
       ['property', 'og:url', 'https://parthparekh.dev/solutions']
@@ -172,7 +172,7 @@ function SolutionsPage() {
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <header className="sol-header">
         <div className="sol-header-inner">
-          <a className="sol-wordmark" href="/" aria-label="Parth Parekh, back to portfolio">PARTH<span>.</span><small> / SOLUTIONS</small></a>
+          <a className="sol-wordmark" href="/" aria-label="Parth Parekh, back to portfolio">PARTH<span>.</span><small> / DATA SOLUTIONS</small></a>
           <nav className="sol-nav" aria-label="Solutions page">
             <a href="#services">Services</a>
             <a href="#work">Work</a>
@@ -180,20 +180,22 @@ function SolutionsPage() {
           </nav>
           <a className="sol-nav-cta" href="#contact">Discuss a Project <ArrowUpRight size={15} /></a>
         </div>
+        <nav className="sol-mobile-nav" aria-label="Data Solutions sections">
+          <a href="#services">Services</a><a href="#work">Selected work</a><a href="#approach">Approach</a>
+        </nav>
       </header>
 
       <main id="sol-main">
         <section className="sol-hero" aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
             <div className="sol-hero-copy">
-              <div className="sol-topline"><span className="sol-status-dot" /> INDEPENDENT ENGINEERING / FOCUSED PROJECTS</div>
+              <div className="sol-topline"><span className="sol-status-dot" /> DATA SOLUTIONS / PARTH PAREKH</div>
               <h1 id="sol-hero-title">From manual data work to <em>reliable systems.</em></h1>
               <p className="sol-hero-sub">I build data pipelines, integrations and reporting automations that help teams spend less time moving data and more time using it.</p>
               <div className="sol-actions">
                 <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
                 <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
               </div>
-              <p className="sol-hero-signature">Parth Parekh <span>/</span> Data engineer · Rutgers CS graduate</p>
             </div>
             <div className="sol-hero-art"><ArchitectureGraphic /></div>
           </div>
@@ -241,23 +243,24 @@ function SolutionsPage() {
                 </article>
               ))}
             </div>
+            <div className="sol-tooling-note">
+              <span className="sol-tooling-symbol"><Layers3 size={21} strokeWidth={1.6} /></span>
+              <div><strong>Make the most of the tools you already have.</strong><p>I start with your current systems and choose the simplest practical approach. Any new subscriptions, API charges or infrastructure needs are identified when we scope the work.</p></div>
+              <a href="#contact" aria-label="Discuss a cost-conscious data project"><ArrowUpRight size={19}/></a>
+            </div>
           </div>
         </section>
 
         <section className="sol-section sol-work-section" id="work">
           <div className="sol-container">
-            <SectionIntro index="03" label="ENGINEERING EVIDENCE" title="See the systems behind the claims." description="These are independent, inspectable projects, not invented consulting engagements or examples borrowed from an employer." />
+            <SectionIntro index="03" label="ENGINEERING EVIDENCE" title="See the systems behind the claims." description="A closer look at how I design, build and validate systems, from the data architecture to the finished experience." />
             <div className="sol-case-list">{caseStudies.filter(study => study.publicationApproved).map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
-            <div className="sol-practice-note">
-              <ShieldCheck size={24} strokeWidth={1.5} />
-              <div><h3>Professional context, without proprietary material.</h3><p>I also work as a Junior Data Engineer, building and validating production data workflows. Client data, internal code and employer-specific systems are not published here. Public projects above provide independently reviewable technical evidence.</p></div>
-            </div>
           </div>
         </section>
 
         <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
-            <SectionIntro index="04" label="WORKING TOGETHER" title="A straightforward path from problem to handoff." description="I take on clearly bounded, independently deliverable work. Projects are scheduled around existing full-time commitments, with milestones and availability agreed before work begins." />
+            <SectionIntro index="04" label="WORKING TOGETHER" title="A straightforward path from problem to handoff." description="Every project begins with a clear outcome, agreed milestones, practical validation and a handoff your team can use." />
             <div className="sol-process">{process.map(([number, name, summary]) => <div className="sol-process-step" key={number}><span>{number}</span><h3>{name}</h3><p>{summary}</p></div>)}</div>
             <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Defined scope before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>
           </div>
