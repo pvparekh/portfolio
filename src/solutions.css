@@ -736,3 +736,8 @@
 /* Keep the two site destinations discoverable without altering mobile section layout. */
 .sol-nav .sol-nav-home { display:inline-flex; align-items:center; gap:7px; padding-right:16px; margin-right:2px; border-right:1px solid rgba(255,255,255,.13); white-space:nowrap; }
 .sol-nav .sol-nav-home > svg { color:var(--sol-accent); opacity:.8; }
+
+
+/* Shared persistent 64px navigation is outside the Solutions page tree.
+   Reserve exactly its height so the opening hero never renders beneath it. */
+.solutions { padding-top: 64px; }
