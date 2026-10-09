@@ -169,7 +169,7 @@
   --sol-muted: #abb5c4;
   --sol-soft: #8490a3;
   --sol-border: rgba(226,232,240,.12);
-  --sol-accent: #f5a524;
+  --sol-accent: var(--accent, #F59E0B);
   font-feature-settings: "kern" 1;
 }
 .solutions .sol-container { max-width: 1280px; }
@@ -729,3 +729,6 @@
 @media (prefers-reduced-motion: reduce) {
   .solutions .sol-contact-copy { transition: none; }
 }
+
+/* Shared portfolio brand color, reserved for chapter-level emphasis. */
+.solutions .sol-section-intro h2 .sol-heading-emphasis { color: var(--accent, #F59E0B); font-style: normal; }
