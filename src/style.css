@@ -293,3 +293,35 @@ body {
   .portfolio-chevron,
   .portfolio-dropdown-link { transition: none; }
 }
+
+
+/* One shared brand lockup on both Portfolio and Data Solutions routes. */
+.site-shared-brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  white-space: nowrap;
+  text-decoration: none;
+  font: 700 21px/1 'Space Grotesk',system-ui,sans-serif;
+  letter-spacing: -.055em;
+  color: var(--text-1);
+  transition: color .18s ease;
+}
+.site-shared-brand:hover { color: #fff; }
+.site-shared-brand-period { color: var(--accent); }
+.site-shared-brand-section {
+  color: #9aa5b5;
+  margin-left: 12px;
+  font: 500 10px/1 'JetBrains Mono',monospace;
+  letter-spacing: .08em;
+}
+.site-shared-brand:focus-visible,
+.site-shared-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.site-shared-nav .portfolio-nav-dropdown { flex: 0 0 auto; }
+@media (max-width: 700px) {
+  .site-shared-brand { font-size: 19px; }
+  .site-shared-brand-section { margin-left: 9px; font-size: 9px; letter-spacing: .03em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shared-brand { transition: none; }
+}
