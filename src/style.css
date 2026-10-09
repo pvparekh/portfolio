@@ -325,3 +325,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .site-shared-brand { transition: none; }
 }
+
+
+/* One unobtrusive viewport reading indicator, identical on either route. */
+.site-reading-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg,var(--accent),#f7c875);
+  transform-origin: left center;
+  pointer-events: none;
+}
