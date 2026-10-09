@@ -23,13 +23,13 @@ export const caseStudies: PublicCaseStudy[] = [
     eyebrow: '01 / DATA PLATFORM + PRODUCT ENGINEERING',
     title: 'Formula Vision',
     description:
-      'A historical Formula 1 replay product built on a reproducible data pipeline, not a permanently running replay server.',
+      'A historical Formula 1 replay platform powered by reproducible data engineering and efficient, on-demand browser delivery.',
     problem:
       'High-frequency race data is large, irregular and not naturally shaped for interactive browser playback. Correct race order also cannot be inferred safely from position samples alone.',
     work:
       'Built a typed Parquet source-of-truth layer, separate browser delivery artifacts, timing-authoritative race intelligence, validation gates, immutable Cloudflare R2 releases and a React replay client with selective chunk loading.',
     outcome:
-      'A publicly inspectable product where validated historical races can be added through the publication pipeline without rewriting the frontend. Invalid builds are quarantined rather than promoted.',
+      'A growing race library powered by a repeatable publication workflow. Validated races become available without frontend changes, with quality gates protecting each release.',
     contribution:
       'Independently designed and built the extraction, data contracts, publication process, client replay architecture and user experience.',
     architecture: [
@@ -62,7 +62,7 @@ export const caseStudies: PublicCaseStudy[] = [
     work:
       'Built a multi-format file ingestion workflow, batch categorization, deterministic statistical calculations and vendor analysis with a PostgreSQL-backed application.',
     outcome:
-      'An independent product demonstrating ingestion, repeatable analysis, user-facing results and separation of statistical computation from AI-generated narrative.',
+      'A working expense intelligence application that combines repeatable data ingestion, computed analytics, and a clear interface for exploring the results.',
     contribution:
       'Designed and implemented the application, data flow and analysis features.',
     architecture: [
