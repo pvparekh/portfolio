@@ -353,3 +353,236 @@
   .solutions .sol-flow-node { transition-duration:0s; }
   .solutions .sol-problem:after { transition-duration:0s; }
 }
+
+
+
+/* 2026-10-09: Final rhythm and interaction system.
+   Interactions reveal state, direction and hierarchy, not decorative spectacle. */
+.solutions {
+  --sol-proof-gap: clamp(25px, 2.4vw, 37px);
+}
+.solutions .sol-hero h1 {
+  line-height: 1.075;
+  margin-bottom: 0;
+  text-wrap: balance;
+}
+.solutions .sol-hero-sub {
+  margin-top: clamp(40px, 4.3vw, 51px);
+  max-width: 565px;
+  line-height: 1.82;
+  text-wrap: pretty;
+}
+.solutions .sol-actions {
+  margin-top: clamp(31px, 3vw, 39px);
+}
+.solutions .sol-section-intro > p {
+  text-wrap: pretty;
+}
+.solutions .sol-case-fact {
+  gap: 20px;
+}
+.solutions .sol-deep-dive > div {
+  min-width: 0;
+}
+.solutions .sol-deep-dive li {
+  align-items: flex-start;
+  gap: 14px;
+  text-wrap: pretty;
+}
+.solutions .sol-deep-dive li > svg {
+  flex: 0 0 16px;
+}
+.solutions .sol-deep-foot {
+  margin: var(--sol-proof-gap) 0 21px;
+  padding: 26px 0 0;
+  border-top: 1px solid rgba(255,255,255,.12);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+}
+.solutions .sol-deep-foot > span {
+  font: 500 10px/1.55 'JetBrains Mono',monospace;
+  letter-spacing: .12em;
+  color: var(--sol-accent);
+}
+.solutions .sol-deep-foot > p {
+  margin: 0;
+  color: #c7d0dc;
+  font: 400 13px/1.77 Inter,sans-serif;
+  max-width: 520px;
+}
+.solutions .sol-deep-dive ol,
+.solutions .sol-deep-dive ul {
+  gap: 17px;
+}
+.solutions .sol-flow-footer .sol-state {
+  color: #c9d2df;
+  letter-spacing: .08em;
+}
+
+/* Scroll orientation follows the document without re-laying out content. */
+.sol-reading-progress {
+  pointer-events: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, #d89421, #ffbf57);
+  transform-origin: 0 50%;
+  z-index: 2;
+}
+.sol-nav a,
+.sol-mobile-nav a {
+  position: relative;
+}
+.sol-nav a.is-current,
+.sol-mobile-nav a.is-current {
+  color: #f5b454;
+}
+.sol-nav a.is-current:after,
+.sol-nav a:has(.sol-active-underline):after {
+  display: none;
+}
+.sol-active-underline {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  height: 2px;
+  background: #f5a524;
+  border-radius: 10px;
+}
+.sol-mobile-nav .sol-active-underline {
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+}
+
+/* Pipeline has one meaningful progression on view, then stays quiet. */
+.sol-flow-connector {
+  position: relative;
+}
+.sol-flow-connector .sol-flow-base {
+  background: rgba(245,165,36,.26);
+}
+.sol-flow-connector .sol-flow-trace {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 100%;
+  background: #f5b454;
+  box-shadow: 0 0 10px rgba(245,165,36,.26);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+.sol-process {
+  position: relative;
+}
+.sol-process-track {
+  pointer-events: none;
+  display: block;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: -1px;
+  background: linear-gradient(90deg,#f5a524,#f6bc68);
+  transform-origin: 0 50%;
+  z-index: 1;
+}
+.sol-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(16px, 2.6vw, 34px);
+}
+.sol-footer-links a {
+  white-space: nowrap;
+}
+
+/* Native <details> retains keyboard/browser semantics. Browsers without
+   ::details-content animation simply open normally. */
+@supports (interpolate-size: allow-keywords) {
+  .solutions .sol-case-details {
+    interpolate-size: allow-keywords;
+  }
+  .solutions .sol-case-details::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition: block-size .32s cubic-bezier(.22,1,.36,1),
+                opacity .22s ease,
+                content-visibility .32s allow-discrete;
+  }
+  .solutions .sol-case-details[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 980px) {
+  .solutions .sol-hero-sub {
+    max-width: 650px;
+    margin-top: 38px;
+  }
+  .solutions .sol-deep-foot {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 700px) {
+  .solutions section[id],
+  .solutions article[id] {
+    scroll-margin-top: 130px;
+  }
+  .solutions .sol-hero h1 {
+    line-height: 1.09;
+  }
+  .solutions .sol-hero-sub {
+    margin-top: 34px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .solutions .sol-actions {
+    margin-top: 32px;
+  }
+  .solutions .sol-deep-dive ul,
+  .solutions .sol-deep-dive ol {
+    gap: 17px;
+  }
+  .solutions .sol-deep-foot {
+    margin-top: 32px;
+    padding-top: 23px;
+    gap: 9px;
+  }
+  .sol-process-track {
+    display: none;
+  }
+  .sol-footer-links {
+    gap: 22px;
+  }
+  .sol-footer-inner > span {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solutions .sol-flow-trace,
+  .solutions .sol-active-underline,
+  .solutions .sol-process-track {
+    transition-duration: 0s !important;
+    animation: none !important;
+  }
+  @supports (interpolate-size: allow-keywords) {
+    .solutions .sol-case-details::details-content {
+      transition-duration: 0s;
+    }
+  }
+}
