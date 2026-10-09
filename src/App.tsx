@@ -4,7 +4,6 @@ import {
   useScroll,
   useTransform,
   useInView,
-  useReducedMotion,
   AnimatePresence,
   type Variants,
 } from 'framer-motion';
@@ -12,7 +11,6 @@ import {
   Mail,
   ExternalLink,
   ArrowUpRight,
-  ChevronDown,
   Code2,
   Layers,
   Server,
@@ -284,246 +282,6 @@ function SectionLabel({ label }: { label: string }) {
       </span>
       <span className="h-px w-8" style={{ background: 'var(--accent)', opacity: 0.5 }} />
     </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   NAV
-───────────────────────────────────────────────────────────── */
-
-function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const reduceNavMotion = useReducedMotion();
-  const [portfolioOpen, setPortfolioOpen] = useState(false);
-  const [mobilePortfolioOpen, setMobilePortfolioOpen] = useState(false);
-  const portfolioDropdownRef = useRef<HTMLDivElement>(null);
-  const portfolioTriggerRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const closeOnOutsidePointer = (event: PointerEvent) => {
-      if (portfolioDropdownRef.current && !portfolioDropdownRef.current.contains(event.target as Node)) {
-        setPortfolioOpen(false);
-      }
-    };
-    document.addEventListener('pointerdown', closeOnOutsidePointer);
-    return () => document.removeEventListener('pointerdown', closeOnOutsidePointer);
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setMenuOpen(false);
-    setMobilePortfolioOpen(false);
-    setPortfolioOpen(false);
-  };
-
-  const links = [
-    { label: 'About', id: 'about' },
-    { label: 'Experience', id: 'experience' },
-    { label: 'Projects', id: 'projects' },
-    { label: 'Skills', id: 'skills' },
-    { label: 'Contact', id: 'contact' },
-  ];
-
-  return (
-    <motion.nav
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease }}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        background: scrolled ? 'rgba(8,8,13,0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--border)' : 'none',
-      }}
-    >
-      <div className="w-full px-6 md:px-10 h-16 flex items-center justify-between">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-2"
-        >
-          <span
-            className="font-display font-bold text-lg tracking-tight"
-            style={{ color: 'var(--accent)' }}
-          >
-            Parth
-          </span>
-          <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: 'var(--accent)', opacity: 0.5 }}
-          />
-        </button>
-
-        <div className="hidden md:flex items-center gap-7 lg:gap-9">
-          <div
-            className="portfolio-nav-dropdown"
-            ref={portfolioDropdownRef}
-            onPointerEnter={(event) => { if (event.pointerType === 'mouse') setPortfolioOpen(true); }}
-            onPointerLeave={(event) => {
-              if (event.pointerType === 'mouse' && !event.currentTarget.contains(document.activeElement)) setPortfolioOpen(false);
-            }}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPortfolioOpen(false);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Escape') {
-                event.preventDefault();
-                event.stopPropagation();
-                setPortfolioOpen(false);
-                portfolioTriggerRef.current?.focus();
-              }
-            }}
-          >
-            <button
-              ref={portfolioTriggerRef}
-              type="button"
-              className="nav-link portfolio-nav-trigger font-mono text-xs tracking-widest uppercase"
-              aria-expanded={portfolioOpen}
-              aria-controls={portfolioOpen ? 'portfolio-section-list' : undefined}
-              onClick={() => setPortfolioOpen((open) => !open)}
-              style={{ color: 'var(--text-2)' }}
-            >
-              Portfolio
-              <ChevronDown size={14} className={portfolioOpen ? 'portfolio-chevron is-open' : 'portfolio-chevron'} aria-hidden="true" />
-            </button>
-            <AnimatePresence initial={false}>
-              {portfolioOpen && (
-                <motion.div
-                  id="portfolio-section-list"
-                  className="portfolio-dropdown-position"
-                  initial={reduceNavMotion ? { opacity: 0 } : { opacity: 0, y: -7, scale: 0.985 }}
-                  animate={reduceNavMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-                  exit={reduceNavMotion ? { opacity: 0 } : { opacity: 0, y: -5, scale: 0.985 }}
-                  transition={{ duration: reduceNavMotion ? 0 : 0.16, ease: 'easeOut' }}
-                >
-                  <div className="portfolio-dropdown-panel" aria-label="Portfolio sections">
-                    <p className="portfolio-dropdown-kicker">PORTFOLIO / SECTIONS</p>
-                    {links.map((l, index) => (
-                      <a
-                        key={l.id}
-                        href={`#${l.id}`}
-                        onClick={(event) => { event.preventDefault(); scrollTo(l.id); }}
-                        className="portfolio-dropdown-link"
-                      >
-                        <span className="portfolio-dropdown-index">0{index + 1}</span>
-                        <span>{l.label}</span>
-                        <ArrowUpRight size={14} aria-hidden="true" />
-                      </a>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <a
-            href="/solutions"
-            className="nav-link font-mono text-xs tracking-widest uppercase"
-            style={{ color: 'var(--text-2)' }}
-          >
-            Data Solutions
-          </a>
-          <a
-            href="mailto:pvparekh14@gmail.com"
-            className="btn-primary font-mono text-xs tracking-widest px-4 py-2 rounded-sm font-semibold"
-            style={{ background: 'var(--accent)', color: '#08080D' }}
-          >
-            Connect
-          </a>
-        </div>
-
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 p-2"
-          onClick={() => {
-            setMenuOpen(!menuOpen);
-            if (menuOpen) setMobilePortfolioOpen(false);
-          }}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-          aria-controls="portfolio-mobile-panel"
-        >
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="block w-5 h-px transition-all duration-300"
-              style={{
-                background: 'var(--text-2)',
-                transform:
-                  i === 0 && menuOpen
-                    ? 'rotate(45deg) translate(3.5px, 3.5px)'
-                    : i === 2 && menuOpen
-                    ? 'rotate(-45deg) translate(3.5px, -3.5px)'
-                    : '',
-                opacity: i === 1 && menuOpen ? 0 : 1,
-              }}
-            />
-          ))}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            id="portfolio-mobile-panel"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden"
-            style={{ background: 'rgba(8,8,13,0.97)', borderBottom: '1px solid var(--border)' }}
-          >
-            <div className="px-6 py-4 flex flex-col gap-4">
-              <div className="portfolio-mobile-group">
-                <button
-                  type="button"
-                  className="portfolio-mobile-trigger font-mono text-xs tracking-widest uppercase"
-                  aria-expanded={mobilePortfolioOpen}
-                  aria-controls={mobilePortfolioOpen ? 'portfolio-mobile-sections' : undefined}
-                  onClick={() => setMobilePortfolioOpen((open) => !open)}
-                >
-                  Portfolio <ChevronDown size={15} className={mobilePortfolioOpen ? 'portfolio-chevron is-open' : 'portfolio-chevron'} aria-hidden="true" />
-                </button>
-                <AnimatePresence initial={false}>
-                  {mobilePortfolioOpen && (
-                    <motion.div
-                      id="portfolio-mobile-sections"
-                      initial={reduceNavMotion ? false : { opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={reduceNavMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-                      transition={{ duration: reduceNavMotion ? 0 : 0.2 }}
-                      className="portfolio-mobile-sections"
-                    >
-                      {links.map((l) => (
-                        <a
-                          key={l.id}
-                          href={`#${l.id}`}
-                          onClick={(event) => { event.preventDefault(); scrollTo(l.id); }}
-                          className="portfolio-mobile-link font-mono text-xs tracking-widest uppercase"
-                        >
-                          {l.label}
-                        </a>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              <a
-                href="/solutions"
-                className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
-                style={{ color: 'var(--accent)' }}
-              >
-                Data Solutions <ArrowUpRight size={14} aria-hidden="true" />
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
   );
 }
 
@@ -1541,7 +1299,6 @@ function Footer() {
 export default function App() {
   return (
     <>
-      <Nav />
       <main>
         <HeroSection />
         <AboutSection />
