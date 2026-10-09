@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, MotionConfig, useInView, useReducedMotion, useScroll, useSpring } from 'framer-motion';
+import { motion, MotionConfig, useInView, useReducedMotion } from 'framer-motion';
 import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
 import './solutions.css';
@@ -195,17 +195,7 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
   );
 }
 
-const sectionNav = [
-  { id: 'services', label: 'Services', mobileLabel: 'Services' },
-  { id: 'work', label: 'Work', mobileLabel: 'Selected work' },
-  { id: 'approach', label: 'Approach', mobileLabel: 'Approach' }
-];
-
 function SolutionsPage() {
-  const { scrollYProgress } = useScroll();
-  const easedScrollProgress = useSpring(scrollYProgress, { stiffness: 135, damping: 30, mass: 0.28 });
-  const reducedMotion = !!useReducedMotion();
-  const [activeSection, setActiveSection] = useState('');
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   async function copyEmail() {
@@ -217,19 +207,6 @@ function SolutionsPage() {
       setCopyStatus('failed');
     }
   }
-
-  useEffect(() => {
-    const sections = ['problems', 'services', 'work', 'approach', 'contact']
-      .map(id => document.getElementById(id))
-      .filter((node): node is HTMLElement => node !== null);
-    if (typeof IntersectionObserver === 'undefined') return;
-    const observer = new IntersectionObserver(entries => {
-      const activeEntry = entries.find(entry => entry.isIntersecting);
-      if (activeEntry) setActiveSection(activeEntry.target.id);
-    }, { rootMargin: '-22% 0px -67% 0px', threshold: 0 });
-    sections.forEach(node => observer.observe(node));
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -257,31 +234,6 @@ function SolutionsPage() {
     <MotionConfig reducedMotion="user">
       <div className="solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
-      <header className="sol-header">
-        <div className="sol-header-inner">
-          <a className="sol-wordmark" href="/" aria-label="Parth Parekh, back to portfolio">PARTH<span>.</span><small> / DATA SOLUTIONS</small></a>
-          <nav className="sol-nav" aria-label="Data Solutions page">
-            <a href="/" className="sol-nav-home">Portfolio <ArrowUpRight size={13} aria-hidden="true" /></a>
-            {sectionNav.map(item => (
-              <a key={item.id} href={'#' + item.id} className={activeSection === item.id ? 'is-current' : undefined} aria-current={activeSection === item.id ? 'location' : undefined}>
-                {item.label}
-                {activeSection === item.id && <motion.span layoutId="sol-desktop-active-underline" className="sol-active-underline" transition={{ type: 'spring', stiffness: 420, damping: 38 }} />}
-              </a>
-            ))}
-          </nav>
-          <a className="sol-nav-cta" href="#contact">Discuss a Project <ArrowUpRight size={15} /></a>
-        </div>
-        <nav className="sol-mobile-nav" aria-label="Data Solutions sections">
-          {sectionNav.map(item => (
-            <a key={item.id} href={'#' + item.id} className={activeSection === item.id ? 'is-current' : undefined} aria-current={activeSection === item.id ? 'location' : undefined}>
-              {item.mobileLabel}
-              {activeSection === item.id && <motion.span layoutId="sol-mobile-active-underline" className="sol-active-underline" transition={{ type: 'spring', stiffness: 420, damping: 38 }} />}
-            </a>
-          ))}
-        </nav>
-        <motion.div className="sol-reading-progress" aria-hidden="true" style={{ scaleX: reducedMotion ? scrollYProgress : easedScrollProgress }} />
-      </header>
-
       <main id="sol-main">
         <section className="sol-hero" aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
