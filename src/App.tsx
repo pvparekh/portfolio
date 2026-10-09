@@ -4,7 +4,6 @@ import {
   useScroll,
   useTransform,
   useInView,
-  AnimatePresence,
   type Variants,
 } from 'framer-motion';
 import {
