@@ -47,7 +47,7 @@ const PROJECTS = [
   number: '01',
   name: 'Formula Vision',
   tagline: 'F1 Race Replay Platform',
-  description: 'Full-scale race replay platform with real-time telemetry visualization, lap comparison tools, and multi-driver sync, built for the fan who cares about the milliseconds.',
+  description: 'Historical Formula 1 replay rebuilt as a verified data product: canonical Parquet, timing-authoritative race intelligence, immutable releases, and a client-owned replay engine.',
   tech: ['React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Python', 'Vercel'],
   live: 'https://formulavision.vercel.app' as string | null,
   github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
@@ -62,9 +62,9 @@ const PROJECTS = [
     name: 'GitHub Review Bot',
     tagline: 'AI-Powered Code Review Automation',
     description:
-      'Production-grade GitHub App that reviews pull requests using Claude AI, posts inline comments, and integrates natively with any CI/CD pipeline. Deployed on AWS EC2.',
-    tech: ['Python', 'FastAPI', 'Claude API', 'Docker', 'AWS EC2', 'GitHub Actions'],
-    live: 'https://github.com/pvparekh/github-review-bot' as string | null,
+      'GitHub App code-review agent using signed webhooks, a custom diff-position parser, and a two-pass Claude workflow for structured findings and inline feedback.',
+    tech: ['Python', 'FastAPI', 'Claude', 'GitHub API', 'Webhooks', 'Railway'],
+    live: null as string | null,
     github: 'https://github.com/pvparekh/github-review-bot' as string | null,
     accent: '#F59E0B',
     accentDim: 'rgba(245,158,11,0.07)',
@@ -75,9 +75,9 @@ const PROJECTS = [
     id: 'aetherflow',
     number: '03',
     name: 'AetherFlow',
-    tagline: 'AI Expense Intelligence SaaS',
+    tagline: 'Expense Data & Analytics Product',
     description:
-      'Next-gen expense intelligence platform that uses GPT-4o to analyze spending patterns, predict cash flow, and surface actionable financial insights in real time.',
+      'Expense intelligence product that ingests business files, categorizes transactions with AI, computes deterministic anomalies and vendor metrics, and presents actionable analyses.',
     tech: ['Next.js 15', 'GPT-4o', 'Supabase', 'PostgreSQL', 'TypeScript', 'Tailwind'],
     live: 'https://aetherflow-three.vercel.app' as string | null,
     github: 'https://github.com/pvparekh/aetherflow' as string | null,
@@ -709,155 +709,126 @@ function AboutSection() {
    PROJECTS
 ───────────────────────────────────────────────────────────── */
 
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: (typeof PROJECTS)[0];
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 36 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.14, ease }}
-      className="flex flex-col h-full"
-    >
-      <div
-        className="project-card rounded-sm border relative overflow-hidden flex flex-col h-full"
-        style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
-      >
-        {/* Livery stripe */}
-        <div className="h-0.5 w-full flex-shrink-0" style={{ background: project.accent }} />
-
-        {/* Top glow */}
-        <div
-          className="absolute top-0 left-0 right-0 h-20 pointer-events-none"
-          style={{ background: `linear-gradient(180deg, ${project.accentDim} 0%, transparent 100%)` }}
-        />
-
-        <div className="p-6 flex flex-col flex-1 relative z-10">
-          <div className="flex items-start justify-between mb-5">
-            <span
-              className="font-mono text-xs tracking-widest"
-              style={{ color: project.accent, opacity: 0.7 }}
-            >
-              {project.number}
-            </span>
-            <div className="flex gap-2.5">
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="GitHub repository"
-                  className="p-2.5 rounded-md border transition-all duration-200"
-                  style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = project.accent;
-                    e.currentTarget.style.color = project.accent;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.color = 'var(--text-2)';
-                  }}
-                >
-                  <GithubIcon size={18} />
-                </a>
-              )}
-              {project.live && (
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Live site"
-                  className="live-link-glow p-2.5 rounded-md border flex items-center justify-center transition-transform duration-200 hover:scale-110"
-                  style={
-                    {
-                      borderColor: project.accent,
-                      color: project.accent,
-                      background: project.accentDim,
-                      '--glow-color': project.glow,
-                    } as React.CSSProperties
-                  }
-                >
-                  <ExternalLink size={18} strokeWidth={2.4} />
-                </a>
-              )}
-            </div>
-          </div>
-
-          <h3 className="font-display font-bold text-2xl mb-1" style={{ color: 'var(--text-1)' }}>
-            {project.name}
-            {project.note && (
-              <span style={{ color: project.accent }} aria-hidden="true">
-                {' '}
-                *
-              </span>
-            )}
-          </h3>
-          <p className="font-mono text-xs tracking-wide mb-4" style={{ color: project.accent }}>
-            {project.tagline}
-          </p>
-          <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-2)' }}>
-            {project.description}
-          </p>
-
-          {project.note && (
-            <p
-              className="mb-6 text-xs leading-relaxed flex gap-1.5"
-              style={{ color: 'var(--text-3)' }}
-            >
-              <span style={{ color: project.accent }}>*</span>
-              <span>{project.note}</span>
-            </p>
-          )}
-
-          <div className="flex flex-wrap gap-1.5 mt-auto">
-            {project.tech.map((t) => (
-              <span
-                key={t}
-                className="font-mono text-xs px-2.5 py-1 rounded-sm border"
-                style={{ borderColor: 'var(--border)', color: 'var(--text-2)', background: 'var(--bg-2)' }}
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 function ProjectsSection() {
+  const flagship = PROJECTS[0];
+  const supporting = PROJECTS.slice(1);
+
   return (
-    <section id="projects" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
-      <div className="max-w-6xl mx-auto">
+    <section id="projects" className="renaissance-project-section">
+      <div className="renaissance-project-wrap">
         <FadeInSection>
-          <SectionLabel label="Projects" />
-          <h2
-            className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-4 leading-[1.15] text-center"
-            style={{ color: 'var(--text-1)' }}
-          >
-            Things I've <span style={{ color: 'var(--accent)' }}>built</span> and shipped.
-          </h2>
-          <p
-            className="text-base mb-16 max-w-xl mx-auto text-center"
-            style={{ color: 'var(--text-2)' }}
-          >
-            A few projects I've designed, built, and shipped end to end.
-          </p>
+          <div className="renaissance-project-intro">
+            <SectionLabel label="Selected Engineering" />
+            <h2 className="font-display">Not just interfaces. <span>Systems.</span></h2>
+            <p>Three very different problems, solved through data engineering, backend automation, and product development. Explore the architecture and the real code.</p>
+          </div>
         </FadeInSection>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {PROJECTS.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
-          ))}
+        <FadeInSection>
+          <article className="renaissance-flagship" aria-labelledby="formula-vision-title">
+            <div className="renaissance-project-topline">
+              <span>01 / FEATURED SYSTEM</span>
+              <span>DATA PLATFORM + INTERACTIVE PRODUCT</span>
+            </div>
+            <div className="renaissance-flagship-grid">
+              <div className="renaissance-flagship-story">
+                <p className="renaissance-project-overline">{flagship.tagline}</p>
+                <h3 id="formula-vision-title">{flagship.name}</h3>
+                <p className="renaissance-flagship-lead">An actual racing product. An engineering system underneath.</p>
+                <p className="renaissance-project-description">{flagship.description}</p>
+                <div className="renaissance-proof-points" aria-label="Engineering highlights">
+                  <div><span>01</span><p>Timing decides race order. Telemetry drives the picture.</p></div>
+                  <div><span>02</span><p>Canonical data and browser delivery are separate contracts.</p></div>
+                  <div><span>03</span><p>Valid releases publish atomically; broken races are quarantined.</p></div>
+                </div>
+                <div className="renaissance-project-actions">
+                  {flagship.live && (
+                    <a href={flagship.live} target="_blank" rel="noreferrer" className="renaissance-primary-project-link">
+                      Explore Live Replay <ArrowUpRight size={16} aria-hidden="true" />
+                    </a>
+                  )}
+                  {flagship.github && (
+                    <a href={flagship.github} target="_blank" rel="noreferrer" className="renaissance-text-project-link">
+                      Source Code <GithubIcon size={16} />
+                    </a>
+                  )}
+                  <a href="https://github.com/pvparekh/F1-Viewer/blob/main/docs/v2/ENGINEERING_OVERVIEW.md"
+                    target="_blank" rel="noreferrer" className="renaissance-text-project-link">
+                    Architecture <ArrowUpRight size={15} aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="renaissance-architecture" aria-label="Formula Vision architecture diagram">
+                <div className="renaissance-architecture-caption">
+                  <span>BUILD / VALIDATE / DELIVER</span><span>READ-ONLY SYSTEM OVERVIEW</span>
+                </div>
+                <div className="renaissance-architecture-flow">
+                  {[
+                    { label: 'Acquire', tech: 'FastF1 + source timing', detail: 'Ingest authoritative race data', code: '01' },
+                    { label: 'Canonical truth', tech: 'Typed Parquet + lineage', detail: 'Normalize and version race products', code: '02' },
+                    { label: 'Validate', tech: 'Quality gates + quarantine', detail: 'Reject inconsistent sessions', code: '03' },
+                    { label: 'Publish', tech: 'Immutable R2 artifacts', detail: 'Verify objects, promote catalog', code: '04' },
+                    { label: 'Replay', tech: 'React + client-owned clock', detail: 'Load only needed data chunks', code: '05' },
+                  ].map((step, i) => (
+                    <div key={step.code} className="renaissance-architecture-step">
+                      <span className="renaissance-architecture-index">{step.code}</span>
+                      <div className="renaissance-architecture-step-body">
+                        <strong>{step.label}</strong>
+                        <small>{step.tech}</small>
+                        <p>{step.detail}</p>
+                      </div>
+                      {i !== 4 && <span className="renaissance-architecture-connector" aria-hidden="true" />}
+                    </div>
+                  ))}
+                </div>
+                <p className="renaissance-architecture-foot">Historical replay is static-first. No always-on replay API.</p>
+              </div>
+            </div>
+            <div className="renaissance-tech-strip" aria-label="Formula Vision technologies">
+              {flagship.tech.map(tech => <span key={tech}>{tech}</span>)}
+            </div>
+          </article>
+        </FadeInSection>
+
+        <div className="renaissance-supporting-projects">
+          {supporting.map((project, index) => {
+            const isReviewBot = project.id === 'github-review-bot';
+            const flow = isReviewBot
+              ? ['Verify webhook', 'Parse pull-request diff', 'Two-pass AI review', 'Post inline feedback']
+              : ['Upload expense files', 'Categorize in batches', 'Compute deterministic statistics', 'Explore analysis'];
+            return (
+              <FadeInSection key={project.id} delay={index * .07}>
+                <article className={`renaissance-supporting-project ${isReviewBot ? 'is-review-bot' : 'is-aetherflow'}`}>
+                  <div className="renaissance-project-topline">
+                    <span>{project.number} / ENGINEERING PROJECT</span>
+                    <span>{isReviewBot ? 'GITHUB INTEGRATION' : 'FILE INGESTION + ANALYTICS'}</span>
+                  </div>
+                  <div className="renaissance-secondary-body">
+                    <div>
+                      <p className="renaissance-project-overline">{project.tagline}</p>
+                      <h3>{project.name}</h3>
+                      <p className="renaissance-project-description">{project.description}</p>
+                    </div>
+                    <ol className="renaissance-mini-flow" aria-label={`${project.name} system workflow`}>
+                      {flow.map((step, i) => <li key={step}><span>0{i+1}</span>{step}</li>)}
+                    </ol>
+                    <div className="renaissance-project-actions">
+                      {project.github && <a className="renaissance-text-project-link" href={project.github} target="_blank" rel="noreferrer">
+                        Examine Repository <GithubIcon size={16} />
+                      </a>}
+                      {project.live && <a className="renaissance-text-project-link" href={project.live} target="_blank" rel="noreferrer">
+                        Open Product <ArrowUpRight size={15} aria-hidden="true" />
+                      </a>}
+                    </div>
+                  </div>
+                  <div className="renaissance-secondary-tech" aria-label={`${project.name} technologies`}>
+                    {project.tech.map(tech => <span key={tech}>{tech}</span>)}
+                  </div>
+                </article>
+              </FadeInSection>
+            );
+          })}
         </div>
       </div>
     </section>
