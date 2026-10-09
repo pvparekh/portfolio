@@ -823,50 +823,71 @@ function ExperienceSection() {
         <div className="renaissance-company-list">
           {EXPERIENCE.map((exp, companyIndex) => (
             <FadeInSection key={exp.company} delay={companyIndex * 0.06}>
-              <article className={`renaissance-company ${exp.roles.length > 1 ? 'renaissance-company--progression' : ''}`}>
-                <div className="renaissance-company-identity">
-                  <p className="renaissance-index">0{companyIndex + 1} / EXPERIENCE</p>
-                  <div className="renaissance-company-heading">
-                    {exp.logo && (
-                      <span className="renaissance-company-logo" style={{ background: exp.logoBg ?? 'var(--bg-2)' }}>
-                        <img src={exp.logo} alt={`${exp.company} logo`}
-                          style={exp.logoScale ? { transform: `scale(${exp.logoScale})` } : undefined} />
-                      </span>
-                    )}
+              <article className="renaissance-company" aria-label={exp.company}>
+                <p className="renaissance-index">{String(companyIndex + 1).padStart(2, '0')} / EXPERIENCE</p>
+
+                <header className="renaissance-company-header">
+                  {exp.logo && (
+                    <span
+                      className={`renaissance-company-logo ${exp.company === 'DOWC' ? 'is-dowc' : ''}`}
+                      style={{ background: exp.company === 'DOWC' ? '#050508' : (exp.logoBg ?? 'var(--bg-2)') }}
+                    >
+                      <img
+                        src={exp.company === 'DOWC' ? '/dowc-logo-supplied.png' : exp.logo}
+                        alt=""
+                        loading="lazy"
+                        style={exp.logoScale ? { transform: `scale(${exp.logoScale})` } : undefined}
+                      />
+                    </span>
+                  )}
+                  <div className="renaissance-company-details">
                     {exp.companyUrl ? (
-                      <a className="renaissance-company-name" href={exp.companyUrl}
-                        target="_blank" rel="noreferrer">
+                      <a className="renaissance-company-name" href={exp.companyUrl} target="_blank" rel="noreferrer">
                         {exp.company}<ArrowUpRight size={17} aria-hidden="true" />
                       </a>
                     ) : (
                       <h3 className="renaissance-company-name">{exp.company}</h3>
                     )}
+                    <p className="renaissance-company-meta">{exp.companyPeriod}</p>
+                    {exp.location && exp.location !== 'Contract' && (
+                      <p className="renaissance-company-meta">{exp.location}</p>
+                    )}
                   </div>
-                  <p className="renaissance-company-meta">{exp.companyPeriod}</p>
-                  {exp.location && <p className="renaissance-company-meta">{exp.location}</p>}
-                </div>
+                </header>
 
-                <div className="renaissance-roles" aria-label={`${exp.company} positions`}>
-                  {exp.roles.map((role, roleIndex) => (
-                    <div className={`renaissance-role ${role.current ? 'is-current' : ''}`}
-                      key={`${exp.company}-${role.role}`}>
-                      <div className="renaissance-role-head">
-                        <div>
-                          <p className="renaissance-role-index">
-                            {exp.roles.length > 1 ? `ROLE 0${roleIndex + 1} / 0${exp.roles.length}` : 'POSITION'}
-                          </p>
-                          <h3 className="renaissance-role-title">{role.role}</h3>
-                          <p className="renaissance-role-period">{role.period}</p>
+                <div
+                  className={`renaissance-roles ${exp.roles.length > 1 ? 'renaissance-roles--nested' : 'renaissance-roles--single'}`}
+                  aria-label={`${exp.company} roles`}
+                >
+                  {exp.roles.map((role) => {
+                    const employmentType = role.role === 'Junior Data Engineer'
+                      ? 'Full-time'
+                      : role.role.includes('Intern')
+                        ? 'Internship'
+                        : exp.location === 'Contract'
+                          ? 'Contract'
+                          : null;
+                    return (
+                      <div className={`renaissance-role ${role.current ? 'is-current' : ''}`} key={`${exp.company}-${role.role}`}>
+                        <div className="renaissance-role-title-row">
+                          <h4 className="renaissance-role-title">{role.role}</h4>
+                          {role.current && (
+                            <span className="renaissance-current-marker">
+                              <span className="renaissance-current-beacon" aria-hidden="true" />
+                              CURRENT
+                            </span>
+                          )}
                         </div>
-                        {role.current && <span className="renaissance-current-marker">CURRENT</span>}
+                        {employmentType && <p className="renaissance-role-type">{employmentType}</p>}
+                        <p className="renaissance-role-period">{role.period}</p>
+                        {role.bullets && (
+                          <ul className="renaissance-role-bullets">
+                            {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
+                          </ul>
+                        )}
                       </div>
-                      {role.bullets && (
-                        <ul className="renaissance-role-bullets">
-                          {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </article>
             </FadeInSection>
