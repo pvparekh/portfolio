@@ -188,7 +188,31 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
   );
 }
 
+const sectionNav = [
+  { id: 'services', label: 'Services', mobileLabel: 'Services' },
+  { id: 'work', label: 'Work', mobileLabel: 'Selected work' },
+  { id: 'approach', label: 'Approach', mobileLabel: 'Approach' }
+];
+
 function SolutionsPage() {
+  const { scrollYProgress } = useScroll();
+  const easedScrollProgress = useSpring(scrollYProgress, { stiffness: 135, damping: 30, mass: 0.28 });
+  const reducedMotion = !!useReducedMotion();
+  const [activeSection, setActiveSection] = useState('');
+
+  useEffect(() => {
+    const sections = ['problems', 'services', 'work', 'approach', 'contact']
+      .map(id => document.getElementById(id))
+      .filter((node): node is HTMLElement => node !== null);
+    if (typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(entries => {
+      const activeEntry = entries.find(entry => entry.isIntersecting);
+      if (activeEntry) setActiveSection(activeEntry.target.id);
+    }, { rootMargin: '-22% 0px -67% 0px', threshold: 0 });
+    sections.forEach(node => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const previousTitle = document.title;
     document.title = 'Data Solutions | Parth Parekh';
@@ -212,21 +236,31 @@ function SolutionsPage() {
   }, []);
 
   return (
-    <div className="solutions">
+    <MotionConfig reducedMotion="user">
+      <div className="solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <header className="sol-header">
         <div className="sol-header-inner">
           <a className="sol-wordmark" href="/" aria-label="Parth Parekh, back to portfolio">PARTH<span>.</span><small> / DATA SOLUTIONS</small></a>
-          <nav className="sol-nav" aria-label="Solutions page">
-            <a href="#services">Services</a>
-            <a href="#work">Work</a>
-            <a href="#approach">Approach</a>
+          <nav className="sol-nav" aria-label="Data Solutions page">
+            {sectionNav.map(item => (
+              <a key={item.id} href={'#' + item.id} className={activeSection === item.id ? 'is-current' : undefined} aria-current={activeSection === item.id ? 'location' : undefined}>
+                {item.label}
+                {activeSection === item.id && <motion.span layoutId="sol-desktop-active-underline" className="sol-active-underline" transition={{ type: 'spring', stiffness: 420, damping: 38 }} />}
+              </a>
+            ))}
           </nav>
           <a className="sol-nav-cta" href="#contact">Discuss a Project <ArrowUpRight size={15} /></a>
         </div>
         <nav className="sol-mobile-nav" aria-label="Data Solutions sections">
-          <a href="#services">Services</a><a href="#work">Selected work</a><a href="#approach">Approach</a>
+          {sectionNav.map(item => (
+            <a key={item.id} href={'#' + item.id} className={activeSection === item.id ? 'is-current' : undefined} aria-current={activeSection === item.id ? 'location' : undefined}>
+              {item.mobileLabel}
+              {activeSection === item.id && <motion.span layoutId="sol-mobile-active-underline" className="sol-active-underline" transition={{ type: 'spring', stiffness: 420, damping: 38 }} />}
+            </a>
+          ))}
         </nav>
+        <motion.div className="sol-reading-progress" aria-hidden="true" style={{ scaleX: reducedMotion ? scrollYProgress : easedScrollProgress }} />
       </header>
 
       <main id="sol-main">
@@ -330,7 +364,8 @@ function SolutionsPage() {
         </section>
       </main>
       <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/"><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>
-    </div>
+      </div>
+    </MotionConfig>
   );
 }
 
