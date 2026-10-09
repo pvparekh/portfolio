@@ -10,6 +10,7 @@ import {
   Mail,
   ExternalLink,
   ArrowUpRight,
+  ChevronDown,
   Code2,
   Layers,
   Server,
