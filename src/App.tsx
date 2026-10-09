@@ -469,7 +469,7 @@ function HeroSection() {
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
           {[
             { label: 'ROLE', value: 'DATA ENGINEER' },
-            { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB (Class of '26)" },
+            { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB" },
             { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
             { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
             { label: 'STATUS', value: 'AVAILABLE' },
