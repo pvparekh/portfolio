@@ -29,7 +29,7 @@
   --bg-card: #13131C;
   --text-1: #F1F5F9;
   --text-2: #94A3B8;
-  --text-3: #4B5563;
+  --text-3: #8793A3; /* tertiary labels meet AA on both dark page surfaces */
   --border: rgba(255, 255, 255, 0.06);
 }
 
@@ -395,3 +395,34 @@ body {
 /* Fixed nav must not cover targeted portfolio sections. Solutions has
    its own more-specific scroll margins. */
 main > section[id] { scroll-margin-top: 76px; }
+
+
+/* Renaissance S1: accessible interaction defaults.
+   Keep the existing geometry, brand and persistent navigation unchanged.
+   This intentionally fixes only text/focus/motion fundamentals; visual layout
+   and individual component animation will receive rendered QA in later stages. */
+main a[href]:focus-visible,
+main button:focus-visible,
+.site-shared-nav a[href]:focus-visible,
+.site-shared-nav button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .speed-line,
+  .live-dot,
+  .cursor-blink,
+  .live-link-glow { animation: none; }
+  .project-card,
+  .btn-primary,
+  .btn-secondary,
+  .skill-chip,
+  .nav-link::after {
+    transition: none;
+  }
+  .project-card:hover,
+  .btn-primary:hover,
+  .btn-secondary:hover { transform: none; }
+}
