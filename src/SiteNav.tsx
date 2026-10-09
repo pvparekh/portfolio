@@ -42,6 +42,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   // Direct visits, keyboard activation, and touch navigation need no hover gate.
   const [solutionsDropdownReady, setSolutionsDropdownReady] = useState(page === 'solutions');
   const solutionsLinkMouseDown = useRef(false);
+  const solutionsLinkRef = useRef<HTMLAnchorElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGroup, setDesktopGroup] = useState<SitePage | null>(null);
   const [mobileGroup, setMobileGroup] = useState<SitePage | null>(null);
@@ -68,6 +69,15 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
       setDesktopGroup(current => current === 'solutions' ? null : current);
     }
   }, [solutionsDropdownReady]);
+
+  useEffect(() => {
+    // Covers the edge case where the pointer leaves while React is switching
+    // pages, before the new Solutions link has received a pointerleave event.
+    if (page === 'solutions' && !solutionsDropdownReady &&
+        !solutionsLinkRef.current?.matches(':hover')) {
+      setSolutionsDropdownReady(true);
+    }
+  }, [page, solutionsDropdownReady]);
 
   useEffect(() => {
     const onOutsidePointer = (event: PointerEvent) => {
@@ -258,14 +268,15 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           {dropdown(groups[0])}
           {page === 'solutions' && solutionsDropdownReady ? dropdown(groups[1]) : (
             <a
+              ref={solutionsLinkRef}
               href="/solutions"
               className="nav-link font-mono text-xs tracking-widest uppercase"
               style={{ color: 'var(--text-2)' }}
               onPointerDown={event => { solutionsLinkMouseDown.current = event.pointerType === 'mouse'; }}
               onPointerLeave={event => {
-                if (page === 'solutions' && event.pointerType === 'mouse') {
-                  setSolutionsDropdownReady(true);
-                }
+                if (event.pointerType !== 'mouse') return;
+                if (page === 'solutions') setSolutionsDropdownReady(true);
+                else solutionsLinkMouseDown.current = false;
               }}
               onClick={event => {
                 if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
