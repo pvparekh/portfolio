@@ -647,3 +647,85 @@
   .solutions .sol-flow-row { min-height: 218px; }
   .solutions .sol-flow-node { min-height: 159px; }
 }
+
+
+/* Contact: the address itself is the primary action, not the mailto link. */
+.solutions .sol-contact-email-block {
+  margin-top: clamp(31px, 3.3vw, 44px);
+  padding-top: 22px;
+  border-top: 1px solid rgba(245,165,36,.24);
+}
+.solutions .sol-contact-email-topline {
+  color: var(--sol-accent);
+  font: 500 10px/1.5 'JetBrains Mono',monospace;
+  letter-spacing: .13em;
+}
+.solutions .sol-contact-email-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  margin-top: 13px;
+}
+.solutions .sol-contact-email-address {
+  font: 600 clamp(23px,2.65vw,36px)/1.2 'Space Grotesk',sans-serif;
+  letter-spacing: -.047em;
+  color: #f5f7fb;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+.solutions .sol-contact-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: rgba(245,165,36,.055);
+  border: 1px solid rgba(245,165,36,.36);
+  color: #f3bb66;
+  font: 600 12px/1.35 'Space Grotesk',sans-serif;
+  transition: background .18s ease,border-color .18s ease;
+}
+.solutions .sol-contact-copy:hover {
+  background: rgba(245,165,36,.13);
+  border-color: rgba(245,165,36,.7);
+}
+.solutions .sol-contact-copy:focus-visible,
+.solutions .sol-contact-compose:focus-visible {
+  outline: 2px solid var(--sol-accent);
+  outline-offset: 4px;
+}
+.solutions .sol-contact-copy-status {
+  display: block;
+  min-height: 19px;
+  margin-top: 14px;
+  font: 400 12px/1.6 Inter,sans-serif;
+  color: #aeb9c7;
+}
+.solutions .sol-contact-compose {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 17px;
+  color: #b9c5d4;
+  font: 500 12px/1.5 'JetBrains Mono',monospace;
+  text-decoration: underline;
+  text-decoration-color: rgba(245,165,36,.35);
+  text-underline-offset: 5px;
+}
+.solutions .sol-contact-compose:hover { color: var(--sol-accent); }
+@media (max-width: 700px) {
+  .solutions .sol-contact-email-row {
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .solutions .sol-contact-email-address {
+    font-size: clamp(23px,6.4vw,31px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .solutions .sol-contact-copy { transition: none; }
+}
