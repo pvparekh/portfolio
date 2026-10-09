@@ -336,7 +336,7 @@ function SolutionsPage() {
             </div>
             <div className="sol-tooling-note">
               <span className="sol-tooling-symbol"><Layers3 size={21} strokeWidth={1.6} /></span>
-              <div><strong>Make the most of the tools you already have.</strong><p>I start with your current systems and choose the simplest practical approach. Any new subscriptions, API charges or infrastructure needs are identified when we scope the work.</p></div>
+              <div><strong>Make the most of the tools you already have.</strong><p>Whether you use spreadsheets, business apps, SQL databases or cloud storage, I start with your existing systems and choose a practical approach. Any new subscriptions, API charges or infrastructure needs are identified when we scope the work.</p></div>
               <a href="#contact" aria-label="Discuss a cost-conscious data project"><ArrowUpRight size={19}/></a>
             </div>
           </div>
