@@ -354,6 +354,13 @@ function Nav() {
             </button>
           ))}
           <a
+            href="/solutions"
+            className="nav-link font-mono text-xs tracking-widest uppercase"
+            style={{ color: 'var(--text-2)' }}
+          >
+            Solutions
+          </a>
+          <a
             href="mailto:pvparekh14@gmail.com"
             className="btn-primary font-mono text-xs tracking-widest px-4 py-2 rounded-sm font-semibold"
             style={{ background: 'var(--accent)', color: '#08080D' }}
@@ -407,6 +414,13 @@ function Nav() {
                   {l.label}
                 </button>
               ))}
+              <a
+                href="/solutions"
+                className="text-left font-mono text-xs tracking-widest uppercase"
+                style={{ color: 'var(--accent)' }}
+              >
+                Solutions
+              </a>
             </div>
           </motion.div>
         )}
