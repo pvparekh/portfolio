@@ -38,7 +38,10 @@ const groups: NavigationGroup[] = [
 /** One persistent header, shared across both routes. */
 export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const [scrolled, setScrolled] = useState(false);
-  const [pastSolutionsHero, setPastSolutionsHero] = useState(false);
+  // A mouse click into Solutions keeps its link under the pointer until exit.
+  // Direct visits, keyboard activation, and touch navigation need no hover gate.
+  const [solutionsDropdownReady, setSolutionsDropdownReady] = useState(page === 'solutions');
+  const solutionsLinkMouseDown = useRef(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGroup, setDesktopGroup] = useState<SitePage | null>(null);
   const [mobileGroup, setMobileGroup] = useState<SitePage | null>(null);
@@ -48,21 +51,11 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      // Services navigation is useful once Section 00 has passed the header.
-      // Until then Data Solutions remains a direct, one-click page link.
-      const hero = page === 'solutions' ? document.querySelector<HTMLElement>('.sol-hero') : null;
-      setPastSolutionsHero(Boolean(hero && hero.getBoundingClientRect().bottom <= 112));
-    };
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [page]);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     setDesktopGroup(null);
@@ -71,11 +64,10 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   }, [page]);
 
   useEffect(() => {
-    if (!pastSolutionsHero) {
+    if (!solutionsDropdownReady) {
       setDesktopGroup(current => current === 'solutions' ? null : current);
-      setMobileGroup(current => current === 'solutions' ? null : current);
     }
-  }, [pastSolutionsHero]);
+  }, [solutionsDropdownReady]);
 
   useEffect(() => {
     const onOutsidePointer = (event: PointerEvent) => {
@@ -264,14 +256,24 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
 
         <div className="hidden md:flex items-center gap-7 lg:gap-9" ref={desktopAreaRef}>
           {dropdown(groups[0])}
-          {page === 'solutions' && pastSolutionsHero ? dropdown(groups[1]) : (
+          {page === 'solutions' && solutionsDropdownReady ? dropdown(groups[1]) : (
             <a
               href="/solutions"
               className="nav-link font-mono text-xs tracking-widest uppercase"
               style={{ color: 'var(--text-2)' }}
+              onPointerDown={event => { solutionsLinkMouseDown.current = event.pointerType === 'mouse'; }}
+              onPointerLeave={event => {
+                if (page === 'solutions' && event.pointerType === 'mouse') {
+                  setSolutionsDropdownReady(true);
+                }
+              }}
               onClick={event => {
                 if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                 event.preventDefault();
+                // The route changes while the cursor remains over this same link.
+                // Arm the disclosure as soon as that mouse pointer leaves it.
+                if (page !== 'solutions') setSolutionsDropdownReady(!solutionsLinkMouseDown.current);
+                solutionsLinkMouseDown.current = false;
                 navigate('solutions');
               }}
             >
@@ -325,7 +327,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           >
             <div className="px-6 py-4 flex flex-col gap-4">
               {mobileDisclosure(groups[0])}
-              {page === 'solutions' && pastSolutionsHero ? mobileDisclosure(groups[1]) : (
+              {page === 'solutions' ? mobileDisclosure(groups[1]) : (
                 <a
                   href="/solutions"
                   className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
