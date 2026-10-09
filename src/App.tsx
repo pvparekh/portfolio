@@ -358,7 +358,7 @@ function Nav() {
             className="nav-link font-mono text-xs tracking-widest uppercase"
             style={{ color: 'var(--text-2)' }}
           >
-            Solutions
+            Data Solutions
           </a>
           <a
             href="mailto:pvparekh14@gmail.com"
@@ -419,7 +419,7 @@ function Nav() {
                 className="text-left font-mono text-xs tracking-widest uppercase"
                 style={{ color: 'var(--accent)' }}
               >
-                Solutions
+                Data Solutions
               </a>
             </div>
           </motion.div>
