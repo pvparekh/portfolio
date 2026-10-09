@@ -870,216 +870,72 @@ function ProjectsSection() {
 
 function ExperienceSection() {
   return (
-    <section id="experience" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-1)' }}>
-      <div className="max-w-6xl mx-auto">
+    <section id="experience" className="renaissance-experience-section" style={{ background: 'var(--bg-1)' }}>
+      <div className="renaissance-experience-wrap">
         <FadeInSection>
-          <SectionLabel label="Experience" />
-          <h2
-            className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-16 leading-[1.15] text-center"
-            style={{ color: 'var(--text-1)' }}
-          >
-            Where I've <span style={{ color: 'var(--accent)' }}>worked</span>.
-          </h2>
+          <div className="renaissance-experience-intro">
+            <SectionLabel label="Experience" />
+            <h2 className="font-display">
+              Engineering is <span>what I do.</span>
+            </h2>
+            <p>
+              From translating requirements to building production data systems.
+              A chronological record of the work, responsibilities, and progression.
+            </p>
+          </div>
         </FadeInSection>
 
-        <div className="relative max-w-3xl mx-auto">
-          {/* Company-level timeline */}
-          <div
-            className="absolute left-[11px] top-2 bottom-2 w-px"
-            style={{ background: 'var(--border)' }}
-          />
-
-          <div className="space-y-14">
-            {EXPERIENCE.map((exp, i) => {
-              const companyIsCurrent = exp.roles.some((role) => role.current);
-
-              return (
-                <FadeInSection key={exp.company} delay={i * 0.1}>
-                  <div className="flex gap-7 relative">
-                    {/* Company timeline node */}
-                    <div className="flex-shrink-0 relative z-10 mt-1.5">
-                      <div
-                        className="w-6 h-6 rounded-full border-2 flex items-center justify-center"
-                        style={{
-                          borderColor: companyIsCurrent ? 'var(--accent)' : 'var(--border)',
-                          background: companyIsCurrent
-                            ? 'rgba(245,158,11,0.1)'
-                            : 'var(--bg-0)',
-                        }}
-                      >
-                        {companyIsCurrent && (
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{ background: 'var(--accent)' }}
-                          />
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      {/* Company identity */}
-                      <div className="mb-5">
-                        <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                          {exp.logo && (
-                            <span
-                              className="inline-flex items-center justify-center w-8 h-8 rounded-md border flex-shrink-0 p-1"
-                              style={{
-                                borderColor: 'var(--border)',
-                                background: exp.logoBg ?? 'var(--bg-2)',
-                              }}
-                            >
-                              <img
-                                src={exp.logo}
-                                alt={`${exp.company} logo`}
-                                className="max-w-full max-h-full object-contain"
-                                style={
-                                  exp.logoScale
-                                    ? { transform: `scale(${exp.logoScale})` }
-                                    : undefined
-                                }
-                              />
-                            </span>
-                          )}
-
-                          {exp.companyUrl ? (
-                            <a
-                              href={exp.companyUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="font-display font-bold text-2xl flex items-center gap-1 transition-colors duration-200"
-                              style={{ color: 'var(--text-1)' }}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.color = 'var(--accent)')
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.color = 'var(--text-1)')
-                              }
-                            >
-                              {exp.company}
-                              <ArrowUpRight size={15} />
-                            </a>
-                          ) : (
-                            <span
-                              className="font-display font-bold text-2xl"
-                              style={{ color: 'var(--text-1)' }}
-                            >
-                              {exp.company}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex flex-wrap gap-x-3 gap-y-1 items-center pl-0 sm:pl-[42px]">
-                          <span className="font-mono text-xs" style={{ color: '#6B7280' }}>
-                            {exp.companyPeriod}
-                          </span>
-                          {exp.location && (
-                            <span
-                              className="font-mono text-xs flex items-center gap-1"
-                              style={{ color: '#6B7280' }}
-                            >
-                              <span style={{ opacity: 0.6 }}>•</span>
-                              {exp.location}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Role-level timeline inside the company */}
-                      <div className="relative ml-1 sm:ml-4 pl-7">
-                        {exp.roles.length > 1 && (
-                          <div
-                            className="absolute left-[5px] top-2 bottom-2 w-px"
-                            style={{ background: 'var(--border)' }}
-                          />
-                        )}
-
-                        <div className="space-y-8">
-                          {exp.roles.map((role, roleIndex) => (
-                            <div key={`${exp.company}-${role.role}`} className="relative">
-                              {/* Role node / connector */}
-                              <div
-                                className="absolute -left-7 top-[7px] w-3 h-3 rounded-full border-2 z-10"
-                                style={{
-                                  borderColor: role.current
-                                    ? 'var(--accent)'
-                                    : 'var(--border)',
-                                  background: role.current
-                                    ? 'var(--accent)'
-                                    : 'var(--bg-1)',
-                                  boxShadow: role.current
-                                    ? '0 0 0 4px rgba(245,158,11,0.08)'
-                                    : 'none',
-                                }}
-                              />
-
-                              <div className="flex flex-wrap items-center gap-2 mb-1">
-                                <h3
-                                  className="font-display font-semibold text-lg"
-                                  style={{
-                                    color: role.current
-                                      ? 'var(--text-1)'
-                                      : 'var(--text-1)',
-                                  }}
-                                >
-                                  {role.role}
-                                </h3>
-
-                                {role.current && (
-                                  <span
-                                    className="font-mono text-[10px] tracking-wider px-2 py-0.5 rounded-sm border"
-                                    style={{
-                                      borderColor: 'rgba(34,197,94,0.3)',
-                                      color: '#22C55E',
-                                      background: 'rgba(34,197,94,0.08)',
-                                    }}
-                                  >
-                                    CURRENT
-                                  </span>
-                                )}
-                              </div>
-
-                              <div className="font-mono text-xs mb-3" style={{ color: '#6B7280' }}>
-                                {role.period}
-                              </div>
-
-                              {role.bullets && (
-                                <ul className="space-y-2 mt-3">
-                                  {role.bullets.map((bullet) => (
-                                    <li
-                                      key={bullet}
-                                      className="text-sm leading-relaxed flex gap-2.5"
-                                      style={{ color: 'var(--text-2)' }}
-                                    >
-                                      <span
-                                        className="mt-[0.65em] w-1 h-1 rounded-full flex-shrink-0"
-                                        style={{ background: 'var(--accent)', opacity: 0.8 }}
-                                      />
-                                      <span>{bullet}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-
-                              {/* Subtle separator between roles, not after the last one */}
-                              {roleIndex < exp.roles.length - 1 && (
-                                <div
-                                  className="mt-7 h-px w-full"
-                                  style={{
-                                    background:
-                                      'linear-gradient(90deg, var(--border), transparent)',
-                                  }}
-                                />
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+        <div className="renaissance-company-list">
+          {EXPERIENCE.map((exp, companyIndex) => (
+            <FadeInSection key={exp.company} delay={companyIndex * 0.06}>
+              <article className="renaissance-company">
+                <div className="renaissance-company-identity">
+                  <p className="renaissance-index">0{companyIndex + 1} / EXPERIENCE</p>
+                  <div className="renaissance-company-heading">
+                    {exp.logo && (
+                      <span className="renaissance-company-logo" style={{ background: exp.logoBg ?? 'var(--bg-2)' }}>
+                        <img src={exp.logo} alt={`${exp.company} logo`}
+                          style={exp.logoScale ? { transform: `scale(${exp.logoScale})` } : undefined} />
+                      </span>
+                    )}
+                    {exp.companyUrl ? (
+                      <a className="renaissance-company-name" href={exp.companyUrl}
+                        target="_blank" rel="noreferrer">
+                        {exp.company}<ArrowUpRight size={17} aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <h3 className="renaissance-company-name">{exp.company}</h3>
+                    )}
                   </div>
-                </FadeInSection>
-              );
-            })}
-          </div>
+                  <p className="renaissance-company-meta">{exp.companyPeriod}</p>
+                  {exp.location && <p className="renaissance-company-meta">{exp.location}</p>}
+                </div>
+
+                <div className="renaissance-roles" aria-label={`${exp.company} positions`}>
+                  {exp.roles.map((role, roleIndex) => (
+                    <div className={`renaissance-role ${role.current ? 'is-current' : ''}`}
+                      key={`${exp.company}-${role.role}`}>
+                      <div className="renaissance-role-head">
+                        <div>
+                          <p className="renaissance-role-index">
+                            {exp.roles.length > 1 ? `ROLE 0${exp.roles.length - roleIndex} / 0${exp.roles.length}` : 'POSITION'}
+                          </p>
+                          <h3 className="renaissance-role-title">{role.role}</h3>
+                        </div>
+                        {role.current && <span className="renaissance-current-marker">CURRENT</span>}
+                      </div>
+                      <p className="renaissance-role-period">{role.period}</p>
+                      {role.bullets && (
+                        <ul className="renaissance-role-bullets">
+                          {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </article>
+            </FadeInSection>
+          ))}
         </div>
       </div>
     </section>
