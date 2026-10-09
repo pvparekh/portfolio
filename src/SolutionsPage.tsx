@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { motion, MotionConfig, useInView, useReducedMotion, useScroll, useSpring } from 'framer-motion';
 import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
 import './solutions.css';
@@ -94,7 +95,7 @@ function ArchitectureGraphic() {
         </div>
       </div>
       <div className="sol-flow-footer">
-        <span className="sol-state"><span className="sol-status-dot" />DESIGNED TO BE REPEATABLE</span>
+        <span className="sol-state">DESIGNED TO BE REPEATABLE</span>
         <span>REAL SYSTEMS, NOT ONE-OFF SCRIPTS</span>
       </div>
     </div>
@@ -134,7 +135,7 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
           <div>
             <h4>Reliability and validation</h4>
             <ul>{study.validation.map((point) => <li key={point}><CheckCircle2 size={16} />{point}</li>)}</ul>
-            <p className="sol-deep-foot"><strong>My contribution:</strong> {study.contribution}</p>
+            <div className="sol-deep-foot"><span>MY CONTRIBUTION</span><p>{study.contribution}</p></div>
             {study.docsUrl && <a className="sol-text-link" href={study.docsUrl} target="_blank" rel="noreferrer">Read the full engineering overview <ArrowUpRight size={15} /></a>}
           </div>
         </div>
@@ -150,7 +151,7 @@ function SolutionsPage() {
     document.title = 'Data Solutions | Parth Parekh';
     const values: Array<[string, string, string]> = [
       ['name', 'description', 'Data pipelines, reporting automation, SQL modernization and system integrations built around the way your business works.'],
-      ['property', 'og:title', 'Data Engineering Solutions | Parth Parekh'],
+      ['property', 'og:title', 'Data Solutions | Parth Parekh'],
       ['property', 'og:description', 'Manual reporting, disconnected systems and fragile pipelines. I build focused, reliable solutions.'],
       ['property', 'og:url', 'https://parthparekh.dev/solutions']
     ];
@@ -191,7 +192,7 @@ function SolutionsPage() {
             <div className="sol-hero-copy">
               <div className="sol-topline"><span className="sol-status-dot" /> DATA SOLUTIONS / PARTH PAREKH</div>
               <h1 id="sol-hero-title">From manual data work to <em>reliable systems.</em></h1>
-              <p className="sol-hero-sub">I build data pipelines, integrations and reporting automations that help teams spend less time moving data and more time using it.</p>
+              <p className="sol-hero-sub">As a data engineer and a Computer Science graduate with a Data Science minor, I build data pipelines, integrations and reporting automations that help teams spend less time moving data and more time using it.</p>
               <div className="sol-actions">
                 <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
                 <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
@@ -276,7 +277,7 @@ function SolutionsPage() {
               <a className="sol-direct-email" href={'mailto:' + email}>{email} <ArrowUpRight size={15} /></a>
             </div>
             <aside className="sol-contact-panel">
-              <p className="sol-contact-panel-title"><span className="sol-status-dot" /> A GOOD FIRST MESSAGE</p>
+              <p className="sol-contact-panel-title">A GOOD FIRST MESSAGE</p>
               <div><span>01</span><p>What your team does manually today</p></div>
               <div><span>02</span><p>The applications, files or databases involved</p></div>
               <div><span>03</span><p>What success looks like and any timing constraints</p></div>
@@ -285,7 +286,7 @@ function SolutionsPage() {
           </div>
         </section>
       </main>
-      <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/"><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><a href="https://github.com/pvparekh" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={13}/></a></div></footer>
+      <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/"><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>
     </div>
   );
 }
