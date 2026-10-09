@@ -282,7 +282,7 @@ function SolutionsPage() {
             <div className="sol-hero-copy">
               <div className="sol-topline"><span className="sol-status-dot" /> 00 / DATA SOLUTIONS / PARTH PAREKH</div>
               <h1 id="sol-hero-title">From manual data work to <em>reliable systems.</em></h1>
-              <p className="sol-hero-sub">As a data engineer and a Computer Science graduate with a Data Science minor, I build data pipelines, integrations and reporting automations that help teams spend less time moving data and more time using it.</p>
+              <p className="sol-hero-sub">As a Data Engineer with a background in computer science and data science from Rutgers University, I build data pipelines, integrations, and reporting automations that help teams spend less time moving data and more time using it.</p>
               <div className="sol-actions">
                 <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
                 <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
