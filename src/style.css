@@ -338,3 +338,60 @@ body {
   transform-origin: left center;
   pointer-events: none;
 }
+
+/* Navigable group labels + separate disclosure controls.
+   Hover opens the same menu; click on the label follows the destination. */
+.site-shared-nav .portfolio-nav-dropdown { gap: 5px; }
+.site-shared-nav .portfolio-nav-destination {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 0;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.site-shared-nav .portfolio-nav-dropdown:hover .portfolio-nav-destination,
+.site-shared-nav .portfolio-nav-dropdown:focus-within .portfolio-nav-destination {
+  color: var(--accent) !important;
+}
+.site-shared-nav .portfolio-nav-chevron-button {
+  flex: 0 0 auto;
+  min-width: 28px;
+  min-height: 40px;
+  padding: 8px 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+}
+.site-shared-nav .portfolio-nav-chevron-button:hover,
+.site-shared-nav .portfolio-nav-chevron-button[aria-expanded="true"] { color: var(--accent); }
+.site-shared-nav .portfolio-nav-chevron-button:focus-visible,
+.site-shared-nav .portfolio-nav-destination:focus-visible,
+.site-shared-nav .portfolio-mobile-destination:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.site-shared-nav .portfolio-mobile-disclosure-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.site-shared-nav .portfolio-mobile-destination {
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-height: 44px;
+  color: var(--text-2);
+  text-decoration: none;
+}
+.site-shared-nav .portfolio-mobile-destination:hover { color: var(--accent); }
+.site-shared-nav .portfolio-mobile-trigger {
+  flex: 0 0 44px;
+  width: 44px;
+  min-height: 44px;
+  justify-content: center;
+  color: var(--text-2);
+}
+/* Fixed nav must not cover targeted portfolio sections. Solutions has
+   its own more-specific scroll margins. */
+main > section[id] { scroll-margin-top: 76px; }
