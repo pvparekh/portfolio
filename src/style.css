@@ -463,7 +463,7 @@ main button:focus-visible,
 }
 .renaissance-company {
   border-top: 1px solid rgba(255,255,255,.125);
-  padding: clamp(31px,4.5vw,49px) 0 clamp(45px,6vw,68px);
+  padding: clamp(25px,3.4vw,36px) 0 clamp(29px,3.8vw,43px);
 }
 .renaissance-company-list > div:last-child .renaissance-company {
   border-bottom: 1px solid rgba(255,255,255,.125);
@@ -472,7 +472,7 @@ main button:focus-visible,
   color: var(--accent);
   font: 500 10px/1.5 'JetBrains Mono',monospace;
   letter-spacing: .13em;
-  margin-bottom: 22px;
+  margin-bottom: 17px;
 }
 .renaissance-company-header {
   display: flex;
@@ -531,15 +531,15 @@ a.renaissance-company-name:hover { color: var(--accent); }
   position: relative;
   margin-left: 35px;
   padding-left: 59px;
-  margin-top: 27px;
+  margin-top: 21px;
 }
 .renaissance-role {
   min-width: 0;
   position: relative;
 }
 .renaissance-roles--nested .renaissance-role:not(:last-child) {
-  margin-bottom: 37px;
-  padding-bottom: 32px;
+  margin-bottom: 20px;
+  padding-bottom: 21px;
   border-bottom: 1px solid rgba(255,255,255,.085);
 }
 /* Connecting stroke is attached to the previous role, so it finishes at
@@ -548,7 +548,7 @@ a.renaissance-company-name:hover { color: var(--accent); }
   content: '';
   position: absolute;
   top: 18px;
-  bottom: -43px;
+  bottom: -26px;
   left: -59px;
   width: 1px;
   background: linear-gradient(to bottom,rgba(74,222,128,.38),rgba(255,255,255,.19));
@@ -587,7 +587,6 @@ a.renaissance-company-name:hover { color: var(--accent); }
 .renaissance-current-marker {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
   flex: 0 0 auto;
   padding: 5px 9px;
   border-radius: 4px;
@@ -598,23 +597,6 @@ a.renaissance-company-name:hover { color: var(--accent); }
   letter-spacing: .10em;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
 }
-.renaissance-current-beacon {
-  position: relative;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px rgba(74,222,128,.72);
-  flex: 0 0 6px;
-}
-.renaissance-current-beacon::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border: 1px solid rgba(74,222,128,.52);
-  border-radius: 50%;
-  animation: renaissance-current-wave 2.5s ease-out infinite;
-}
 @keyframes renaissance-timeline-beacon {
   0%,100% {
     box-shadow: 0 0 0 4px rgba(74,222,128,.11),0 0 9px rgba(74,222,128,.33);
@@ -622,10 +604,6 @@ a.renaissance-company-name:hover { color: var(--accent); }
   48% {
     box-shadow: 0 0 0 7px rgba(74,222,128,.18),0 0 21px rgba(74,222,128,.76);
   }
-}
-@keyframes renaissance-current-wave {
-  0%,100% { transform: scale(.65); opacity: .32; }
-  48% { transform: scale(1.3); opacity: 1; }
 }
 .renaissance-role-type {
   margin-top: 6px;
@@ -663,7 +641,7 @@ a.renaissance-company-name:hover { color: var(--accent); }
 }
 @media (max-width: 650px) {
   .renaissance-experience-intro { margin-bottom: 50px; }
-  .renaissance-company { padding: 29px 0 45px; }
+  .renaissance-company { padding: 23px 0 34px; }
   .renaissance-company-logo { width: 60px; height: 60px; flex-basis: 60px; padding: 8px; }
   .renaissance-company-logo.is-dowc { padding: 5px; }
   .renaissance-company-header { gap: 14px; }
@@ -684,8 +662,7 @@ a.renaissance-company-name:hover { color: var(--accent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .renaissance-company-name { transition: none; }
-  .renaissance-roles--nested .renaissance-role.is-current::before,
-  .renaissance-current-beacon::after { animation: none; }
+  .renaissance-roles--nested .renaissance-role.is-current::before { animation: none; }
 }
 
 /* Stage 3 — content-specific technical project storytelling.
@@ -869,4 +846,37 @@ a.renaissance-company-name:hover { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .renaissance-primary-project-link,.renaissance-text-project-link { transition: none; }
   .renaissance-primary-project-link:hover { transform: none; }
+}
+
+/* Secondary contact action: no border, no button surface, visually subordinate. */
+.renaissance-solutions-text-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(245,158,11,.4);
+  border-radius: 0;
+  padding: 8px 1px 9px;
+  color: var(--accent);
+  font: 600 13px/1.35 'Space Grotesk',system-ui,sans-serif;
+  letter-spacing: .015em;
+  transition: border-color .2s ease, color .2s ease;
+}
+.renaissance-solutions-text-link:hover {
+  color: #ffb335;
+  border-bottom-color: #ffb335;
+}
+.renaissance-solutions-text-link svg {
+  transition: transform .2s ease;
+}
+.renaissance-solutions-text-link:hover svg {
+  transform: translate(2px,-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .renaissance-solutions-text-link,
+  .renaissance-solutions-text-link svg { transition: none; }
+  .renaissance-solutions-text-link:hover svg { transform: none; }
 }

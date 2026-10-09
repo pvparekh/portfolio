@@ -114,7 +114,7 @@ function PortfolioSite() {
       {page === 'solutions' ? (
         <SolutionsPage onBackToPortfolio={() => navigate('portfolio')} />
       ) : (
-        <App />
+        <App onNavigateSolutions={() => navigate('solutions')} />
       )}
     </>
   );

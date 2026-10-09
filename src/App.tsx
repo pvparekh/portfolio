@@ -103,7 +103,8 @@ const EXPERIENCE = [
         period: 'Sept 2026 – Present',
         current: true,
         bullets: [
-          'Building and maintaining production data pipelines and platform workflows across Python, SQL, PostgreSQL, Snowflake, and Apache Airflow.',
+          'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
+          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh (~1.8 GB / ~1.65M rows per day) using Apache Airflow, Selenium, SFTP, automated archival, source validation, and transactional full-refresh loading.',
         ],
       },
       {
@@ -111,10 +112,11 @@ const EXPERIENCE = [
         period: 'June 2026 – Sept 2026',
         current: false,
         bullets: [
-          'Engineered and maintained production ETL/ELT pipelines across SFTP, PostgreSQL, SQL Server, and Apache Airflow for recurring ingestion, validation, transformation, and reporting workflows.',
-          'Designed and deployed an automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual workflow with hourly, idempotent processing.',
-          'Reverse-engineered complex Power BI DAX into validated SQL for a NetSuite accounting integration, decomposing 15+ production reports and 100+ measures.',
-          'Audited four production Airflow DAGs and developed a 400+ line config-driven SFTP-to-PostgreSQL framework that standardized loading, metadata, archiving, connection handling, and retries.',
+          'Reverse-engineered and translated complex, nested Power BI DAX logic into validated SQL for NetSuite accounting integration, decomposing 15+ production reports and 100+ measures; reproduced filter-context, cancellation, reinstatement, and transaction-reconstruction logic and validated outputs against production Power BI results.',
+          'Designed and deployed a fully automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual reporting workflow with hourly, idempotent processing; built ~600 lines of dynamic Excel extraction, standardization, region mapping, and duplicate-prevention logic.',
+          'Automated manual Tableau reporting workflows using Selenium, enabling reports to be programmatically downloaded and routed into downstream data-processing/database workflows; also developed additional process automations using Power Automate.',
+          'Audited four production Apache Airflow DAGs and developed a 400+ line config-driven reusable SFTP-to-PostgreSQL ETL framework, standardizing loading, metadata, archiving, connection handling, and pipeline structure while improving maintainability, observability, and retry safety.',
+          'Contributed to the organization’s broader data platform modernization, including the transition from transactional PostgreSQL reporting toward Snowflake and the evolution of Airflow-based orchestration and development infrastructure.',
         ],
       },
     ],
@@ -171,7 +173,7 @@ const SKILLS = [
     sector: '02',
     label: 'Data Engineering',
     Icon: Database,
-    skills: ['Apache Airflow', 'Snowflake', 'PostgreSQL', 'SQL Server', 'ETL / ELT', 'SFTP'],
+    skills: ['Apache Airflow', 'Snowflake', 'PostgreSQL', 'SQL Server', 'ETL / ELT', 'SFTP', 'Selenium', 'Power Automate', 'Tableau', 'Power BI / DAX'],
   },
   {
     sector: '03',
@@ -383,7 +385,7 @@ function HeroSection() {
             className="font-mono text-xs tracking-[0.3em] uppercase"
             style={{ color: 'var(--accent)' }}
           >
-            Data Engineer · Actively Building
+            Actively Building
           </span>
           <span
             className="w-1.5 h-1.5 rounded-full live-dot"
@@ -461,20 +463,21 @@ function HeroSection() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.9, duration: 0.7, ease }}
-        className="absolute bottom-0 left-0 right-0 border-t font-mono text-[10px] lg:text-[11px] xl:text-xs overflow-x-auto"
+        className="absolute bottom-0 left-0 right-0 border-t font-mono text-[10px] lg:text-[10px] 2xl:text-xs overflow-x-auto"
         style={{ borderColor: 'var(--border)' }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
           {[
             { label: 'ROLE', value: 'DATA ENGINEER' },
-            { label: 'EDUCATION', value: "CS + DS AT RUTGERS (CLASS OF '26)" },
+            { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB (Class of '26)" },
             { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
             { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
+            { label: 'STATUS', value: 'AVAILABLE' },
           ].map((item) => (
             <div key={item.label} className="flex shrink-0 items-center gap-1.5 lg:gap-2 whitespace-nowrap">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
               <span className="h-px w-2 lg:w-3 shrink-0" style={{ background: 'var(--border)' }} />
-              <span style={{ color: 'var(--text-2)' }}>
+              <span style={{ color: item.label === 'STATUS' ? '#22C55E' : 'var(--text-2)' }}>
                 {item.value}
               </span>
             </div>
@@ -804,7 +807,54 @@ function ProjectsSection() {
    EXPERIENCE
 ───────────────────────────────────────────────────────────── */
 
+
+/* Calendar-month tenure: Jun-Sep is four inclusive months; Sep-Present
+   becomes three months on November 1, regardless of browser reload. */
+const EXPERIENCE_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
+
+function formatExperienceTenure(period: string, today: Date): string {
+  const match = /^([A-Za-z]+)\s+(\d{4})\s*[–-]\s*([A-Za-z]+)(?:\s+(\d{4}))?$/.exec(period.trim());
+  if (!match) return period;
+  const [, startName, startYearText, endName, endYearText] = match;
+  const monthIndex = (name: string) => EXPERIENCE_MONTHS.findIndex(month => month.toLowerCase() === name.slice(0, 3).toLowerCase());
+  const startMonth = monthIndex(startName);
+  const present = endName.toLowerCase() === 'present';
+  const endMonth = present ? today.getMonth() : monthIndex(endName);
+  if (startMonth < 0 || endMonth < 0) return period;
+  const startYear = Number(startYearText);
+  const endYear = present ? today.getFullYear() : Number(endYearText);
+  if (!Number.isInteger(startYear) || !Number.isInteger(endYear)) return period;
+  const total = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+  if (total <= 0) return period;
+  const years = Math.floor(total / 12);
+  const months = total % 12;
+  const duration = years > 0
+    ? [years === 1 ? '1 yr' : `${years} yrs`, ...(months ? [months === 1 ? '1 mo' : `${months} mos`] : [])].join(' ')
+    : total === 1 ? '1 mo' : `${total} mos`;
+  return `${EXPERIENCE_MONTHS[startMonth]} ${startYear} - ${present ? 'Present' : `${EXPERIENCE_MONTHS[endMonth]} ${endYear}`} · ${duration}`;
+}
+
 function ExperienceSection() {
+  const [asOf, setAsOf] = useState(() => new Date());
+
+  // Refresh while the tab stays open; finished roles keep their fixed end date.
+  useEffect(() => {
+    const checkDate = () => {
+      const now = new Date();
+      setAsOf(previous =>
+        previous.getFullYear() === now.getFullYear() && previous.getMonth() === now.getMonth()
+          ? previous
+          : now
+      );
+    };
+    const interval = window.setInterval(checkDate, 60_000);
+    document.addEventListener('visibilitychange', checkDate);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', checkDate);
+    };
+  }, []);
+
   return (
     <section id="experience" className="renaissance-experience-section" style={{ background: 'var(--bg-1)' }}>
       <div className="renaissance-experience-wrap">
@@ -850,10 +900,14 @@ function ExperienceSection() {
                         <span className="renaissance-company-name">{exp.company}</span>
                       )}
                     </h3>
-                    <p className="renaissance-company-meta">{exp.companyPeriod}</p>
-                    {exp.location && exp.location !== 'Contract' && (
-                      <p className="renaissance-company-meta">{exp.location}</p>
-                    )}
+                    <p className="renaissance-company-meta">{formatExperienceTenure(exp.companyPeriod, asOf)}</p>
+                    <p className="renaissance-company-meta">
+                      {exp.company === 'DOWC'
+                        ? <>Parsippany, NJ <span aria-hidden="true">·</span> On-site</>
+                        : exp.company === 'Perfect Threading Salon'
+                          ? 'Async'
+                          : exp.location}
+                    </p>
                   </div>
                 </header>
 
@@ -874,14 +928,11 @@ function ExperienceSection() {
                         <div className="renaissance-role-title-row">
                           <h4 className="renaissance-role-title">{role.role}</h4>
                           {role.current && (
-                            <span className="renaissance-current-marker">
-                              <span className="renaissance-current-beacon" aria-hidden="true" />
-                              CURRENT
-                            </span>
+                            <span className="renaissance-current-marker">CURRENT</span>
                           )}
                         </div>
                         {employmentType && <p className="renaissance-role-type">{employmentType}</p>}
-                        <p className="renaissance-role-period">{role.period}</p>
+                        <p className="renaissance-role-period">{formatExperienceTenure(role.period, asOf)}</p>
                         {role.bullets && (
                           <ul className="renaissance-role-bullets">
                             {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
@@ -976,7 +1027,7 @@ function SkillsSection() {
    CONTACT
 ───────────────────────────────────────────────────────────── */
 
-function ContactSection() {
+function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
   return (
     <section
       id="contact"
@@ -1016,6 +1067,11 @@ function ContactSection() {
               Open to full-time roles, interesting contracts, or a conversation about
               building something new.
             </p>
+            <div className="flex justify-center -mt-8 mb-11">
+              <button type="button" onClick={onNavigateSolutions} className="renaissance-solutions-text-link">
+                Explore Data Solutions <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
+              </button>
+            </div>
           </FadeInSection>
 
           <FadeInSection delay={0.3}>
@@ -1110,7 +1166,7 @@ function Footer() {
    ROOT
 ───────────────────────────────────────────────────────────── */
 
-export default function App() {
+export default function App({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
   return (
     <>
       <main>
@@ -1119,7 +1175,7 @@ export default function App() {
         <ExperienceSection />
         <ProjectsSection />
         <SkillsSection />
-        <ContactSection />
+        <ContactSection onNavigateSolutions={onNavigateSolutions} />
       </main>
       <Footer />
     </>

@@ -1,4 +1,4 @@
-# 08 — Protected experience copy baseline (user-authorized 2026-10-09 update)
+# 08 — Protected experience copy baseline
 
 Source: pvparekh/portfolio/src/App.tsx at `feat/solutions-client-acquisition`, commit `01e6f9510952776fcf1a39266270b686a5c224a4`, blob SHA `4f455e3278c53d4911c9b805826e212bd13f221b`.
 
@@ -20,8 +20,7 @@ const EXPERIENCE = [
         period: 'Sept 2026 – Present',
         current: true,
         bullets: [
-          'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
-          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh (~1.8 GB / ~1.65M rows per day) using Apache Airflow, Selenium, SFTP, automated archival, source validation, and transactional full-refresh loading.',
+          'Building and maintaining production data pipelines and platform workflows across Python, SQL, PostgreSQL, Snowflake, and Apache Airflow.',
         ],
       },
       {
@@ -29,11 +28,10 @@ const EXPERIENCE = [
         period: 'June 2026 – Sept 2026',
         current: false,
         bullets: [
-          'Reverse-engineered and translated complex, nested Power BI DAX logic into validated SQL for NetSuite accounting integration, decomposing 15+ production reports and 100+ measures; reproduced filter-context, cancellation, reinstatement, and transaction-reconstruction logic and validated outputs against production Power BI results.',
-          'Designed and deployed a fully automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual reporting workflow with hourly, idempotent processing; built ~600 lines of dynamic Excel extraction, standardization, region mapping, and duplicate-prevention logic.',
-          'Automated manual Tableau reporting workflows using Selenium, enabling reports to be programmatically downloaded and routed into downstream data-processing/database workflows; also developed additional process automations using Power Automate.',
-          'Audited four production Apache Airflow DAGs and developed a 400+ line config-driven reusable SFTP-to-PostgreSQL ETL framework, standardizing loading, metadata, archiving, connection handling, and pipeline structure while improving maintainability, observability, and retry safety.',
-          'Contributed to the organization’s broader data platform modernization, including the transition from transactional PostgreSQL reporting toward Snowflake and the evolution of Airflow-based orchestration and development infrastructure.',
+          'Engineered and maintained production ETL/ELT pipelines across SFTP, PostgreSQL, SQL Server, and Apache Airflow for recurring ingestion, validation, transformation, and reporting workflows.',
+          'Designed and deployed an automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual workflow with hourly, idempotent processing.',
+          'Reverse-engineered complex Power BI DAX into validated SQL for a NetSuite accounting integration, decomposing 15+ production reports and 100+ measures.',
+          'Audited four production Airflow DAGs and developed a 400+ line config-driven SFTP-to-PostgreSQL framework that standardized loading, metadata, archiving, connection handling, and retries.',
         ],
       },
     ],
@@ -78,10 +76,7 @@ const EXPERIENCE = [
     ],
   },
 ];
+
 ```
 
 **Baseline check:** current App.tsx starts at `const EXPERIENCE = [` and ends immediately before `const SKILLS = [`. No content edits were made during this research commit.
-
-
-## Explicitly approved revision, 2026-10-09
-The user directly requested replacement of **only** the Junior Data Engineer and Data Analytics Intern bullet arrays with the supplied copy. All other employer details and source strings remain unchanged. The exact original snapshot is archived as `08-original-experience-snapshot.md`. This file is the **current approved content baseline** enforced by the build guard. These production figures are user-reported and should not be represented as independently verified or employer-approved for external sharing.
