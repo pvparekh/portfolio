@@ -70,3 +70,23 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 
 **Validated READY preview for this implementation:** https://portfolio-9x1jvzf66-pvparekhs-projects.vercel.app/ (commit 2f2a1fde0b8529a8ee0c145a3d8f58693ab3da0d; subsequent documentation commits have no runtime changes).
 **Research for this refinement:** docs/portfolio-renaissance/10-refinement-research-2026-10-09.md.
+
+
+## Follow-up: company-first nested experience design (2026-10-09)
+
+**Scope:** Experience section only. Existing navbar, About, Projects and protected employer content untouched.
+
+- [x] DOWC now has the supplied white wordmark in a dedicated square dark company logo tile, cropped from the user's provided raster and stored at `public/dowc-logo-supplied.png`; the original baseline logo path remains unchanged.
+- [x] All companies display the 01/02/03 EXPERIENCE index and company header above associated roles.
+- [x] DOWC roles are vertically nested with a connecting rail and role nodes, in newest-first order, without role numbers.
+- [x] Single-role employers have no contrived timeline or POSITION labels.
+- [x] Job titles, employment type and dates stack in order, with an inline, compact green CURRENT badge attached to Junior Data Engineer.
+- [x] The current-role rail node and badge beacon have animated glow/pulse; `prefers-reduced-motion` makes them static.
+- [x] Profession descriptions and every literal `EXPERIENCE` entry match the protected baseline exactly. Inline display-only type labels are inferred from established job information.
+- [x] Company names use semantic level-three headings, with role titles in level-four headings.
+- [x] Vercel reported READY on preview build `66501beeea35ba54668fdfe4ceea42d6e99d9e2b` after the new JSX and CSS.
+- [ ] Rendered desktop/mobile screenshots, precise animation appearance, and full keyboard/screen-reader testing remain unverified in this tool environment.
+
+Design: single-column information hierarchy with company logo/name and tenure at the parent level, role titles and accomplishments underneath, a timeline limited to multi-role companies. Replaces the previous two-column and later role-grid alternatives entirely.
+
+No production deployment or merge authorized.
