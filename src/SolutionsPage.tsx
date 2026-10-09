@@ -128,28 +128,19 @@ function ArchitectureGraphic() {
       </div>
       <div className="sol-flow-footer">
         <span className="sol-state">DESIGNED TO BE REPEATABLE</span>
-        <span>REAL SYSTEMS, NOT ONE-OFF SCRIPTS</span>
+        <span>REAL SYSTEMS</span>
       </div>
     </div>
   );
 }
 
 function EngagementProcess() {
-  const processRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = !!useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: processRef, offset: ['start 90%', 'end 25%'] });
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 130, damping: 28, mass: 0.3 });
-
   return (
-    <div className="sol-process" ref={processRef}>
-      <motion.span
-        aria-hidden="true"
-        className="sol-process-track"
-        style={{ scaleX: reducedMotion ? scrollYProgress : smoothProgress }}
-      />
-      {process.map(([number, name, summary]) => (
+    <div className="sol-process">
+      {process.map(([number, name, summary], index) => (
         <div className="sol-process-step" key={number}>
-          <span>{number}</span>
+          <span className="sol-process-number">{number}</span>
+          {index < process.length - 1 && <ChevronRight className="sol-process-next" size={19} strokeWidth={1.5} aria-hidden="true" />}
           <h3>{name}</h3>
           <p>{summary}</p>
         </div>
@@ -280,7 +271,7 @@ function SolutionsPage() {
         <section className="sol-hero" aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
             <div className="sol-hero-copy">
-              <div className="sol-topline"><span className="sol-status-dot" /> 00 / DATA SOLUTIONS / PARTH PAREKH</div>
+              <div className="sol-topline"><span className="sol-status-dot" /> DATA SOLUTIONS / PARTH PAREKH</div>
               <h1 id="sol-hero-title">From manual data work to <em>reliable systems.</em></h1>
               <p className="sol-hero-sub">As a Data Engineer with a background in Computer Science and Data Science from Rutgers University, I build data pipelines, integrations, and reporting automations that help teams spend less time moving data and more time using it.</p>
               <div className="sol-actions">
