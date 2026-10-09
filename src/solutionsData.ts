@@ -42,7 +42,7 @@ export const caseStudies: PublicCaseStudy[] = [
       'Source timing defines order and gaps; position telemetry supplies spatial presentation.',
       'Manifest hashes and object read-back validation guard publication.',
       'Difficult race conditions are handled through explicit validation and quarantine.',
-      'A benchmarked JSON chunk-delivery contract avoids an unnecessary browser codec.'
+      'Benchmarked JSON delivery avoided an extra browser codec.'
     ],
     stack: ['Python', 'Parquet', 'Data validation', 'Cloudflare R2', 'React', 'TypeScript'],
     liveUrl: 'https://formulavision.vercel.app',
