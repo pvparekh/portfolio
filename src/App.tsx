@@ -4,6 +4,7 @@ import {
   useScroll,
   useTransform,
   useInView,
+  useReducedMotion,
   AnimatePresence,
   type Variants,
 } from 'framer-motion';
@@ -293,6 +294,7 @@ function SectionLabel({ label }: { label: string }) {
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const reduceNavMotion = useReducedMotion();
   const [portfolioOpen, setPortfolioOpen] = useState(false);
   const [mobilePortfolioOpen, setMobilePortfolioOpen] = useState(false);
   const portfolioDropdownRef = useRef<HTMLDivElement>(null);
@@ -383,7 +385,7 @@ function Nav() {
               type="button"
               className="nav-link portfolio-nav-trigger font-mono text-xs tracking-widest uppercase"
               aria-expanded={portfolioOpen}
-              aria-controls="portfolio-section-list"
+              aria-controls={portfolioOpen ? 'portfolio-section-list' : undefined}
               onClick={() => setPortfolioOpen((open) => !open)}
               style={{ color: 'var(--text-2)' }}
             >
@@ -395,10 +397,10 @@ function Nav() {
                 <motion.div
                   id="portfolio-section-list"
                   className="portfolio-dropdown-position"
-                  initial={{ opacity: 0, y: -7, scale: 0.985 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -5, scale: 0.985 }}
-                  transition={{ duration: 0.16, ease: 'easeOut' }}
+                  initial={reduceNavMotion ? { opacity: 0 } : { opacity: 0, y: -7, scale: 0.985 }}
+                  animate={reduceNavMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+                  exit={reduceNavMotion ? { opacity: 0 } : { opacity: 0, y: -5, scale: 0.985 }}
+                  transition={{ duration: reduceNavMotion ? 0 : 0.16, ease: 'easeOut' }}
                 >
                   <div className="portfolio-dropdown-panel" aria-label="Portfolio sections">
                     <p className="portfolio-dropdown-kicker">PORTFOLIO / SECTIONS</p>
@@ -481,7 +483,7 @@ function Nav() {
                   type="button"
                   className="portfolio-mobile-trigger font-mono text-xs tracking-widest uppercase"
                   aria-expanded={mobilePortfolioOpen}
-                  aria-controls="portfolio-mobile-sections"
+                  aria-controls={mobilePortfolioOpen ? 'portfolio-mobile-sections' : undefined}
                   onClick={() => setMobilePortfolioOpen((open) => !open)}
                 >
                   Portfolio <ChevronDown size={15} className={mobilePortfolioOpen ? 'portfolio-chevron is-open' : 'portfolio-chevron'} aria-hidden="true" />
@@ -490,9 +492,10 @@ function Nav() {
                   {mobilePortfolioOpen && (
                     <motion.div
                       id="portfolio-mobile-sections"
-                      initial={{ opacity: 0, height: 0 }}
+                      initial={reduceNavMotion ? false : { opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
+                      exit={reduceNavMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                      transition={{ duration: reduceNavMotion ? 0 : 0.2 }}
                       className="portfolio-mobile-sections"
                     >
                       {links.map((l) => (
