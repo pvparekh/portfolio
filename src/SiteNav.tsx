@@ -43,6 +43,23 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const [solutionsDropdownReady, setSolutionsDropdownReady] = useState(page === 'solutions');
   const solutionsLinkMouseDown = useRef(false);
   const solutionsLinkRef = useRef<HTMLAnchorElement>(null);
+  const solutionsDropdownDelay = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelSolutionsDropdownDelay = () => {
+    if (solutionsDropdownDelay.current !== null) {
+      clearTimeout(solutionsDropdownDelay.current);
+      solutionsDropdownDelay.current = null;
+    }
+  };
+
+  const scheduleSolutionsDropdown = () => {
+    cancelSolutionsDropdownDelay();
+    solutionsDropdownDelay.current = setTimeout(() => {
+      solutionsDropdownDelay.current = null;
+      // Do not replace a link that the pointer has moved back onto.
+      if (!solutionsLinkRef.current?.matches(':hover')) setSolutionsDropdownReady(true);
+    }, 500);
+  };
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGroup, setDesktopGroup] = useState<SitePage | null>(null);
   const [mobileGroup, setMobileGroup] = useState<SitePage | null>(null);
@@ -71,12 +88,13 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   }, [solutionsDropdownReady]);
 
   useEffect(() => {
-    // Covers the edge case where the pointer leaves while React is switching
-    // pages, before the new Solutions link has received a pointerleave event.
+    // If the cursor leaves during the route transition, use the same half-second
+    // delay rather than swapping the label immediately beneath the pointer.
     if (page === 'solutions' && !solutionsDropdownReady &&
         !solutionsLinkRef.current?.matches(':hover')) {
-      setSolutionsDropdownReady(true);
+      scheduleSolutionsDropdown();
     }
+    return cancelSolutionsDropdownDelay;
   }, [page, solutionsDropdownReady]);
 
   useEffect(() => {
@@ -273,9 +291,12 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
               className="nav-link font-mono text-xs tracking-widest uppercase"
               style={{ color: 'var(--text-2)' }}
               onPointerDown={event => { solutionsLinkMouseDown.current = event.pointerType === 'mouse'; }}
+              onPointerEnter={event => {
+                if (event.pointerType === 'mouse') cancelSolutionsDropdownDelay();
+              }}
               onPointerLeave={event => {
                 if (event.pointerType !== 'mouse') return;
-                if (page === 'solutions') setSolutionsDropdownReady(true);
+                if (page === 'solutions') scheduleSolutionsDropdown();
                 else solutionsLinkMouseDown.current = false;
               }}
               onClick={event => {
