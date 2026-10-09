@@ -1,11 +1,19 @@
-import { StrictMode } from 'react';
+import { StrictMode, Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 import App from './App.tsx';
-import SolutionsPage from './SolutionsPage.tsx';
+
+const SolutionsPage = lazy(() => import('./SolutionsPage.tsx'));
+const isSolutionsPath = /^\/solutions(?:\/|$)/.test(window.location.pathname);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {/^\/solutions(?:\/|$)/.test(window.location.pathname) ? <SolutionsPage /> : <App />}
+    {isSolutionsPath ? (
+      <Suspense fallback={<div role="status" style={{ padding: 40 }}>Loading solutions…</div>}>
+        <SolutionsPage />
+      </Suspense>
+    ) : (
+      <App />
+    )}
   </StrictMode>,
 );
