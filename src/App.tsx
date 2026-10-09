@@ -383,7 +383,7 @@ function HeroSection() {
             className="font-mono text-xs tracking-[0.3em] uppercase"
             style={{ color: 'var(--accent)' }}
           >
-            Actively Building
+            Junior Data Engineer · DOWC
           </span>
           <span
             className="w-1.5 h-1.5 rounded-full live-dot"
@@ -451,7 +451,7 @@ function HeroSection() {
           className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-12 px-4"
           style={{ color: 'var(--text-3)' }}
         >
-          Building reliable systems across data, software, and AI.
+          Building dependable data platforms and ambitious software, from production pipelines to interactive products.
         </motion.p>
 
         {/* CTAs */}
@@ -463,22 +463,22 @@ function HeroSection() {
         >
           <button
             onClick={() =>
-              document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })
+              document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })
             }
             className="btn-primary font-display font-semibold text-sm px-7 py-3.5 rounded-sm flex items-center gap-2"
             style={{ background: 'var(--accent)', color: '#08080D' }}
           >
-            View My Work
+            Explore Projects
             <ArrowUpRight size={16} strokeWidth={2.5} />
           </button>
           <button
             onClick={() =>
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+              document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })
             }
             className="btn-secondary font-display font-medium text-sm px-7 py-3.5 rounded-sm border"
             style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
           >
-            Get In Touch
+            View Experience
           </button>
           <a
             href="/resume.pdf"
@@ -502,15 +502,15 @@ function HeroSection() {
       >
         <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap gap-x-8 gap-y-1 items-center justify-between">
           {[
-            { label: 'DRIVER', value: 'PAREKH' },
-            { label: 'TEAM',   value: "RUTGERS '26" },
+            { label: 'ROLE', value: 'DATA ENGINEER' },
+            { label: 'EDUCATION', value: "RUTGERS '26" },
             { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
-            { label: 'STATUS', value: 'AVAILABLE' },
+            { label: 'FOCUS', value: 'DATA + SOFTWARE' },
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-3">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
               <span className="h-px w-4" style={{ background: 'var(--border)' }} />
-              <span style={{ color: item.label === 'STATUS' ? '#22C55E' : 'var(--text-2)' }}>
+              <span style={{ color: 'var(--text-2)' }}>
                 {item.value}
               </span>
             </div>
