@@ -21,7 +21,7 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 - [x] Stage 5 partial: HTML + in-app per-route metadata correctness and canonical tags.
 - [x] Protected experience exact block equality checked again after project redesign (length 3129 characters) against original feature branch: **identical**.
 - [x] Vercel PREVIEW builds reported READY through the Stage 3 project CSS commit `00e9128606a739df88d5f667f003532fcbd55345`. Deployment state ≠ visual QA.
-- [ ] Final post-metadata build must be confirmed after commits to `src/main.tsx` and `index.html`.
+- [x] Final post-metadata build verified: Vercel deployment `dpl_9kA4HL3ZTnjvnzEcF26q57W9u1A8` for commit `907da1787e07162d6af5ef36407c1b3e0037c5a9` reports READY (2026-10-09). This is a build/deployment status only, not a browser functional check.
 - [ ] Stage 4 advanced signature motion design not implemented; Stage 5 typed source/media architecture incomplete; Stage 6 browser QA pending.
 
 ## Explicitly NOT verified
@@ -44,3 +44,9 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 
 ## Release status
 **Partial preview implementation and research package.** Source changes exist on `feat/portfolio-renaissance-research`; no production changes, no merge or deployment promotion, no claim of full six-stage completion. Stage 1–3 have targeted implementation; stages 4–6 are incomplete. Next gate: browser screenshots and cross-device functional/visual inspection, source provenance review, then refinements. A Vercel READY build is not proof of UI performance or accessibility.
+
+## Preview and review links
+- Draft PR: https://github.com/pvparekh/portfolio/pull/3
+- Inspected READY preview (2026-10-09): https://portfolio-i3p1zi3xk-pvparekhs-projects.vercel.app/
+- Branch: https://github.com/pvparekh/portfolio/tree/feat/portfolio-renaissance-research
+- No merge or production promotion authorized.
