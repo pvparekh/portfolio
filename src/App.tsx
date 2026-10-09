@@ -104,7 +104,7 @@ const EXPERIENCE = [
         current: true,
         bullets: [
           'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
-          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh (~1.8 GB / ~1.65M rows per day) using Apache Airflow, Selenium, SFTP, automated archival, source validation, and transactional full-refresh loading.',
+          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
         ],
       },
       {
@@ -116,7 +116,6 @@ const EXPERIENCE = [
           'Designed and deployed a fully automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual reporting workflow with hourly, idempotent processing; built ~600 lines of dynamic Excel extraction, standardization, region mapping, and duplicate-prevention logic.',
           'Automated manual Tableau reporting workflows using Selenium, enabling reports to be programmatically downloaded and routed into downstream data-processing/database workflows; also developed additional process automations using Power Automate.',
           'Audited four production Apache Airflow DAGs and developed a 400+ line config-driven reusable SFTP-to-PostgreSQL ETL framework, standardizing loading, metadata, archiving, connection handling, and pipeline structure while improving maintainability, observability, and retry safety.',
-          'Contributed to the organization’s broader data platform modernization, including the transition from transactional PostgreSQL reporting toward Snowflake and the evolution of Airflow-based orchestration and development infrastructure.',
         ],
       },
     ],
@@ -135,7 +134,8 @@ const EXPERIENCE = [
         period: 'May 2025 – June 2025',
         current: false,
         bullets: [
-          'Built and deployed a full-stack booking platform with Next.js 14 and Calendly API integration, reducing receptionist workload by ~30%.',
+          'Built and deployed a full-stack booking platform using Next.js 14.',
+          'Integrated the Calendly API into the booking workflow, reducing receptionist workload by ~30%.',
         ],
       },
     ],
@@ -965,11 +965,11 @@ function SkillsSection() {
             className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-16 leading-[1.15] text-center"
             style={{ color: 'var(--text-1)' }}
           >
-            The full <span style={{ color: 'var(--accent)' }}>technical</span> stack.
+            The full <span style={{ color: 'var(--accent)' }}>technical</span> stack
           </h2>
         </FadeInSection>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {SKILLS.map((group, i) => {
             const { Icon } = group;
             return (
@@ -1006,7 +1006,7 @@ function SkillsSection() {
                     {group.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="skill-chip font-mono text-xs px-2.5 py-1.5 rounded-sm border cursor-default"
+                        className="skill-chip font-mono text-xs px-2 py-1.5 rounded-sm border cursor-default"
                         style={{ borderColor: 'var(--border)', color: 'var(--text-2)', background: 'var(--bg-2)' }}
                       >
                         {skill}
@@ -1055,7 +1055,7 @@ function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => vo
             >
               Let's build something
               <br />
-              <span style={{ color: 'var(--accent)' }}>together.</span>
+              <span style={{ color: 'var(--accent)' }}>together</span>
             </h2>
           </FadeInSection>
 

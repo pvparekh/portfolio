@@ -21,7 +21,7 @@ const EXPERIENCE = [
         current: true,
         bullets: [
           'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
-          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh (~1.8 GB / ~1.65M rows per day) using Apache Airflow, Selenium, SFTP, automated archival, source validation, and transactional full-refresh loading.',
+          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
         ],
       },
       {
@@ -33,7 +33,6 @@ const EXPERIENCE = [
           'Designed and deployed a fully automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual reporting workflow with hourly, idempotent processing; built ~600 lines of dynamic Excel extraction, standardization, region mapping, and duplicate-prevention logic.',
           'Automated manual Tableau reporting workflows using Selenium, enabling reports to be programmatically downloaded and routed into downstream data-processing/database workflows; also developed additional process automations using Power Automate.',
           'Audited four production Apache Airflow DAGs and developed a 400+ line config-driven reusable SFTP-to-PostgreSQL ETL framework, standardizing loading, metadata, archiving, connection handling, and pipeline structure while improving maintainability, observability, and retry safety.',
-          'Contributed to the organization’s broader data platform modernization, including the transition from transactional PostgreSQL reporting toward Snowflake and the evolution of Airflow-based orchestration and development infrastructure.',
         ],
       },
     ],
@@ -52,7 +51,8 @@ const EXPERIENCE = [
         period: 'May 2025 – June 2025',
         current: false,
         bullets: [
-          'Built and deployed a full-stack booking platform with Next.js 14 and Calendly API integration, reducing receptionist workload by ~30%.',
+          'Built and deployed a full-stack booking platform using Next.js 14.',
+          'Integrated the Calendly API into the booking workflow, reducing receptionist workload by ~30%.',
         ],
       },
     ],
@@ -85,3 +85,10 @@ const EXPERIENCE = [
 
 ## Explicitly approved revision, 2026-10-09
 The user directly requested replacement of **only** the Junior Data Engineer and Data Analytics Intern bullet arrays with the supplied copy. All other employer details and source strings remain unchanged. The exact original snapshot is archived as `08-original-experience-snapshot.md`. This file is the **current approved content baseline** enforced by the build guard. These production figures are user-reported and should not be represented as independently verified or employer-approved for external sharing.
+
+
+## Approved copy adjustments, 2026-10-09 (follow-up)
+- Shortened the Junior Data Engineer NESNA pipeline bullet to the user-provided one-sentence version.
+- Removed the user-specified Snowflake / broader modernization bullet from the Data Analytics Intern role.
+- Split the Perfect Threading Salon booking-system bullet into two factual accomplishments: booking platform delivery and Calendly integration/workload reduction. The ~30% figure was already user-provided in the original and is not independently verified.
+- All other protected professional experience entries remain unchanged.
