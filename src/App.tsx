@@ -841,13 +841,15 @@ function ExperienceSection() {
                     </span>
                   )}
                   <div className="renaissance-company-details">
-                    {exp.companyUrl ? (
-                      <a className="renaissance-company-name" href={exp.companyUrl} target="_blank" rel="noreferrer">
-                        {exp.company}<ArrowUpRight size={17} aria-hidden="true" />
-                      </a>
-                    ) : (
-                      <h3 className="renaissance-company-name">{exp.company}</h3>
-                    )}
+                    <h3>
+                      {exp.companyUrl ? (
+                        <a className="renaissance-company-name" href={exp.companyUrl} target="_blank" rel="noreferrer">
+                          {exp.company}<ArrowUpRight size={17} aria-hidden="true" />
+                        </a>
+                      ) : (
+                        <span className="renaissance-company-name">{exp.company}</span>
+                      )}
+                    </h3>
                     <p className="renaissance-company-meta">{exp.companyPeriod}</p>
                     {exp.location && exp.location !== 'Contract' && (
                       <p className="renaissance-company-meta">{exp.location}</p>
