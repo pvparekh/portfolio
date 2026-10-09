@@ -19,7 +19,7 @@ const offerings = [
     included: 'Source review, implementation, validation, documentation and handoff.',
     boundary: 'Does not include ongoing 24/7 monitoring or unlimited report redesign.',
     inputs: 'An example output, sample files, access to relevant systems and the reporting schedule.',
-    tools: ['Python', 'Excel', 'SFTP', 'SQL', 'Airflow']
+    tools: ['Python', 'Excel', 'Power Automate', 'Selenium', 'SFTP', 'Airflow']
   },
   {
     number: '02',
