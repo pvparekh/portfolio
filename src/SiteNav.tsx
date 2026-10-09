@@ -43,6 +43,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const [solutionsDropdownReady, setSolutionsDropdownReady] = useState(page === 'solutions');
   const solutionsLinkMouseDown = useRef(false);
   const solutionsLinkRef = useRef<HTMLAnchorElement>(null);
+  const suppressSolutionsHover = useRef(false);
   const solutionsDropdownDelay = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelSolutionsDropdownDelay = () => {
@@ -57,7 +58,12 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
     solutionsDropdownDelay.current = setTimeout(() => {
       solutionsDropdownDelay.current = null;
       // Do not replace a link that the pointer has moved back onto.
-      if (!solutionsLinkRef.current?.matches(':hover')) setSolutionsDropdownReady(true);
+      if (!solutionsLinkRef.current?.matches(':hover')) {
+        // A newly mounted dropdown can have a slightly larger hitbox.
+        // Suppress its initial hover-open until the pointer leaves that hitbox.
+        suppressSolutionsHover.current = true;
+        setSolutionsDropdownReady(true);
+      }
     }, 500);
   };
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -136,11 +142,16 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
       <div
         key={group.page}
         className="portfolio-nav-dropdown"
-        onPointerEnter={event => { if (event.pointerType === 'mouse') reveal(group.page); }}
+        onPointerEnter={event => {
+          if (event.pointerType !== 'mouse') return;
+          if (group.page === 'solutions' && suppressSolutionsHover.current) return;
+          reveal(group.page);
+        }}
         onPointerLeave={event => {
           // Focus may remain on a previously clicked link; it should not pin
           // the dropdown open after the mouse leaves the entire group.
           if (event.pointerType === 'mouse') {
+            if (group.page === 'solutions') suppressSolutionsHover.current = false;
             setDesktopGroup(current => current === group.page ? null : current);
           }
         }}
