@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, useScroll } from 'framer-motion';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 
 export type SitePage = 'portfolio' | 'solutions';
@@ -44,6 +44,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const desktopAreaRef = useRef<HTMLDivElement>(null);
   const desktopTriggers = useRef<Record<SitePage, HTMLButtonElement | null>>({ portfolio: null, solutions: null });
   const reducedMotion = !!useReducedMotion();
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -305,6 +306,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      <motion.span className="site-reading-progress" aria-hidden="true" style={{ scaleX: scrollYProgress }} />
     </motion.nav>
   );
 }
