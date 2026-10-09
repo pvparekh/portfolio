@@ -641,16 +641,24 @@ a.renaissance-company-name:hover { color: var(--accent); }
 .renaissance-architecture-step-body p {
   color: var(--text-3); font: 400 12px/1.6 'Inter',system-ui,sans-serif; margin-top: 8px;
 }
-.renaissance-architecture-foot {
-  margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.10);
-  color: var(--text-3); font: 500 10px/1.6 'JetBrains Mono',monospace;
-}
+/* One quiet technology rail, proportioned to each project's width and scope. */
 .renaissance-tech-strip {
-  display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 17px clamp(24px,3vw,46px);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  column-gap: clamp(17px,2.65vw,38px); row-gap: 13px;
+  padding: 23px clamp(23px,3.4vw,48px);
   border-top: 1px solid rgba(255,255,255,.10);
 }
-.renaissance-tech-strip span,.renaissance-secondary-tech span {
-  color: var(--text-3); font: 500 10px/1.5 'JetBrains Mono',monospace;
+.renaissance-tech-strip span {
+  color: #bfcbda;
+  font: 500 12px/1.55 'JetBrains Mono',monospace;
+  letter-spacing: .015em;
+  white-space: nowrap;
+}
+.renaissance-secondary-tech span {
+  color: #b8c4d1;
+  font: 500 11px/1.5 'JetBrains Mono',monospace;
+  letter-spacing: .012em;
+  white-space: nowrap;
 }
 .renaissance-supporting-projects {
   display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
@@ -689,8 +697,9 @@ a.renaissance-company-name:hover { color: var(--accent); }
 .is-aetherflow .renaissance-mini-flow li span { color: #b5a1ff; }
 .renaissance-secondary-body .renaissance-project-actions { margin-top: auto; padding-top: 23px; }
 .renaissance-secondary-tech {
-  display: flex; flex-wrap: wrap; gap: 8px 17px; padding: 17px 31px;
-  border-top: 1px solid rgba(255,255,255,.09);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-evenly;
+  column-gap: clamp(11px,1.35vw,19px); row-gap: 12px;
+  padding: 19px 21px; border-top: 1px solid rgba(255,255,255,.09);
 }
 @media (max-width: 950px) {
   .renaissance-flagship-grid { grid-template-columns: minmax(0,1fr); }
@@ -707,4 +716,70 @@ a.renaissance-company-name:hover { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .renaissance-primary-project-link,.renaissance-text-project-link { transition: none; }
   .renaissance-primary-project-link:hover { transform: none; }
+}
+
+
+/* Multi-role employers use a broad career progression.
+   The shorter single-role entries retain their compact two-column layout. */
+.renaissance-company--progression {
+  row-gap: 25px; column-gap: clamp(32px,7vw,108px); padding-bottom: 56px;
+}
+.renaissance-company--progression .renaissance-company-identity,
+.renaissance-company--progression .renaissance-roles { grid-column: 1 / -1; }
+.renaissance-company--progression .renaissance-company-identity {
+  display: flex; align-items: center; flex-wrap: wrap;
+  column-gap: 21px; row-gap: 7px;
+  border-bottom: 1px solid rgba(255,255,255,.085); padding-bottom: 25px;
+}
+.renaissance-company--progression .renaissance-index { flex-basis: 100%; margin-bottom: 5px; }
+.renaissance-company--progression .renaissance-company-heading { margin: 0 20px 0 0; }
+.renaissance-company--progression .renaissance-company-meta { margin: 0; }
+.renaissance-company--progression .renaissance-roles {
+  width: 100%; padding-left: 26px; margin: 5px 0 0 6px;
+  border-left-color: rgba(245,158,11,.26);
+}
+.renaissance-company--progression .renaissance-role {
+  display: grid;
+  grid-template-columns: minmax(220px,.72fr) minmax(0,1.6fr);
+  grid-template-areas: "rolehead bullets" "period bullets";
+  column-gap: clamp(28px,5vw,76px); row-gap: 0;
+  align-items: start; padding: 6px 0 31px;
+}
+.renaissance-company--progression .renaissance-role:not(:last-child) {
+  margin-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,.09);
+}
+.renaissance-company--progression .renaissance-role:not(:last-child)::after { display: none; }
+.renaissance-company--progression .renaissance-role-head {
+  grid-area: rolehead; align-items: flex-start; flex-wrap: wrap;
+}
+.renaissance-company--progression .renaissance-role-period {
+  grid-area: period; margin-top: 11px; align-self: start;
+}
+.renaissance-company--progression .renaissance-role-bullets {
+  grid-area: bullets; margin: 1px 0 0; max-width: 72ch;
+}
+.renaissance-company--progression .renaissance-role::before { left: -32px; top: 12px; }
+.renaissance-company--progression .renaissance-role:last-child { padding-bottom: 0; }
+@media (max-width: 900px) {
+  .renaissance-company--progression .renaissance-role {
+    grid-template-columns: minmax(0,1fr);
+    grid-template-areas: "rolehead" "period" "bullets";
+  }
+  .renaissance-company--progression .renaissance-role-bullets { margin-top: 19px; }
+}
+@media (max-width: 750px) {
+  .renaissance-company--progression .renaissance-company-identity {
+    align-items: flex-start; gap: 4px 16px;
+  }
+  .renaissance-company--progression .renaissance-company-heading {
+    flex-basis: 100%; margin: 4px 0 7px;
+  }
+  .renaissance-company--progression .renaissance-company-meta { margin-right: 10px; }
+  .renaissance-company--progression .renaissance-roles { margin-left: 5px; }
+  .renaissance-tech-strip { column-gap: 20px; row-gap: 12px; }
+  .renaissance-secondary-tech { justify-content: center; column-gap: 18px; }
+}
+@media (max-width: 420px) {
+  .renaissance-tech-strip span { font-size: 11px; }
+  .renaissance-secondary-tech span { font-size: 10.5px; }
 }
