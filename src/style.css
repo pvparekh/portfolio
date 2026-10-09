@@ -741,7 +741,7 @@ a.renaissance-company-name:hover { color: var(--accent); }
 .renaissance-company--progression .renaissance-role {
   display: grid;
   grid-template-columns: minmax(220px,.72fr) minmax(0,1.6fr);
-  grid-template-areas: "rolehead bullets" "period bullets";
+  grid-template-areas: "rolehead bullets";
   column-gap: clamp(28px,5vw,76px); row-gap: 0;
   align-items: start; padding: 6px 0 31px;
 }
@@ -753,7 +753,7 @@ a.renaissance-company-name:hover { color: var(--accent); }
   grid-area: rolehead; align-items: flex-start; flex-wrap: wrap;
 }
 .renaissance-company--progression .renaissance-role-period {
-  grid-area: period; margin-top: 11px; align-self: start;
+  margin-top: 11px;
 }
 .renaissance-company--progression .renaissance-role-bullets {
   grid-area: bullets; margin: 1px 0 0; max-width: 72ch;
@@ -763,7 +763,7 @@ a.renaissance-company-name:hover { color: var(--accent); }
 @media (max-width: 900px) {
   .renaissance-company--progression .renaissance-role {
     grid-template-columns: minmax(0,1fr);
-    grid-template-areas: "rolehead" "period" "bullets";
+    grid-template-areas: "rolehead" "bullets";
   }
   .renaissance-company--progression .renaissance-role-bullets { margin-top: 19px; }
 }
