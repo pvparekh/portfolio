@@ -261,6 +261,7 @@ function SolutionsPage() {
         <div className="sol-header-inner">
           <a className="sol-wordmark" href="/" aria-label="Parth Parekh, back to portfolio">PARTH<span>.</span><small> / DATA SOLUTIONS</small></a>
           <nav className="sol-nav" aria-label="Data Solutions page">
+            <a href="/" className="sol-nav-home">Portfolio <ArrowUpRight size={13} aria-hidden="true" /></a>
             {sectionNav.map(item => (
               <a key={item.id} href={'#' + item.id} className={activeSection === item.id ? 'is-current' : undefined} aria-current={activeSection === item.id ? 'location' : undefined}>
                 {item.label}
