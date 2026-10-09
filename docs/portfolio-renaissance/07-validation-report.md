@@ -13,6 +13,17 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 - [x] 27 different external reference URLs opened in text/structure mode; 17 technical/UX primary docs opened.
 - [x] Mathematical color comparison: --text-3 #4B5563 vs #08080D ≈ 2.64:1, #6B7280 vs #0D0D15 ≈ 4.00:1. Not a page-wide audit.
 
+## Implementation verification — 2026-10-09
+- [x] New branch `feat/portfolio-renaissance-research` created from active preview feature branch; **no production branch writes, merges, or promotions**.
+- [x] Stage 1 targeted improvements: muted text token, keyboard focus outlines and CSS reduced-motion behavior.
+- [x] Stage 2: editorial responsive DOWC/company/role progression and recruiter-first hero, keeping entire original `EXPERIENCE` block unchanged.
+- [x] Stage 3: differentiated project narratives, Formula Vision flagship architecture and proof surface; conservative copy matched against public engineering sources.
+- [x] Stage 5 partial: HTML + in-app per-route metadata correctness and canonical tags.
+- [x] Protected experience exact block equality checked again after project redesign (length 3129 characters) against original feature branch: **identical**.
+- [x] Vercel PREVIEW builds reported READY through the Stage 3 project CSS commit `00e9128606a739df88d5f667f003532fcbd55345`. Deployment state ≠ visual QA.
+- [ ] Final post-metadata build must be confirmed after commits to `src/main.tsx` and `index.html`.
+- [ ] Stage 4 advanced signature motion design not implemented; Stage 5 typed source/media architecture incomplete; Stage 6 browser QA pending.
+
 ## Explicitly NOT verified
 - [ ] Production or preview screenshots: site unavailable through current web tool; visual comparison pending.
 - [ ] Real hover/touch and keyboard interaction: no graphical browser session succeeded.
@@ -32,4 +43,4 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 | Performance | Lighthouse device profiles, LCP, INP, CLS, animation profiling | not run |
 
 ## Release status
-**Research package only.** Production untouched; no visual implementation or release claimed. Next gate is browser access, screenshot capture and claim validation, then Stage 1 changes on this feature branch. No approval to merge/promote.
+**Partial preview implementation and research package.** Source changes exist on `feat/portfolio-renaissance-research`; no production changes, no merge or deployment promotion, no claim of full six-stage completion. Stage 1–3 have targeted implementation; stages 4–6 are incomplete. Next gate: browser screenshots and cross-device functional/visual inspection, source provenance review, then refinements. A Vercel READY build is not proof of UI performance or accessibility.
