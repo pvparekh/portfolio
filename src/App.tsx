@@ -461,19 +461,19 @@ function HeroSection() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.9, duration: 0.7, ease }}
-        className="absolute bottom-0 left-0 right-0 border-t font-mono text-xs"
+        className="absolute bottom-0 left-0 right-0 border-t font-mono text-[10px] lg:text-[11px] xl:text-xs overflow-x-auto"
         style={{ borderColor: 'var(--border)' }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap gap-x-8 gap-y-1 items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
           {[
             { label: 'ROLE', value: 'DATA ENGINEER' },
             { label: 'EDUCATION', value: "CS + DS AT RUTGERS (CLASS OF '26)" },
             { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
             { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
           ].map((item) => (
-            <div key={item.label} className="flex items-center gap-3">
+            <div key={item.label} className="flex shrink-0 items-center gap-1.5 lg:gap-2 whitespace-nowrap">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
-              <span className="h-px w-4" style={{ background: 'var(--border)' }} />
+              <span className="h-px w-2 lg:w-3 shrink-0" style={{ background: 'var(--border)' }} />
               <span style={{ color: 'var(--text-2)' }}>
                 {item.value}
               </span>
