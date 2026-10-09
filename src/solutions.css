@@ -732,3 +732,7 @@
 
 /* Shared portfolio brand color, reserved for chapter-level emphasis. */
 .solutions .sol-section-intro h2 .sol-heading-emphasis { color: var(--accent, #F59E0B); font-style: normal; }
+
+/* Keep the two site destinations discoverable without altering mobile section layout. */
+.sol-nav .sol-nav-home { display:inline-flex; align-items:center; gap:7px; padding-right:16px; margin-right:2px; border-right:1px solid rgba(255,255,255,.13); white-space:nowrap; }
+.sol-nav .sol-nav-home > svg { color:var(--sol-accent); opacity:.8; }
