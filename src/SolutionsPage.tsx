@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, MotionConfig, useInView, useReducedMotion, useScroll, useSpring } from 'framer-motion';
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
+import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
 import './solutions.css';
 
@@ -203,6 +203,17 @@ function SolutionsPage() {
   const easedScrollProgress = useSpring(scrollYProgress, { stiffness: 135, damping: 30, mass: 0.28 });
   const reducedMotion = !!useReducedMotion();
   const [activeSection, setActiveSection] = useState('');
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
+
+  async function copyEmail() {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(email);
+      setCopyStatus('copied');
+    } catch {
+      setCopyStatus('failed');
+    }
+  }
 
   useEffect(() => {
     const sections = ['problems', 'services', 'work', 'approach', 'contact']
@@ -354,15 +365,27 @@ function SolutionsPage() {
               <p className="sol-eyebrow">05 / LET'S TALK</p>
               <h2>Have a data problem worth <em>solving?</em></h2>
               <p>Send me a short description of what's taking time, what systems are involved and what a successful result would look like. I'll let you know whether it's a fit for a scoped project.</p>
-              <a className="sol-button sol-button-primary sol-contact-button" href={projectEmail}>Discuss a Project <Mail size={17} /></a>
-              <a className="sol-direct-email" href={'mailto:' + email}>{email} <ArrowUpRight size={15} /></a>
+              <div className="sol-contact-email-block">
+                <div className="sol-contact-email-topline">DIRECT EMAIL</div>
+                <div className="sol-contact-email-row">
+                  <span className="sol-contact-email-address">{email}</span>
+                  <button type="button" className="sol-contact-copy" onClick={copyEmail} aria-label="Copy email address to clipboard">
+                    {copyStatus === 'copied' ? <CheckCircle2 size={17} /> : <Copy size={17} />}
+                    {copyStatus === 'copied' ? 'Copied' : 'Copy email'}
+                  </button>
+                </div>
+                <span className="sol-contact-copy-status" role="status" aria-live="polite">
+                  {copyStatus === 'copied' ? 'Email address copied. Paste it into Gmail or any email service.' : copyStatus === 'failed' ? 'Copy unavailable. Select the address above to copy it.' : 'Copy the address to use with Gmail, Outlook or any email service.'}
+                </span>
+                <a className="sol-contact-compose" href={projectEmail}>Prefer your email app? Open a draft <Mail size={14} /></a>
+              </div>
             </div>
             <aside className="sol-contact-panel">
               <p className="sol-contact-panel-title">A GOOD FIRST MESSAGE</p>
               <div><span>01</span><p>What your team does manually today</p></div>
               <div><span>02</span><p>The applications, files or databases involved</p></div>
               <div><span>03</span><p>What success looks like and any timing constraints</p></div>
-              <p className="sol-contact-small">The button opens your email application with a short project outline. No account or form required. Initial project pricing is quoted based on agreed scope.</p>
+              <p className="sol-contact-small">Copy the address and send a short note from whichever email service you use. Project pricing is quoted based on agreed scope.</p>
             </aside>
           </div>
         </section>
