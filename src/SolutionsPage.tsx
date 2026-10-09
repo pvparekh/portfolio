@@ -68,9 +68,28 @@ function SectionIntro({ index, label, title, description }: { index: string; lab
   );
 }
 
-function ArchitectureGraphic() {
+function FlowConnector({ index, active, reducedMotion }: { index: number; active: boolean; reducedMotion: boolean }) {
   return (
-    <div className="sol-flow-graphic" aria-label="Diagram: source systems feed a validation and transformation workflow, which delivers dependable data">
+    <div className="sol-flow-connector" aria-hidden="true">
+      <span className="sol-flow-base" />
+      <ArrowRight size={18} />
+      <motion.span
+        className="sol-flow-trace"
+        initial={reducedMotion ? false : { scaleX: 0 }}
+        animate={{ scaleX: active || reducedMotion ? 1 : 0 }}
+        transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.25 + index * 0.58, ease: [0.22, 1, 0.36, 1] }}
+      />
+    </div>
+  );
+}
+
+function ArchitectureGraphic() {
+  const graphicRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(graphicRef, { once: true, amount: 0.25 });
+  const reducedMotion = !!useReducedMotion();
+
+  return (
+    <div ref={graphicRef} className="sol-flow-graphic" aria-label="Diagram: source systems feed a validation and transformation workflow, which delivers dependable data">
       <div className="sol-flow-top"><span>PROJECT PATTERN / 001</span><span>INGEST · VALIDATE · DELIVER</span></div>
       <div className="sol-flow-row">
         <div className="sol-flow-node">
@@ -79,14 +98,14 @@ function ArchitectureGraphic() {
           <strong>Disconnected sources</strong>
           <small>APIs · files · databases</small>
         </div>
-        <div className="sol-flow-connector" aria-hidden="true"><span /><ArrowRight size={18} /><span /></div>
+        <FlowConnector index={0} active={isInView} reducedMotion={reducedMotion} />
         <div className="sol-flow-node sol-flow-node-center">
           <span className="sol-flow-icon"><GitBranch size={23} strokeWidth={1.6} /></span>
           <span className="sol-flow-small">02 / SYSTEM</span>
           <strong>Reliable processing</strong>
           <small>Checks · retries · traceability</small>
         </div>
-        <div className="sol-flow-connector" aria-hidden="true"><span /><ArrowRight size={18} /><span /></div>
+        <FlowConnector index={1} active={isInView} reducedMotion={reducedMotion} />
         <div className="sol-flow-node">
           <span className="sol-flow-icon"><FileCheck2 size={23} strokeWidth={1.6} /></span>
           <span className="sol-flow-small">03 / OUTPUT</span>
@@ -98,6 +117,30 @@ function ArchitectureGraphic() {
         <span className="sol-state">DESIGNED TO BE REPEATABLE</span>
         <span>REAL SYSTEMS, NOT ONE-OFF SCRIPTS</span>
       </div>
+    </div>
+  );
+}
+
+function EngagementProcess() {
+  const processRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = !!useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: processRef, offset: ['start 90%', 'end 25%'] });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 130, damping: 28, mass: 0.3 });
+
+  return (
+    <div className="sol-process" ref={processRef}>
+      <motion.span
+        aria-hidden="true"
+        className="sol-process-track"
+        style={{ scaleX: reducedMotion ? scrollYProgress : smoothProgress }}
+      />
+      {process.map(([number, name, summary]) => (
+        <div className="sol-process-step" key={number}>
+          <span>{number}</span>
+          <h3>{name}</h3>
+          <p>{summary}</p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -262,7 +305,7 @@ function SolutionsPage() {
         <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
             <SectionIntro index="04" label="WORKING TOGETHER" title="A straightforward path from problem to handoff." description="Every project begins with a clear outcome, agreed milestones, practical validation and a handoff your team can use." />
-            <div className="sol-process">{process.map(([number, name, summary]) => <div className="sol-process-step" key={number}><span>{number}</span><h3>{name}</h3><p>{summary}</p></div>)}</div>
+            <EngagementProcess />
             <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Defined scope before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>
           </div>
         </section>
