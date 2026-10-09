@@ -853,13 +853,13 @@ function ExperienceSection() {
                       <div className="renaissance-role-head">
                         <div>
                           <p className="renaissance-role-index">
-                            {exp.roles.length > 1 ? `ROLE 0${exp.roles.length - roleIndex} / 0${exp.roles.length}` : 'POSITION'}
+                            {exp.roles.length > 1 ? `ROLE 0${roleIndex + 1} / 0${exp.roles.length}` : 'POSITION'}
                           </p>
                           <h3 className="renaissance-role-title">{role.role}</h3>
+                          <p className="renaissance-role-period">{role.period}</p>
                         </div>
                         {role.current && <span className="renaissance-current-marker">CURRENT</span>}
                       </div>
-                      <p className="renaissance-role-period">{role.period}</p>
                       {role.bullets && (
                         <ul className="renaissance-role-bullets">
                           {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
