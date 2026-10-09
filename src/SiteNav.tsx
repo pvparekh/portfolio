@@ -38,6 +38,7 @@ const groups: NavigationGroup[] = [
 /** One persistent header, shared across both routes. */
 export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const [scrolled, setScrolled] = useState(false);
+  const [pastSolutionsHero, setPastSolutionsHero] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGroup, setDesktopGroup] = useState<SitePage | null>(null);
   const [mobileGroup, setMobileGroup] = useState<SitePage | null>(null);
@@ -47,17 +48,34 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      // Services navigation is useful once Section 00 has passed the header.
+      // Until then Data Solutions remains a direct, one-click page link.
+      const hero = page === 'solutions' ? document.querySelector<HTMLElement>('.sol-hero') : null;
+      setPastSolutionsHero(Boolean(hero && hero.getBoundingClientRect().bottom <= 112));
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [page]);
 
   useEffect(() => {
     setDesktopGroup(null);
     setMobileOpen(false);
     setMobileGroup(null);
   }, [page]);
+
+  useEffect(() => {
+    if (!pastSolutionsHero) {
+      setDesktopGroup(current => current === 'solutions' ? null : current);
+      setMobileGroup(current => current === 'solutions' ? null : current);
+    }
+  }, [pastSolutionsHero]);
 
   useEffect(() => {
     const onOutsidePointer = (event: PointerEvent) => {
@@ -83,6 +101,15 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
     (targetPage === 'portfolio' ? '/' : '/solutions') + '#' + id;
 
   const reveal = (targetPage: SitePage) => setDesktopGroup(targetPage);
+
+  const followGroup = (targetPage: SitePage, event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    setDesktopGroup(null);
+    setMobileOpen(false);
+    setMobileGroup(null);
+    navigate(targetPage);
+  };
   const dropdown = (group: NavigationGroup) => {
     const open = desktopGroup === group.page;
     return (
@@ -91,7 +118,11 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
         className="portfolio-nav-dropdown"
         onPointerEnter={event => { if (event.pointerType === 'mouse') reveal(group.page); }}
         onPointerLeave={event => {
-          if (event.pointerType === 'mouse' && !event.currentTarget.contains(document.activeElement)) setDesktopGroup(null);
+          // Focus may remain on a previously clicked link; it should not pin
+          // the dropdown open after the mouse leaves the entire group.
+          if (event.pointerType === 'mouse') {
+            setDesktopGroup(current => current === group.page ? null : current);
+          }
         }}
         onBlur={event => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDesktopGroup(null);
@@ -105,16 +136,21 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           }
         }}
       >
+        <a
+          href={group.page === 'portfolio' ? '/' : '/solutions'}
+          onClick={event => followGroup(group.page, event)}
+          className="nav-link portfolio-nav-destination font-mono text-xs tracking-widest uppercase"
+          style={{ color: 'var(--text-2)' }}
+        >{group.label}</a>
         <button
           type="button"
           ref={node => { desktopTriggers.current[group.page] = node; }}
-          className="nav-link portfolio-nav-trigger font-mono text-xs tracking-widest uppercase"
+          className="portfolio-nav-trigger portfolio-nav-chevron-button"
+          aria-label={'Show ' + group.label + ' sections'}
           aria-expanded={open}
           aria-controls={open ? 'site-dropdown-' + group.page : undefined}
           onClick={() => setDesktopGroup(open ? null : group.page)}
-          style={{ color: 'var(--text-2)' }}
         >
-          {group.label}
           <ChevronDown size={14} className={open ? 'portfolio-chevron is-open' : 'portfolio-chevron'} aria-hidden="true" />
         </button>
         <AnimatePresence initial={false}>
@@ -153,16 +189,23 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
     const open = mobileGroup === group.page;
     return (
       <div className="portfolio-mobile-group" key={group.page}>
-        <button
-          type="button"
-          className="portfolio-mobile-trigger font-mono text-xs tracking-widest uppercase"
-          aria-expanded={open}
-          aria-controls={open ? 'site-mobile-' + group.page : undefined}
-          onClick={() => setMobileGroup(open ? null : group.page)}
-        >
-          {group.label}
-          <ChevronDown size={15} className={open ? 'portfolio-chevron is-open' : 'portfolio-chevron'} aria-hidden="true" />
-        </button>
+        <div className="portfolio-mobile-disclosure-row">
+          <a
+            href={group.page === 'portfolio' ? '/' : '/solutions'}
+            className="portfolio-mobile-destination font-mono text-xs tracking-widest uppercase"
+            onClick={event => followGroup(group.page, event)}
+          >{group.label}</a>
+          <button
+            type="button"
+            className="portfolio-mobile-trigger"
+            aria-label={'Show ' + group.label + ' sections'}
+            aria-expanded={open}
+            aria-controls={open ? 'site-mobile-' + group.page : undefined}
+            onClick={() => setMobileGroup(open ? null : group.page)}
+          >
+            <ChevronDown size={15} className={open ? 'portfolio-chevron is-open' : 'portfolio-chevron'} aria-hidden="true" />
+          </button>
+        </div>
         <AnimatePresence initial={false}>
           {open && (
             <motion.div
@@ -221,7 +264,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
 
         <div className="hidden md:flex items-center gap-7 lg:gap-9" ref={desktopAreaRef}>
           {dropdown(groups[0])}
-          {page === 'solutions' ? dropdown(groups[1]) : (
+          {page === 'solutions' && pastSolutionsHero ? dropdown(groups[1]) : (
             <a
               href="/solutions"
               className="nav-link font-mono text-xs tracking-widest uppercase"
@@ -282,7 +325,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           >
             <div className="px-6 py-4 flex flex-col gap-4">
               {mobileDisclosure(groups[0])}
-              {page === 'solutions' ? mobileDisclosure(groups[1]) : (
+              {page === 'solutions' && pastSolutionsHero ? mobileDisclosure(groups[1]) : (
                 <a
                   href="/solutions"
                   className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
