@@ -71,11 +71,14 @@ const process = [
   ['05', 'Hand off', 'Deliver source, documentation and operating instructions based on the agreed scope.']
 ];
 
-function SectionIntro({ index, label, title, description }: { index: string; label: string; title: string; description?: string }) {
+function SectionIntro({ index, label, title, accent, description }: { index: string; label: string; title: string; accent?: string; description?: string }) {
+  const splitAt = accent ? title.indexOf(accent) : -1;
   return (
     <div className="sol-section-intro">
       <div className="sol-section-index"><span>{index}</span><span className="sol-rule" />{label}</div>
-      <h2>{title}</h2>
+      <h2>{splitAt >= 0 && accent
+        ? <>{title.slice(0, splitAt)}<em className="sol-heading-emphasis">{accent}</em>{title.slice(splitAt + accent.length)}</>
+        : title}</h2>
       {description && <p>{description}</p>}
     </div>
   );
@@ -300,7 +303,7 @@ function SolutionsPage() {
 
         <section className="sol-problem-section sol-section" id="problems">
           <div className="sol-container">
-            <SectionIntro index="01" label="THE PROBLEM" title="Does any of this sound familiar?" description="You don't need to know what a DAG or an ETL framework is to recognize work that should run by itself." />
+            <SectionIntro index="01" label="THE PROBLEM" title="Does any of this sound familiar?" accent="familiar?" description="You don't need to know what a DAG or an ETL framework is to recognize work that should run by itself." />
             <div className="sol-problems">
               {[
                 ['The weekly spreadsheet ritual', 'Someone downloads files, copies columns, fixes formatting and sends the same report again.'],
@@ -320,7 +323,7 @@ function SolutionsPage() {
 
         <section className="sol-section sol-services-section" id="services">
           <div className="sol-container">
-            <SectionIntro index="02" label="HOW I CAN HELP" title="Focused solutions. Clear deliverables." description="The goal is not to sell your team more tooling. It is to finish a defined job, prove the output works and make the result maintainable." />
+            <SectionIntro index="02" label="HOW I CAN HELP" title="Focused solutions. Clear deliverables." accent="Clear deliverables." description="The goal is not to sell your team more tooling. It is to finish a defined job, prove the output works and make the result maintainable." />
             <div className="sol-service-list">
               {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools }) => (
                 <article className="sol-service" key={number}>
@@ -346,14 +349,14 @@ function SolutionsPage() {
 
         <section className="sol-section sol-work-section" id="work">
           <div className="sol-container">
-            <SectionIntro index="03" label="ENGINEERING EVIDENCE" title="See the systems behind the claims." description="A closer look at how I design, build and validate systems, from the data architecture to the finished experience." />
+            <SectionIntro index="03" label="ENGINEERING EVIDENCE" title="See the systems behind the claims." accent="behind the claims." description="A closer look at how I design, build and validate systems, from the data architecture to the finished experience." />
             <div className="sol-case-list">{caseStudies.filter(study => study.publicationApproved).map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
           </div>
         </section>
 
         <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
-            <SectionIntro index="04" label="WORKING TOGETHER" title="A straightforward path from problem to handoff." description="Every project begins with a clear outcome, agreed milestones, practical validation and a handoff your team can use." />
+            <SectionIntro index="04" label="WORKING TOGETHER" title="A straightforward path from problem to handoff." accent="from problem to handoff." description="Every project begins with a clear outcome, agreed milestones, practical validation and a handoff your team can use." />
             <EngagementProcess />
             <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Defined scope before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>
           </div>
