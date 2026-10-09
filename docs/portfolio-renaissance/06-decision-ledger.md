@@ -15,3 +15,15 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 | DEC-009 | 2026-10-09 | Separate flagship Formula Vision from two secondary project stories | Equal 3-up cards reduced differentiation | F1 v2 Engineering Overview, REF-001/010/021 | exposes technical tradeoffs, source and diagrams | textual architecture nodes, responsive single-column fallback | demo visual quality and layout pending | implemented provisionally |
 | DEC-010 | 2026-10-09 | Put role and practical navigation in homepage hero | Animated personal labels delayed recruiter comprehension | recruiter 15-second scenario, REF-023, DOC-03 | role instantly discoverable and projects one action away | existing button behavior retained, no new dependencies | browser hero test pending | implemented |
 | DEC-011 | 2026-10-09 | Harmonize homepage and Data Solutions metadata for direct and client-side navigation | Portfolio page removed description and OG tags on route swap | src/main.tsx, index.html audit | stronger recruiter search/share clarity | head updates scoped by page, same router | test direct reload and navigation pending | implemented |
+
+## Follow-up refinement decisions, 2026-10-09
+
+| ID | Decision | Reason / evidence | Verification |
+|---|---|---|---|
+| DEC-012 | Remove all hero CTA buttons, move Resume as a fourth About action | Experience and Projects should receive equal importance; consistent small contact actions support direct access | src/App.tsx source verification; browser click still pending |
+| DEC-013 | Replace outdated Formula Vision streaming copy in About | Source README confirms static-first validated replay publication and lazy browser delivery; old 440MB claim describes obsolete design | F1-Viewer engineering overview; source text check |
+| DEC-014 | Give only multi-role employers a full-width header and role-based content columns | NN/G proximity and hierarchy, Baymard reading measure; reject fake data padding and bullet truncation | source class condition and grid inspection; responsive screenshots pending |
+| DEC-015 | Simplify Projects headlines, schematic captions and product labels | Plain names outperform repetitive split-clause slogans and technical footnotes in a recruiter scan | source text verification |
+| DEC-016 | Center larger, brighter technology labels and add source-verified Formula Vision stack | Long flagship demands proportional evidence; flex wrap and limited curation protect readability | F1-Viewer README; CSS flex rules; actual widths require browser inspection |
+| DEC-017 | Treat AI/ML as a focus descriptor, not professional job title | User's AI integrations and DS background justify an interest area without claiming training production models | hero copy inspection |
+| DEC-018 | Add build-time experience-text regression guard | Immutable employer copy must survive future layout work | scripts/check-experience-baseline.mjs compares exact block with fenced baseline; Vercel READY after build command update |
