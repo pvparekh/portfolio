@@ -17,7 +17,7 @@ import {
   Brain,
   Box,
   Database,
-  Download,
+  FileText,
 } from 'lucide-react';
 
 /* ── Brand icon SVGs (lucide-react v1 dropped these) ── */
@@ -48,7 +48,7 @@ const PROJECTS = [
   name: 'Formula Vision',
   tagline: 'F1 Race Replay Platform',
   description: 'Historical Formula 1 replay rebuilt as a verified data product: canonical Parquet, timing-authoritative race intelligence, immutable releases, and a client-owned replay engine.',
-  tech: ['React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Python', 'Vercel'],
+  tech: ['Python', 'FastF1', 'Parquet', 'React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Recharts', 'Vercel'],
   live: 'https://formulavision.vercel.app' as string | null,
   github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
   accent: '#E8002D',
@@ -383,7 +383,7 @@ function HeroSection() {
             className="font-mono text-xs tracking-[0.3em] uppercase"
             style={{ color: 'var(--accent)' }}
           >
-            Junior Data Engineer · DOWC
+            Data Engineer · Actively Building
           </span>
           <span
             className="w-1.5 h-1.5 rounded-full live-dot"
@@ -448,48 +448,12 @@ function HeroSection() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.3, duration: 0.6, ease }}
-          className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-12 px-4"
+          className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-6 px-4"
           style={{ color: 'var(--text-3)' }}
         >
           Building dependable data platforms and ambitious software, from production pipelines to interactive products.
         </motion.p>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.6, ease }}
-          className="flex flex-wrap items-center justify-center gap-4"
-        >
-          <button
-            onClick={() =>
-              document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className="btn-primary font-display font-semibold text-sm px-7 py-3.5 rounded-sm flex items-center gap-2"
-            style={{ background: 'var(--accent)', color: '#08080D' }}
-          >
-            Explore Projects
-            <ArrowUpRight size={16} strokeWidth={2.5} />
-          </button>
-          <button
-            onClick={() =>
-              document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className="btn-secondary font-display font-medium text-sm px-7 py-3.5 rounded-sm border"
-            style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
-          >
-            View Experience
-          </button>
-          <a
-            href="/resume.pdf"
-            download="Parth_Parekh_Resume.pdf"
-            className="btn-secondary font-display font-medium text-sm px-7 py-3.5 rounded-sm border flex items-center gap-2"
-            style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}
-          >
-            Download Resume
-            <Download size={16} strokeWidth={2.5} />
-          </a>
-        </motion.div>
       </motion.div>
 
       {/* F1 telemetry bar */}
@@ -503,9 +467,9 @@ function HeroSection() {
         <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap gap-x-8 gap-y-1 items-center justify-between">
           {[
             { label: 'ROLE', value: 'DATA ENGINEER' },
-            { label: 'EDUCATION', value: "RUTGERS '26" },
+            { label: 'EDUCATION', value: "CS + DS AT RUTGERS (CLASS OF '26)" },
             { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
-            { label: 'FOCUS', value: 'DATA + SOFTWARE' },
+            { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-3">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
@@ -585,8 +549,7 @@ function AboutSection() {
                 .
               </p>
               <p>
-                I like to solve problems, especially ones that involve building systems that need to be reliable, scalable, and useful. Whether it's building autonomous code reviewers, streaming 440MB of telemetry data in
-                real-time, or engineering two-pass LLM pipelines.
+                I like solving problems that call for reliable, scalable, and useful systems. At work, that means building production data pipelines and automating how information moves between systems. On my own time, I've rebuilt Formula Vision around validated race data and efficient browser delivery, and developed an autonomous code reviewer with a two-pass LLM pipeline.
               </p>
               <p>
                 Outside of work I'm probably playing sports, working out, or hanging out with
@@ -669,16 +632,18 @@ function AboutSection() {
           <FadeInSection delay={0.3} className="md:col-span-2">
             <div className="flex flex-wrap justify-center gap-3">
               {[
-                { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon },
-                { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon },
-                { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail },
-              ].map(({ href, label, Icon }) => (
+                { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon, download: undefined },
+                { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon, download: undefined },
+                { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail, download: undefined },
+                { href: '/resume.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
+              ].map(({ href, label, Icon, download }) => (
                 <a
                   key={label}
                   href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 font-mono text-xs tracking-wide px-4 py-2 rounded-sm border transition-all duration-200"
+                  download={download}
+                  target={download ? undefined : '_blank'}
+                  rel={download ? undefined : 'noreferrer'}
+                  className="flex items-center whitespace-nowrap min-h-10 gap-2 font-mono text-xs tracking-wide px-3.5 py-2 rounded-sm border transition-all duration-200"
                   style={{
                     borderColor: 'var(--border)',
                     color: 'var(--text-2)',
@@ -718,9 +683,9 @@ function ProjectsSection() {
       <div className="renaissance-project-wrap">
         <FadeInSection>
           <div className="renaissance-project-intro">
-            <SectionLabel label="Selected Engineering" />
-            <h2 className="font-display">Not just interfaces. <span>Systems.</span></h2>
-            <p>Three very different problems, solved through data engineering, backend automation, and product development. Explore the architecture and the real code.</p>
+            <SectionLabel label="Projects" />
+            <h2 className="font-display">Things I've <span>built</span></h2>
+            <p>Projects spanning data engineering, developer automation, and full-stack software, with the code and architecture available to explore.</p>
           </div>
         </FadeInSection>
 
@@ -737,7 +702,7 @@ function ProjectsSection() {
                 <p className="renaissance-flagship-lead">An actual racing product. An engineering system underneath.</p>
                 <p className="renaissance-project-description">{flagship.description}</p>
                 <div className="renaissance-proof-points" aria-label="Engineering highlights">
-                  <div><span>01</span><p>Timing decides race order. Telemetry drives the picture.</p></div>
+                  <div><span>01</span><p>Official timing determines race order, while telemetry positions the cars on the circuit.</p></div>
                   <div><span>02</span><p>Canonical data and browser delivery are separate contracts.</p></div>
                   <div><span>03</span><p>Valid releases publish atomically; broken races are quarantined.</p></div>
                 </div>
@@ -761,7 +726,7 @@ function ProjectsSection() {
 
               <div className="renaissance-architecture" aria-label="Formula Vision architecture diagram">
                 <div className="renaissance-architecture-caption">
-                  <span>BUILD / VALIDATE / DELIVER</span><span>READ-ONLY SYSTEM OVERVIEW</span>
+                  <span>BUILD / VALIDATE / DEPLOY</span>
                 </div>
                 <div className="renaissance-architecture-flow">
                   {[
@@ -782,7 +747,7 @@ function ProjectsSection() {
                     </div>
                   ))}
                 </div>
-                <p className="renaissance-architecture-foot">Historical replay is static-first. No always-on replay API.</p>
+                
               </div>
             </div>
             <div className="renaissance-tech-strip" aria-label="Formula Vision technologies">
@@ -802,7 +767,7 @@ function ProjectsSection() {
                 <article className={`renaissance-supporting-project ${isReviewBot ? 'is-review-bot' : 'is-aetherflow'}`}>
                   <div className="renaissance-project-topline">
                     <span>{project.number} / ENGINEERING PROJECT</span>
-                    <span>{isReviewBot ? 'GITHUB INTEGRATION' : 'FILE INGESTION + ANALYTICS'}</span>
+                    <span>{isReviewBot ? 'GITHUB INTEGRATION + DEVELOPER TOOLING' : 'FILE INGESTION + ANALYTICS'}</span>
                   </div>
                   <div className="renaissance-secondary-body">
                     <div>
@@ -847,11 +812,10 @@ function ExperienceSection() {
           <div className="renaissance-experience-intro">
             <SectionLabel label="Experience" />
             <h2 className="font-display">
-              Engineering is <span>what I do.</span>
+              Engineering across <span>data and software</span>
             </h2>
             <p>
-              From translating requirements to building production data systems.
-              A chronological record of the work, responsibilities, and progression.
+              I build production data pipelines, automate reporting and integrations, and develop end-to-end software. These roles trace my progression across data engineering, analytics, and application development.
             </p>
           </div>
         </FadeInSection>
@@ -859,7 +823,7 @@ function ExperienceSection() {
         <div className="renaissance-company-list">
           {EXPERIENCE.map((exp, companyIndex) => (
             <FadeInSection key={exp.company} delay={companyIndex * 0.06}>
-              <article className="renaissance-company">
+              <article className={`renaissance-company ${exp.roles.length > 1 ? 'renaissance-company--progression' : ''}`}>
                 <div className="renaissance-company-identity">
                   <p className="renaissance-index">0{companyIndex + 1} / EXPERIENCE</p>
                   <div className="renaissance-company-heading">
