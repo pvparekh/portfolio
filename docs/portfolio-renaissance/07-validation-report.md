@@ -50,3 +50,23 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 - Inspected READY preview (2026-10-09): https://portfolio-i3p1zi3xk-pvparekhs-projects.vercel.app/
 - Branch: https://github.com/pvparekh/portfolio/tree/feat/portfolio-renaissance-research
 - No merge or production promotion authorized.
+
+## Follow-up implementation verification, 2026-10-09
+
+**Branch:** feat/portfolio-renaissance-research, continuing Draft PR #3. **Production:** unchanged.
+
+- [x] Hero removes Explore Projects, View Experience and Download Resume buttons.
+- [x] Hero eyebrow updated to Data Engineer / Actively Building with existing green dot.
+- [x] Status strip: role Data Engineer; education CS + DS at Rutgers (Class of '26); stack original unchanged; focus Data + Software + AI/ML.
+- [x] About social row contains a fourth, matching Resume anchor with FileText icon, same-origin /resume.pdf href and HTML download attribute. Actual user-agent download behavior not browser-tested.
+- [x] About biography replaces obsolete 440 MB real-time streaming reference; preserves reviewer/two-pass LLM and work reliability theme.
+- [x] Projects kicker changed to Projects; removed awkward repeated headline phrasing. Architecture caption is Build / Validate / Deploy; read-only caption and niche historical API footnote removed. GitHub Review Bot labelled Developer Tooling.
+- [x] Formula Vision technology rail now includes source-backed Python, FastF1, Parquet, React, TypeScript, Vite, Cloudflare R2, Recharts and Vercel with stronger contrast and center layout; secondary rails distribute labels evenly.
+- [x] Multi-role DOWC header spans full section width, and both roles use heading/date alongside bullet content. Single-role employers retain original compact two-column presentation. On smaller widths the role grid stacks.
+- [x] Entire const EXPERIENCE source block checked unchanged against upstream feature branch (3129 source characters; trimmed 3128) and the saved baseline.
+- [x] Built-in immutable-copy test script checked by source comparison against current content and saved baseline. Vercel READY reported for `2f2a1fde0b8529a8ee0c145a3d8f58693ab3da0d`, whose npm build script executes the experience test before TypeScript and Vite build.
+- [ ] Visual QA: no screenshots or browser interaction measurements were available; desktop/mobile harmony, Actual download, keyboard focus and all project links need manual or accessible browser verification.
+- [ ] WCAG audit, performance metrics and multi-device behavioral tests still incomplete.
+
+**Validated READY preview for this implementation:** https://portfolio-9x1jvzf66-pvparekhs-projects.vercel.app/ (commit 2f2a1fde0b8529a8ee0c145a3d8f58693ab3da0d; subsequent documentation commits have no runtime changes).
+**Research for this refinement:** docs/portfolio-renaissance/10-refinement-research-2026-10-09.md.
