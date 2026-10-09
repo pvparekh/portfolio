@@ -14,12 +14,12 @@ const offerings = [
     icon: Workflow,
     title: 'Reporting & workflow automation',
     promise: 'Stop rebuilding the same reports by hand.',
-    problem: 'A report only gets delivered when somebody downloads, cleans and assembles files.',
-    deliverable: 'A scheduled workflow that collects, cleans, validates and delivers the output your team needs.',
-    example: 'Turn recurring spreadsheets and emailed exports into an automated reporting process.',
-    included: 'Source review, implementation, validation, documentation and handoff.',
-    boundary: 'Does not include ongoing 24/7 monitoring or unlimited report redesign.',
-    inputs: 'An example output, sample files, access to relevant systems and the reporting schedule.',
+    problem: 'Recurring spreadsheets, email attachments, document exports or repetitive back-office tasks should not depend on someone doing the same steps every week.',
+    deliverable: 'A scheduled or event-driven workflow that collects, cleans, checks and delivers information where your team needs it.',
+    example: 'Automatically process incoming vendor files, reconcile key fields and deliver a finished report.',
+    included: 'Workflow mapping, implementation, testing, documentation and a clear handoff.',
+    boundary: 'Ongoing support, new platform licenses and unrelated report redesign can be scoped separately.',
+    inputs: 'A sample of the current process, example inputs and outputs, access to the relevant tools and the expected schedule.',
     tools: ['Python', 'Excel', 'Power Automate', 'Selenium', 'SFTP', 'Airflow']
   },
   {
@@ -27,26 +27,39 @@ const offerings = [
     icon: Database,
     title: 'Data pipelines & integrations',
     promise: 'Connect the systems your business runs on.',
-    problem: 'Useful data lives across APIs, databases and files, with no dependable way to move it.',
-    deliverable: 'A documented ingestion or synchronization pipeline with checks, retry behavior and clear ownership.',
-    example: 'Move data from an operational system into PostgreSQL for recurring analytics.',
-    included: 'Source/target mapping, data transfer, tests, basic failure diagnostics and a runbook.',
-    boundary: 'Complex enterprise migrations and continuous on-call support require a separate engagement.',
-    inputs: 'Integration requirements, authorized access, destination details and expected data volume.',
-    tools: ['APIs', 'Python', 'PostgreSQL', 'Airflow', 'Snowflake']
+    problem: 'Customer, sales or operational data is scattered across business applications, APIs, files, databases and cloud services.',
+    deliverable: 'A repeatable data pipeline or system integration with source mapping, validation, clear failure handling and a defined destination.',
+    example: 'Bring orders or CRM exports into a cloud database or analytics warehouse for consistent reporting.',
+    included: 'Integration design, ingestion or synchronization, transformation, testing and an operating guide.',
+    boundary: 'Organization-wide migrations, complex platform administration and continuous on-call operations require separate scoping.',
+    inputs: 'Authorized API or system access, sample records, destination requirements, update frequency and expected data volume.',
+    tools: ['REST APIs', 'Python', 'SQL', 'PostgreSQL', 'Snowflake', 'Cloud storage']
   },
   {
     number: '03',
     icon: Code2,
     title: 'SQL & reporting modernization',
     promise: 'Make complicated business logic understandable.',
-    problem: 'Important calculations are scattered across reports, nested measures and hard-to-maintain queries.',
-    deliverable: 'Clean SQL transformations, documented business rules and reconciliation checks against the current results.',
-    example: 'Translate reporting calculations into repeatable, testable SQL for downstream systems.',
-    included: 'Logic discovery, SQL implementation, representative parity checks and a maintainable explanation.',
-    boundary: 'Does not include a blanket guarantee of matching undocumented edge cases without source access.',
-    inputs: 'Current reports, calculation definitions, source data, and examples of expected output.',
-    tools: ['SQL', 'Power BI / DAX', 'PostgreSQL', 'Data validation']
+    problem: 'Important calculations are scattered across reports, fragile queries, nested measures and aging transformations.',
+    deliverable: 'Maintainable SQL transformations, documented business rules and reconciliation checks against existing outputs.',
+    example: 'Consolidate inconsistent reporting calculations into reusable SQL for a database or warehouse.',
+    included: 'Logic discovery, implementation, test cases, representative parity checks and documentation.',
+    boundary: 'Broader BI redesigns or undocumented business-rule discovery beyond the agreed dataset can be scoped separately.',
+    inputs: 'Current reports or queries, calculation definitions, representative source data and expected results.',
+    tools: ['SQL', 'SQL Server', 'Power BI / DAX', 'PostgreSQL', 'Data validation']
+  },
+  {
+    number: '04',
+    icon: Layers3,
+    title: 'Custom data tools & cloud workflows',
+    promise: 'Give your team a better way to work with its data.',
+    problem: 'Sometimes the missing piece is not another report. It is a lightweight internal application, processing service or reliable place for a workflow to run.',
+    deliverable: 'A focused web tool, API or cloud-hosted job that fits the existing process and includes a documented handoff.',
+    example: 'Build an internal upload-and-review tool that validates records, flags exceptions and exports ready-to-use results.',
+    included: 'Requirements, interface or API, data processing, deployment plan, validation and operating instructions.',
+    boundary: 'Large multi-team platforms, complex security programs and long-term infrastructure operations are estimated independently.',
+    inputs: 'Example tasks, users and permissions, existing infrastructure, sample data and the required output.',
+    tools: ['React', 'TypeScript', 'FastAPI', 'Python', 'Managed hosting', 'Databases']
   }
 ];
 
@@ -267,7 +280,7 @@ function SolutionsPage() {
         <section className="sol-hero" aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
             <div className="sol-hero-copy">
-              <div className="sol-topline"><span className="sol-status-dot" /> DATA SOLUTIONS / PARTH PAREKH</div>
+              <div className="sol-topline"><span className="sol-status-dot" /> 00 / DATA SOLUTIONS / PARTH PAREKH</div>
               <h1 id="sol-hero-title">From manual data work to <em>reliable systems.</em></h1>
               <p className="sol-hero-sub">As a data engineer and a Computer Science graduate with a Data Science minor, I build data pipelines, integrations and reporting automations that help teams spend less time moving data and more time using it.</p>
               <div className="sol-actions">
