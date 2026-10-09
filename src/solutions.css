@@ -159,3 +159,197 @@
 @media(max-width:700px){.sol-header{height:64px}.sol-header-inner{padding:0 20px}.sol-wordmark{font-size:19px}.sol-wordmark>small{font-size:9px;margin-left:8px}.sol-nav{display:none}.sol-nav-cta{padding:10px 11px;font-size:11px;gap:6px}.solutions .sol-container{padding-left:20px;padding-right:20px}.sol-hero-layout{padding-top:69px;padding-bottom:42px;gap:40px}.sol-topline{font-size:9px;letter-spacing:.09em}.sol-hero h1{font-size:clamp(2.75rem,11vw,4.2rem);letter-spacing:-.06em;margin-top:26px}.sol-hero-sub{font-size:16px;margin-top:23px}.sol-actions{gap:10px;margin-top:29px}.sol-button{width:100%;justify-content:space-between;min-height:50px}.sol-hero-signature{margin-top:25px}.sol-hero-bottom{padding-bottom:17px!important}.sol-hero-bottom span{font-size:8px}.sol-hero-bottom a{display:none}.sol-flow-top{font-size:8px}.sol-flow-row{gap:5px;min-height:205px}.sol-flow-node{min-height:164px;padding:13px 8px}.sol-flow-icon{height:33px}.sol-flow-icon svg{width:19px}.sol-flow-small{font-size:8px}.sol-flow-node strong{font-size:11px;margin-top:10px}.sol-flow-node small{font-size:9px}.sol-flow-connector{flex:0 0 18px}.sol-flow-connector span{display:none}.sol-flow-connector svg{width:12px}.sol-flow-footer{font-size:8px}.sol-section{padding:76px 0}.sol-section-intro{margin-bottom:36px}.sol-section-intro h2{font-size:clamp(2rem,8vw,3rem)}.sol-section-intro>p{font-size:14px;line-height:1.74}.sol-problems{grid-template-columns:1fr}.sol-problem{min-height:unset;padding:25px}.sol-problem-num{margin-bottom:27px}.sol-problem h3{font-size:22px}.sol-service{grid-template-columns:1fr;gap:18px;padding:34px 0}.sol-service-identity{flex-direction:row;align-items:center}.sol-service-identity svg{margin:0}.sol-service-main h3{font-size:30px}.sol-service-detail{border-left:0;border-top:1px solid var(--sol-border);padding:19px 0 0}.sol-case{padding:26px 0 37px}.sol-case-heading{align-items:flex-start}.sol-case-count span{display:none}.sol-case-tag{font-size:9px}.sol-case-layout{grid-template-columns:1fr;gap:30px}.sol-case-lead h3{font-size:38px}.sol-case-deck{font-size:14px}.sol-case-fact{grid-template-columns:100px 1fr;gap:12px}.sol-case-fact p{font-size:13px}.sol-case-links{margin-top:22px}.sol-deep-dive{grid-template-columns:1fr;gap:30px;padding:20px}.sol-case-details summary{padding:16px}.sol-practice-note{padding:19px;gap:13px}.sol-process{grid-template-columns:1fr}.sol-process-step,.sol-process-step:first-child{padding:21px 0;border-right:0;border-top:1px solid var(--sol-border)}.sol-process-step:first-child{border-top:0}.sol-process-step h3{font-size:24px;margin-top:18px}.sol-process-step:nth-child(4),.sol-process-step:nth-child(5){border-top:1px solid var(--sol-border)}.sol-contact-layout{grid-template-columns:1fr;gap:36px}.sol-contact-section h2{font-size:clamp(2.7rem,11vw,4.2rem)}.sol-contact-section p:not(.sol-eyebrow){font-size:14px}.sol-contact-panel{padding:24px}.sol-footer-inner{flex-wrap:wrap;justify-content:center;padding-top:26px;padding-bottom:26px;min-height:100px}.sol-footer span{order:3;width:100%;text-align:center}}
 @media(max-width:380px){.sol-wordmark>small{display:none}.sol-flow-node{padding:10px 6px}.sol-flow-graphic{padding:10px}.sol-flow-node small{font-size:8px}.sol-topline{font-size:8px}.sol-case-fact{grid-template-columns:1fr;gap:4px}}
 @media(prefers-reduced-motion:reduce){.solutions *,.solutions *:before,.solutions *:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* Data Solutions editorial polish. Scoped to this route; the homepage remains unchanged. */
+
+/* The original amber-on-ink palette stays intact. Refinement comes from
+   typesetting, measured surface hierarchy, and alignment rather than effects. */
+.solutions {
+  --sol-muted: #abb5c4;
+  --sol-soft: #8490a3;
+  --sol-border: rgba(226,232,240,.12);
+  --sol-accent: #f5a524;
+  font-feature-settings: "kern" 1;
+}
+.solutions .sol-container { max-width: 1280px; }
+.sol-header { border-bottom-color: rgba(245,165,36,.095); box-shadow: 0 8px 36px rgba(0,0,0,.15); }
+.sol-header-inner { max-width: 1480px; }
+.sol-nav a { position: relative; padding: 13px 0; }
+.sol-nav a:after { content:""; position:absolute; height:1px; left:0; bottom:7px; width:0; background:var(--sol-accent); transition:width .23s ease; }
+.sol-nav a:hover:after, .sol-nav a:focus-visible:after { width:100%; }
+.sol-mobile-nav { display:none; }
+
+/* An expressive first screen without sacrificing literal buyer clarity. */
+.sol-hero-layout { min-height: 633px; gap: clamp(32px, 4.5vw, 76px); padding-top: 87px; padding-bottom: 68px; }
+.sol-hero h1 { max-width: 720px; font-size:clamp(3.4rem,5.45vw,5.85rem); font-weight: 600; letter-spacing:-.067em; line-height:1.035; }
+.sol-hero h1 em { display:inline; }
+.sol-hero-sub { color:#b9c2d0; max-width:510px; }
+.sol-hero-art { position:relative; }
+.sol-hero-art:before { content:""; pointer-events:none; position:absolute; width:86%; height:1px; left:7%; bottom:-20px; background:linear-gradient(90deg,transparent,rgba(245,165,36,.3),transparent); }
+.sol-flow-graphic { position:relative; overflow:hidden; padding:22px 24px; border-color:rgba(245,165,36,.27); box-shadow: 0 34px 80px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.045); }
+.sol-flow-graphic:before { content:""; position:absolute; pointer-events:none; inset:0; background:linear-gradient(135deg,rgba(245,165,36,.035),transparent 37%); }
+.sol-flow-graphic:after { content:""; position:absolute; width:46px; height:46px; right:-1px; top:-1px; border-top:1px solid rgba(245,165,36,.65);border-right:1px solid rgba(245,165,36,.65);pointer-events:none; }
+.sol-flow-top, .sol-flow-footer { position:relative; z-index:1; letter-spacing:.12em; }
+.sol-flow-row { position:relative; z-index:1; gap:7px; }
+.sol-flow-node { position:relative; min-height:186px; border-color:rgba(226,232,240,.12); background:rgba(255,255,255,.025); transition:background .25s ease,border-color .25s ease,transform .25s ease; }
+.sol-flow-node:hover { border-color:rgba(245,165,36,.32); background:rgba(245,165,36,.055); transform:translateY(-2px); }
+.sol-flow-node-center { background:linear-gradient(160deg,rgba(245,165,36,.13),rgba(245,165,36,.045)); border-color:rgba(245,165,36,.47); box-shadow:inset 0 2px 0 rgba(245,165,36,.72); }
+.sol-flow-node-center:after { content:""; position:absolute; bottom:-1px; left:15%; right:15%; height:1px; background:rgba(245,165,36,.55); }
+.sol-flow-small { color:#9ca8b9; }
+.sol-flow-node strong { font-weight:600; }
+.sol-flow-node small { color:#aab4c2; }
+.sol-flow-connector { flex-basis:34px; color:var(--sol-accent); }
+
+/* The page reads as chapters rather than a tower of unrelated cards. */
+.sol-section { padding-top:clamp(92px,9vw,136px); padding-bottom:clamp(92px,9vw,136px); }
+.sol-section-intro { position:relative; max-width:875px; margin-bottom:61px; }
+.sol-section-intro h2 { letter-spacing:-.057em; font-size:clamp(2.4rem,4.2vw,3.9rem); }
+.sol-section-intro>p { color:#b5bfcc; margin-top:21px; max-width:640px; }
+.sol-section-index { margin-bottom:29px; }
+.sol-section-index .sol-rule { width:42px; }
+.sol-problem-section { background:#0e0e16; }
+.sol-problems { border-color:rgba(255,255,255,.13); }
+.sol-problem { overflow:hidden; min-height:274px; padding:31px 30px 32px; }
+.sol-problem:after { content:""; position:absolute; height:2px; bottom:0; left:0; width:0; background:var(--sol-accent); transition:width .35s ease; }
+.sol-problem:hover:after { width:100%; }
+.sol-problem-num { font-size:12px; color:#e5aa4a; }
+.sol-problem h3 { font-size:23px; letter-spacing:-.04em; }
+.sol-problem p { font-size:14px; line-height:1.8; }
+.sol-problem>svg { color:#ab8c62; opacity:.68; }
+
+.sol-service { position:relative; grid-template-columns: 108px minmax(0,1fr) minmax(0,.89fr); gap:36px; padding:58px 18px 58px 0; transition:background .25s ease; }
+.sol-service:hover { background:linear-gradient(90deg,rgba(245,165,36,.018),transparent 50%); }
+.sol-service-identity span { color:#95a0b1; }
+.sol-service-identity svg { width:32px; height:32px; color:var(--sol-accent); }
+.sol-service-main h3 { font-size:clamp(27px,2.7vw,39px); letter-spacing:-.052em; line-height:1.17; }
+.sol-service-main .sol-service-promise { margin-top:19px; font-size:17px; font-weight:600; color:#f6b54f; }
+.sol-service-main>p:last-child { font-size:14px; line-height:1.8; margin-top:22px; }
+.sol-service-detail { border-left-color:rgba(245,165,36,.18); padding-left:34px; }
+.sol-service-detail b { color:#b3becd; }
+.sol-service-detail p { line-height:1.75; }
+.sol-service-tech span,.sol-case-tech span { border-color:rgba(255,255,255,.12); color:#aab4c2; }
+.sol-service-detail details { border-color:rgba(255,255,255,.12); }
+.sol-service-detail summary { color:#d3d9e2; }
+.sol-tooling-note { display:grid; grid-template-columns:50px 1fr auto; align-items:start; gap:21px; margin-top:43px; padding:25px 27px; border:1px solid rgba(245,165,36,.24); background:linear-gradient(115deg,rgba(245,165,36,.065),rgba(245,165,36,.012) 60%); }
+.sol-tooling-symbol { display:flex; align-items:center; justify-content:center; width:45px; height:45px; color:var(--sol-accent); border:1px solid rgba(245,165,36,.29); }
+.sol-tooling-note strong { display:block; font:600 19px/1.3 'Space Grotesk',sans-serif; letter-spacing:-.032em; color:#eef2f7; }
+.sol-tooling-note p { margin-top:8px; max-width:725px; font:400 13px/1.8 Inter,sans-serif; color:#afbac9; }
+.sol-tooling-note>a { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid rgba(245,165,36,.3); color:var(--sol-accent); transition:background .2s ease; }
+.sol-tooling-note>a:hover { background:rgba(245,165,36,.12); }
+
+/* Technical evidence is strongly structured but not dressed up as a case-study directory. */
+.sol-work-section { background:#0d0d15; }
+.sol-case { padding:51px 0 61px; }
+.sol-case-heading { margin-bottom:42px; }
+.sol-case-count { letter-spacing:.1em; color:#f5b454; }
+.sol-case-tag { border-color:rgba(245,165,36,.23); color:#cbbba3; letter-spacing:.05em; }
+.sol-case-layout { gap:clamp(50px,7.3vw,112px); }
+.sol-case-lead h3 { font-size:clamp(38px,4.5vw,58px); }
+.sol-case-deck { font-size:16px; color:#c9d2dd; }
+.sol-case-links a { font-size:13px; padding-bottom:5px; border-bottom:1px solid rgba(245,165,36,.3); }
+.sol-case-links a:hover { border-bottom-color:var(--sol-accent); text-decoration:none; }
+.sol-case-fact { grid-template-columns:132px 1fr; gap:23px; padding-bottom:19px; border-bottom:1px solid rgba(255,255,255,.08); }
+.sol-case-fact:last-child { padding-bottom:0; border-bottom:0; }
+.sol-case-fact span { color:#a0abbb; line-height:1.6; }
+.sol-case-fact p { color:#cdd4de; line-height:1.79; }
+.sol-case-details { margin-top:40px; background:rgba(255,255,255,.016); transition:border-color .2s ease; }
+.sol-case-details:hover { border-color:rgba(245,165,36,.3); }
+.sol-case-details summary { font-size:14px; padding:21px 24px; }
+.sol-case-details[open] { border-color:rgba(245,165,36,.28); }
+.sol-deep-dive { padding:33px 28px; gap:54px; }
+.sol-deep-dive li { line-height:1.75; }
+.sol-case-tech { margin-top:24px; }
+.sol-process-step { padding-top:32px; padding-bottom:38px; }
+.sol-process-step>span { color:#e9ad52; }
+.sol-process-step h3 { font-size:24px; }
+.sol-process-step p { color:#b3bdca; }
+.sol-process-bottom { gap:32px; }
+.sol-contact-section { background:linear-gradient(118deg,#15141c 0%,#100f16 52%,#0e0d14 100%); }
+.sol-contact-panel { border-color:rgba(245,165,36,.27); background:linear-gradient(145deg,rgba(245,165,36,.038),rgba(0,0,0,.11)); }
+.sol-contact-panel>div { padding:20px 0; }
+.sol-contact-panel>div>p { color:#dbe1e9!important; }
+.sol-contact-section h2 { line-height:1.07; }
+.sol-contact-section p:not(.sol-eyebrow) { color:#bdc5d2; }
+.sol-footer-inner { min-height:90px; }
+
+@media (max-width: 1100px) {
+  .sol-hero h1 { font-size:clamp(3.4rem,5.7vw,5.5rem); }
+  .sol-service { grid-template-columns:72px minmax(0,1fr) minmax(0,1fr); gap:24px; }
+  .sol-service-detail { padding-left:25px; }
+  .sol-case-layout { gap:38px; }
+}
+
+@media (max-width:980px) {
+  .sol-hero-layout { grid-template-columns:1fr; min-height:unset; gap:48px; padding-top:80px; }
+  .sol-hero h1 { max-width:760px; font-size:clamp(3.4rem,7.3vw,5.3rem); }
+  .sol-hero-art { max-width:740px; }
+  .sol-section { padding-top:90px; padding-bottom:90px; }
+  .sol-service { grid-template-columns:60px minmax(0,1fr) minmax(0,.99fr); gap:19px; }
+  .sol-service-detail { padding-left:19px; }
+  .sol-process-step { padding-top:27px; }
+}
+
+@media (max-width:700px) {
+  .sol-header { height:auto; }
+  .sol-header-inner { height:64px; }
+  .sol-mobile-nav { height:40px; display:flex; justify-content:space-around; align-items:center; gap:8px; border-top:1px solid rgba(255,255,255,.065); padding:0 12px; background:rgba(10,10,17,.96); }
+  .sol-mobile-nav a { font:500 11px/1 'JetBrains Mono',monospace; color:#b7c0cd; letter-spacing:.025em; min-height:37px; display:inline-flex; align-items:center; justify-content:center; }
+  .sol-mobile-nav a:hover { color:var(--sol-accent); }
+  .sol-hero-layout { padding-top:54px; padding-bottom:50px; gap:38px; }
+  .sol-hero h1 { font-size:clamp(2.76rem,10.7vw,4.6rem); margin-top:29px; line-height:1.055; }
+  .sol-hero-sub { font-size:15.5px; line-height:1.77; margin-top:25px; }
+  .sol-hero-art:before { bottom:-12px; }
+  .sol-flow-graphic { padding:17px 18px; }
+  .sol-flow-top { font-size:8px; }
+  .sol-flow-footer { font-size:8px; }
+  .sol-flow-node { min-height:153px; }
+  .sol-flow-node strong { font-size:11px; }
+  .sol-section { padding-top:76px; padding-bottom:77px; }
+  .sol-section-intro { margin-bottom:36px; }
+  .sol-section-intro h2 { font-size:clamp(2.1rem,8.2vw,3.2rem); }
+  .sol-section-intro>p { font-size:14px; margin-top:19px; }
+  .sol-problem { min-height:unset; padding:28px 25px; }
+  .sol-problem h3 { font-size:22px; }
+  .sol-service { display:grid; grid-template-columns:1fr; gap:19px; padding:38px 0; }
+  .sol-service-detail { padding:22px 0 0; border-left:0; border-top:1px solid rgba(245,165,36,.15); }
+  .sol-service-main h3 { font-size:31px; }
+  .sol-service-main .sol-service-promise { font-size:17px; }
+  .sol-tooling-note { grid-template-columns:39px 1fr; gap:13px; padding:21px 18px; margin-top:27px; }
+  .sol-tooling-symbol { width:36px; height:36px; }
+  .sol-tooling-symbol svg { width:19px; }
+  .sol-tooling-note strong { font-size:17px; }
+  .sol-tooling-note p { font-size:12.5px; line-height:1.75; }
+  .sol-tooling-note>a { grid-column:2; width:32px; height:32px; margin-top:1px; }
+  .sol-case { padding:36px 0 44px; }
+  .sol-case-heading { margin-bottom:27px; }
+  .sol-case-layout { grid-template-columns:1fr; gap:35px; }
+  .sol-case-lead h3 { font-size:39px; }
+  .sol-case-fact { grid-template-columns:103px minmax(0,1fr); gap:12px; }
+  .sol-case-fact span { font-size:9px; }
+  .sol-case-fact p { font-size:13px; }
+  .sol-case-details { margin-top:29px; }
+  .sol-case-details summary { padding:17px 16px; font-size:13px; }
+  .sol-deep-dive { padding:24px 18px; }
+  .sol-process-step { padding:23px 0; }
+  .sol-process-step h3 { margin-top:15px; }
+  .sol-contact-layout { gap:36px; }
+  .sol-contact-section h2 { font-size:clamp(2.7rem,11vw,4.4rem); }
+}
+@media (max-width:520px) {
+  /* Vertical information flow makes labels readable on narrow phones. */
+  .sol-flow-row { min-height:0; flex-direction:column; gap:0; padding:22px 0; }
+  .sol-flow-node { width:100%; min-height:93px; flex:none; display:grid; grid-template-columns:38px 1fr; grid-template-rows:auto auto auto; column-gap:13px; align-items:center; padding:12px 13px; }
+  .sol-flow-icon { grid-column:1; grid-row:1/4; height:auto; justify-content:center; align-items:center; }
+  .sol-flow-small { grid-column:2; grid-row:1; font-size:8px; }
+  .sol-flow-node strong { grid-column:2; grid-row:2; font-size:14px; margin-top:1px; }
+  .sol-flow-node small { grid-column:2; grid-row:3; font-size:11px; margin-top:1px; }
+  .sol-flow-connector { width:20px; height:25px; flex:0 0 25px; transform:rotate(90deg); }
+  .sol-flow-connector svg { width:17px; }
+  .sol-flow-connector span { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .solutions .sol-nav a:after { transition-duration:0s; }
+  .solutions .sol-flow-node { transition-duration:0s; }
+  .solutions .sol-problem:after { transition-duration:0s; }
+}
