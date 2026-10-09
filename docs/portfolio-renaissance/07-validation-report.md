@@ -90,3 +90,21 @@ Research date: 2026-10-09. Source baseline: pvparekh/portfolio@01e6f9510952776fc
 Design: single-column information hierarchy with company logo/name and tenure at the parent level, role titles and accomplishments underneath, a timeline limited to multi-role companies. Replaces the previous two-column and later role-grid alternatives entirely.
 
 No production deployment or merge authorized.
+
+
+## User-authorized content and tenure refinement (2026-10-09)
+Commit `2d2f6b53f36da858118e685c4f5c8880ab7809fc` was applied atomically to the draft preview branch only.
+
+- [x] **Original Experience source archived** as `08-original-experience-snapshot.md`. Current `08-protected-experience-baseline.md` updated only for the user's explicitly supplied DOWC Junior Data Engineer and Data Analytics Intern bullet replacements. All other experience entries and metadata remain immutable. Existing `npm run check:experience` build guard continues to compare against the new approved baseline.
+- [x] Replaced all 2 Junior and 5 Data Analytics Intern bullets exactly with user-supplied descriptions. User-reported figures, including the ~1.8 GB / ~1.65M rows per day and 400+ lines, are not independently validated or approved for public employer disclosure.
+- [x] Dynamic date formatting for employer tenure and each role: inclusive calendar months (Jun–Sep 2026 = 4 mos; Sep–Oct 2026 = 2 mos; Sep–Nov 2026 = 3 mos). Ended jobs use their stored end month, not today. The open page checks for a calendar month transition once per minute and on tab visibility.
+- [x] Work arrangement in company metadata: DOWC `Parsippany, NJ · On-site`; Marketeq `Remote`; Perfect Threading `Async`. Employment type remains a separate line next to role title.
+- [x] Removed the small green pulse dot inside the CURRENT badge, preserving the larger animated green timeline node.
+- [x] Reduced between-company padding and within-DOWC nested role spacing, with connector lengths adjusted to match.
+- [x] Added only relevant skills: Selenium, Power Automate, Tableau, Power BI / DAX. All existing skill entries remain.
+- [x] Contact copy gains a borderless Explore Data Solutions text action with arrow using the existing SPA navigate callback to `/solutions`, preserving browser navigation / route state.
+- [x] Hero bottom status strip restores the original `STATUS / AVAILABLE` green-value convention as a fifth item, alongside ROLE, EDUCATION, STACK, FOCUS. Education becomes `CS + DS @ Rutgers-NB (Class of '26)`, and eyebrow is only `Actively Building`.
+- [x] Vercel reported READY for the full changed bundle at the implementation commit.
+- [ ] Pixel-level and mobile cross-width review, real browser navigation / scrolling and WCAG audit cannot be certified from connector build status alone.
+
+**Risk note:** Public-facing employer-specific throughput and workflow claims were supplied by the user. Confirm permission to disclose such internal operational figures before merging to production.
