@@ -630,19 +630,14 @@
 }
 
 
-/* Process: five distinct engineering milestones, not a horizontal scroll bar. */
-.solutions .sol-process {
-  gap: 12px;
-  border: 0;
-}
+/* Five individual milestone cards replace the scrolling progress line. */
+.solutions .sol-process { gap: 12px; border: 0; }
 .solutions .sol-process-step {
   position: relative;
-  min-width: 0;
   min-height: 246px;
   padding: 24px 22px 28px;
   border: 1px solid rgba(226,232,240,.14);
-  background: linear-gradient(152deg,rgba(245,165,36,.055),rgba(255,255,255,.012) 47%,rgba(255,255,255,.009));
-  transition: border-color .23s ease, background-color .23s ease, transform .23s ease;
+  background: linear-gradient(150deg, rgba(245,165,36,.055), rgba(255,255,255,.014));
 }
 .solutions .sol-process-step::before {
   content: "";
@@ -653,7 +648,6 @@
   height: 20px;
   border-top: 2px solid rgba(245,165,36,.8);
   border-left: 2px solid rgba(245,165,36,.8);
-  pointer-events: none;
 }
 .solutions .sol-process-step > .sol-process-number {
   display: inline-flex;
@@ -662,9 +656,10 @@
   width: 43px;
   height: 39px;
   border: 1px solid rgba(245,165,36,.26);
-  background: rgba(245,165,36,.072);
+  background: rgba(245,165,36,.07);
   color: #ffbc5a;
-  font: 600 12px/1 'JetBrains Mono',monospace;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: .04em;
 }
 .solutions .sol-process-next {
@@ -674,33 +669,13 @@
   color: rgba(245,165,36,.65);
 }
 .solutions .sol-process-step h3 {
-  margin-top: 29px;
-  letter-spacing: -.045em;
+  margin-top: 26px;
 }
-.solutions .sol-process-step p {
-  line-height: 1.7;
-}
-@media (hover:hover) and (prefers-reduced-motion:no-preference) {
-  .solutions .sol-process-step:hover {
-    transform: translateY(-3px);
-    border-color: rgba(245,165,36,.48);
-    background-color: rgba(245,165,36,.035);
-  }
-}
-@media (max-width: 980px) {
+@media (max-width:980px) {
   .solutions .sol-process-step { min-height: 220px; }
 }
-@media (max-width: 700px) {
+@media (max-width:700px) {
   .solutions .sol-process { gap: 10px; }
-  .solutions .sol-process-step {
-    min-height: 0;
-    padding: 21px 24px 23px;
-  }
-  .solutions .sol-process-step h3 {
-    margin-top: 20px;
-  }
-  .solutions .sol-process-next {
-    top: 28px;
-    right: 19px;
-  }
+  .solutions .sol-process-step { min-height: 0; padding: 21px 24px 23px; }
+  .solutions .sol-process-step h3 { margin-top: 19px; }
 }
