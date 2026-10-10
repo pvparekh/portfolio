@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
-import { motion, MotionConfig, useInView, useReducedMotion } from 'framer-motion';
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Globe2, Lightbulb, Layers3, Mail, PlugZap, Rocket, PanelsTopLeft, Sparkles, Wrench } from 'lucide-react';
+import { useState } from 'react';
+import { MotionConfig } from 'framer-motion';
+import { ArrowDownRight, ArrowLeft, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Globe2, Layers3, Mail, PlugZap, PanelsTopLeft, Sparkles, Wrench } from 'lucide-react';
 import { softwareProjects, type SoftwareProject } from './softwareProjects';
 import './solutions.css';
 import './software.css';
@@ -77,45 +77,86 @@ function SectionIntro({ index, label, title, accent, description }: { index: str
   );
 }
 
-function FlowConnector({ index, active, reducedMotion }: { index: number; active: boolean; reducedMotion: boolean }) {
+function SoftwarePreview() {
   return (
-    <div className="sol-flow-connector" aria-hidden="true">
-      <span className="sol-flow-base" />
-      <ArrowRight size={18} />
-      <motion.span
-        className="sol-flow-trace"
-        initial={reducedMotion ? false : { scaleX: 0 }}
-        animate={{ scaleX: active || reducedMotion ? 1 : 0 }}
-        transition={reducedMotion ? { duration: 0 } : { duration: 0.6, delay: 0.25 + index * 0.58, ease: [0.22, 1, 0.36, 1] }}
-      />
-    </div>
-  );
-}
+    <div className="software-workspace" role="img" aria-label="Illustrative custom application interface with a navigation rail, a project workspace, and software features designed around the user's workflow. This is a design concept, not a client application screenshot.">
+      <div className="software-workspace-top">
+        <span><span className="software-preview-spark" /> A DIFFERENT KIND OF SOFTWARE</span>
+        <span>INTERFACE STUDY / 01</span>
+      </div>
 
-function ArchitectureGraphic() {
-  const graphicRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(graphicRef, { once: true, amount: 0.25 });
-  const reducedMotion = !!useReducedMotion();
-  return (
-    <div ref={graphicRef} className="sol-flow-graphic" role="img" aria-label="Software delivery: define the goal and users, design and build the application, then deliver working software">
-      <div className="sol-flow-top"><span>SOFTWARE / 001</span><span>DEFINE · BUILD · DELIVER</span></div>
-      <div className="sol-flow-row">
-        <div className="sol-flow-node">
-          <span className="sol-flow-icon"><Lightbulb size={22} strokeWidth={1.6} aria-hidden="true" /></span>
-          <span className="sol-flow-small">01 / DIRECTION</span><strong>Goal & users</strong><small>Needs · workflows · scope</small>
+      <div className="software-workspace-browser">
+        <div className="software-browser-bar">
+          <div className="software-window-dots" aria-hidden="true"><span /><span /><span /></div>
+          <span className="software-browser-location"><Globe2 size={11} strokeWidth={1.8} /> workspace / overview</span>
+          <span className="software-browser-badge">UI CONCEPT</span>
         </div>
-        <FlowConnector index={0} active={isInView} reducedMotion={reducedMotion} />
-        <div className="sol-flow-node sol-flow-node-center">
-          <span className="sol-flow-icon"><Code2 size={23} strokeWidth={1.6} aria-hidden="true" /></span>
-          <span className="sol-flow-small">02 / CREATION</span><strong>Design & build</strong><small>Interface · logic · testing</small>
-        </div>
-        <FlowConnector index={1} active={isInView} reducedMotion={reducedMotion} />
-        <div className="sol-flow-node">
-          <span className="sol-flow-icon"><Rocket size={23} strokeWidth={1.6} aria-hidden="true" /></span>
-          <span className="sol-flow-small">03 / DELIVERY</span><strong>Working software</strong><small>Launch · access · handoff</small>
+
+        <div className="software-interface">
+          <div className="software-interface-sidebar" aria-hidden="true">
+            <span className="software-sidebar-mark"><Layers3 size={17} strokeWidth={1.8} /></span>
+            <span className="software-sidebar-item software-sidebar-item-active"><PanelsTopLeft size={16} strokeWidth={1.8} /></span>
+            <span className="software-sidebar-item"><Wrench size={16} strokeWidth={1.8} /></span>
+            <span className="software-sidebar-item"><PlugZap size={16} strokeWidth={1.8} /></span>
+            <span className="software-sidebar-avatar"><span /></span>
+          </div>
+
+          <div className="software-interface-content">
+            <div className="software-interface-overline">
+              <span>THE WORKSPACE</span>
+              <span className="software-app-signal"><span /> PURPOSE-BUILT</span>
+            </div>
+            <div className="software-interface-headline">
+              <div>
+                <h3>Built around <em>your workflow.</em></h3>
+                <p>Less friction. More progress.</p>
+              </div>
+              <div className="software-product-emblem" aria-hidden="true">
+                <span className="software-product-emblem-glow" />
+                <PanelsTopLeft size={26} strokeWidth={1.35} />
+              </div>
+            </div>
+
+            <div className="software-dashboard">
+              <div className="software-workflow-panel">
+                <div className="software-panel-heading"><span>DESIGNED FOR WHAT MATTERS</span><span>03</span></div>
+                <div className="software-task">
+                  <span className="software-task-icon"><PanelsTopLeft size={15} strokeWidth={1.65} /></span>
+                  <span className="software-task-label"><strong>Thoughtful interfaces</strong><small>Clear, comfortable to use</small></span>
+                  <CheckCircle2 className="software-task-check" size={14} strokeWidth={1.5} />
+                </div>
+                <div className="software-task">
+                  <span className="software-task-icon"><PlugZap size={15} strokeWidth={1.65} /></span>
+                  <span className="software-task-label"><strong>Connected workflows</strong><small>The right tools together</small></span>
+                  <CheckCircle2 className="software-task-check" size={14} strokeWidth={1.5} />
+                </div>
+                <div className="software-task">
+                  <span className="software-task-icon"><CheckCircle2 size={15} strokeWidth={1.65} /></span>
+                  <span className="software-task-label"><strong>Practical delivery</strong><small>Ready for the real world</small></span>
+                  <CheckCircle2 className="software-task-check" size={14} strokeWidth={1.5} />
+                </div>
+              </div>
+              <div className="software-details-panel">
+                <div className="software-details-head"><span>YOUR PRODUCT</span><Sparkles size={14} strokeWidth={1.5} /></div>
+                <div className="software-details-illustration">
+                  <div className="software-details-ring software-details-ring-one" />
+                  <div className="software-details-ring software-details-ring-two" />
+                  <div className="software-details-center"><Code2 size={22} strokeWidth={1.6} /></div>
+                  <span className="software-orbit-dot software-orbit-dot-one" />
+                  <span className="software-orbit-dot software-orbit-dot-two" />
+                </div>
+                <strong>Made to fit.</strong>
+                <span className="software-details-caption">NOT ANOTHER TEMPLATE</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="sol-flow-footer"><span className="sol-state">BUILT AROUND THE USE CASE</span><span>REAL APPLICATIONS</span></div>
+
+      <div className="software-workspace-footer">
+        <span><span className="software-preview-pulse" /> INTUITIVE BY DESIGN</span>
+        <span>BUILT FOR REAL USE</span>
+      </div>
     </div>
   );
 }
@@ -203,13 +244,13 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
             <div className="sol-hero-copy">
               <div className="sol-topline"><span className="sol-status-dot" /> SOFTWARE SOLUTIONS / PARTH PAREKH</div>
               <h1 id="sol-hero-title">Custom software, <em>built for the way you work.</em></h1>
-              <p className="sol-hero-sub">I design and develop business websites, web applications and focused software tools—from the first requirements to a working handoff. Explore real projects, then tell me what you need to build or improve.</p>
+              <p className="sol-hero-sub">I design and develop business websites, web applications and focused software tools, from the first requirements to a working handoff. Explore real projects, then tell me what you need to build or improve.</p>
               <div className="sol-actions">
                 <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
                 <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
               </div>
             </div>
-            <div className="sol-hero-art"><ArchitectureGraphic /></div>
+            <div className="sol-hero-art"><SoftwarePreview /></div>
           </div>
           <div className="sol-hero-bottom sol-container">
             <span>WEB APPS / BUSINESS WEBSITES / BACKENDS / INTEGRATIONS</span>
@@ -224,7 +265,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
               {[
                 ['An idea needs a working product', 'You have a specific concept for customers or employees, but need someone to turn it into usable software.'],
                 ['Your business needs a better front door', 'Customers should be able to explore services, book or take the next step without extra friction.'],
-                ['Your current tools have a gap', 'The application you use almost works—but an integration, interface or focused feature would make it fit.']
+                ['Your current tools have a gap', 'The application you use almost works, but an integration, interface or focused feature would make it fit.']
               ].map(([title, description], i) => (
                 <div className="sol-problem" key={title}>
                   <span className="sol-problem-num">0{i + 1}</span><h3>{title}</h3><p>{description}</p>
