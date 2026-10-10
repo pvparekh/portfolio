@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { motion, MotionConfig, useInView, useReducedMotion } from 'framer-motion';
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Globe2, Lightbulb, Mail, PlugZap, Rocket, PanelsTopLeft, Sparkles, Wrench } from 'lucide-react';
+import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Globe2, Lightbulb, Layers3, Mail, PlugZap, Rocket, PanelsTopLeft, Sparkles, Wrench } from 'lucide-react';
 import { softwareProjects, type SoftwareProject } from './softwareProjects';
 import './solutions.css';
 import './software.css';
