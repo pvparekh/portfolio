@@ -18,7 +18,7 @@ const offerings = [
    included:'Requirements, interface implementation, agreed backend features, testing, deployment guidance and handoff.',
    boundary:'Extensive permission systems, regulated-data handling, enterprise integrations and indefinite operations are separately scoped.',
    inputs:'Intended users, must-have workflows, sample information, access requirements and a decision maker.',
-   tools:['React','TypeScript','Next.js','PostgreSQL']},
+   tools:['React','TypeScript','Next.js','PostgreSQL'],proof:{id:'aetherflow',label:'AetherFlow'}},
   {number:'02',icon:Globe2,title:'Business websites & booking experiences',
    promise:'Make it easier for customers to understand and reach your business.',
    problem:'Your business needs a modern responsive site, clearer services or a smoother way for visitors to take action.',
@@ -27,7 +27,7 @@ const offerings = [
    included:'Page structure, responsive development, agreed forms or booking integration, basic testing and launch handoff.',
    boundary:'Paid marketing, content production, ongoing SEO programs and third-party subscription fees are separate.',
    inputs:'Brand assets, service information, example sites, content approvals and access to the domain or booking provider.',
-   tools:['Next.js','TypeScript','Responsive UI','Calendly']},
+   tools:['Next.js','TypeScript','Responsive UI','Calendly'],proof:{id:'salon',label:'Perfect Threading Salon'}},
   {number:'03',icon:PlugZap,title:'Backend services & integrations',
    promise:'Connect application features to the systems behind them.',
    problem:'Your product needs a focused API, webhook, server-side workflow or third-party connection.',
@@ -36,7 +36,7 @@ const offerings = [
    included:'Integration design, API or event implementation, relevant testing, configuration notes and handoff.',
    boundary:'Unlimited vendor integrations, vendor pricing, infrastructure support and major security audits are separately estimated.',
    inputs:'API access or documentation, event examples, expected behavior and the systems you control.',
-   tools:['Python','FastAPI','REST APIs','Webhooks']},
+   tools:['Python','FastAPI','REST APIs','Webhooks'],proof:{id:'review-bot',label:'GitHub Review Bot'}},
   {number:'04',icon:Sparkles,title:'AI-assisted software features',
    promise:'Add useful model-assisted behavior inside a real application.',
    problem:'A defined task such as classifying documents, preparing suggestions or reviewing content may benefit from AI with human oversight.',
@@ -45,7 +45,7 @@ const offerings = [
    included:'Task definition, integration, structured responses, practical fallbacks, testing with examples and cost considerations.',
    boundary:'Guaranteed model accuracy, autonomous high-stakes decisions, model training and open-ended AI research are excluded.',
    inputs:'Representative examples, criteria for good outputs, acceptable error cases and API billing access.',
-   tools:['OpenAI API','Claude','TypeScript','Python']},
+   tools:['OpenAI API','Claude','TypeScript','Python'],proof:{id:'aetherflow',label:'AetherFlow'}},
   {number:'05',icon:Wrench,title:'Existing application improvements',
    promise:'Make a useful product easier to use, extend or maintain.',
    problem:'An existing web app needs a defined feature, a cleaner interaction or a specific frontend/backend improvement.',
@@ -54,7 +54,7 @@ const offerings = [
    included:'Codebase review, change scope, implementation, regression checks and documentation of what changed.',
    boundary:'Full rewrites, undocumented systems, broad platform migrations and ongoing maintenance are assessed separately.',
    inputs:'Repository access, current behavior, expected outcome, test environment and release owner.',
-   tools:['React','TypeScript','APIs','Testing']}
+   tools:['React','TypeScript','APIs','Testing'],proof:{id:'formula',label:'Formula Vision'}}
 ];
 const process = [
  ['01','Understand','We discuss who will use the software, what it should enable and what already exists.'],
@@ -235,13 +235,12 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
           </div>
         </section>
 
-        
 
-<section className="sol-section sol-services-section" id="services">
+        <section className="sol-section sol-services-section" id="services">
           <div className="sol-container">
             <SectionIntro index="02" label="HOW I CAN HELP" title="Practical software. Clear deliverables." accent="Clear deliverables." description="A useful project starts with what people need to do, not a list of programming languages. Each engagement is sized around a defined outcome." />
             <div className="sol-service-list">
-              {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools }) => (
+              {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools, proof }) => (
                 <article className="sol-service" key={number}>
                   <div className="sol-service-identity"><span>{number} / SERVICE</span><Icon size={27} strokeWidth={1.35} /></div>
                   <div className="sol-service-main"><h3>{title}</h3><p className="sol-service-promise">{promise}</p><p>{problem}</p></div>
@@ -250,7 +249,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
                     <div><b>EXAMPLE</b><p>{example}</p></div>
                     <details><summary>Scope and requirements <ChevronRight size={15} /></summary><p><strong>Included:</strong> {included}</p><p><strong>Not included:</strong> {boundary}</p><p><strong>What you provide:</strong> {inputs}</p></details>
                     <div className="sol-service-tech">{tools.map(tool => <span key={tool}>{tool}</span>)}</div>
-                    <a className="sol-text-link" href="#contact">Discuss this service <ArrowUpRight size={15} /></a>
+                    <div className="software-service-links"><a className="sol-text-link" href="#contact">Discuss this service <ArrowUpRight size={15} /></a><a className="software-service-proof" href={"#" + proof.id}>Related work: {proof.label} <ArrowUpRight size={14} /></a></div>
                   </div>
                 </article>
               ))}
@@ -270,9 +269,8 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
           </div>
         </section>
 
-        
 
-<section className="sol-section sol-approach-section" id="approach">
+        <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
             <SectionIntro index="04" label="WORKING TOGETHER" title="From first conversation to working software." accent="working software." description="A proportionate process, with defined requirements, meaningful checkpoints and clear ownership at launch." />
             <EngagementProcess />
@@ -280,9 +278,8 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
           </div>
         </section>
 
-        
 
-<section className="sol-section sol-contact-section" id="contact">
+        <section className="sol-section sol-contact-section" id="contact">
           <div className="sol-container sol-contact-layout">
             <div>
               <p className="sol-eyebrow">05 / LET'S TALK</p>
