@@ -1076,3 +1076,15 @@
   .solutions .sol-contact-copy { min-height: 44px; }
   .solutions .sol-contact-email-address { overflow-wrap: anywhere; }
 }
+
+
+/* Phone-only telemetry hierarchy. The JSX supplies inline key colors, so
+   only the five key spans require a scoped override; values stay untouched. */
+@media screen and (max-width: 767px) and (hover: none) and (pointer: coarse),
+       screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .hero-telemetry-item > span:first-child {
+    color: #D6DFEA !important;
+    font-weight: 700;
+    letter-spacing: .10em;
+  }
+}
