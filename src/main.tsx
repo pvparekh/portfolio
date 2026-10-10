@@ -4,6 +4,7 @@ import App from './App.tsx';
 import SolutionsPage from './SolutionsPage.tsx';
 import SiteNav, { type SitePage } from './SiteNav.tsx';
 import './style.css';
+import './mobile.css';
 
 const currentPage = (): SitePage =>
   /^\/solutions(?:\/|$)/.test(window.location.pathname) ? 'solutions' : 'portfolio';

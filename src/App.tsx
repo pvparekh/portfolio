@@ -367,7 +367,7 @@ function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 1 }}
-        className="absolute top-20 right-6 md:right-14 font-display text-right select-none pointer-events-none"
+        className="hero-grid-marker absolute top-20 right-6 md:right-14 font-display text-right select-none pointer-events-none"
       >
         <div
           className="font-bold leading-none"
@@ -381,7 +381,7 @@ function HeroSection() {
       </motion.div>
 
       {/* Hero content */}
-      <motion.div style={{ y, opacity: op }} className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+      <motion.div style={{ y, opacity: op }} className="hero-mobile-content relative z-10 text-center px-6 max-w-5xl mx-auto">
         {/* Status pill */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -472,10 +472,10 @@ function HeroSection() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.9, duration: 0.7, ease }}
-        className="absolute bottom-0 left-0 right-0 border-t font-mono text-[10px] lg:text-[10px] 2xl:text-xs overflow-x-auto"
+        className="hero-telemetry absolute bottom-0 left-0 right-0 border-t font-mono text-[10px] lg:text-[10px] 2xl:text-xs overflow-x-auto"
         style={{ borderColor: 'var(--border)' }}
       >
-        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
+        <div className="hero-telemetry-grid max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
           {[
             { label: 'ROLE', value: 'DATA ENGINEER' },
             { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB" },
@@ -483,7 +483,7 @@ function HeroSection() {
             { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
             { label: 'STATUS', value: 'AVAILABLE' },
           ].map((item) => (
-            <div key={item.label} className="flex shrink-0 items-center gap-1.5 lg:gap-2 whitespace-nowrap">
+            <div key={item.label} className="hero-telemetry-item flex shrink-0 items-center gap-1.5 lg:gap-2 whitespace-nowrap">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
               <span className="h-px w-2 lg:w-3 shrink-0" style={{ background: 'var(--border)' }} />
               <span style={{ color: item.label === 'STATUS' ? '#22C55E' : 'var(--text-2)' }}>
@@ -499,7 +499,7 @@ function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 0.6 }}
-        className="absolute bottom-14 left-1/2 -translate-x-1/2"
+        className="hero-scroll-cue absolute bottom-14 left-1/2 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 7, 0] }}
@@ -572,7 +572,7 @@ function AboutSection() {
 
           {/* Profile boards */}
           <FadeInSection delay={0.22} className="md:col-span-1">
-            <div className="grid sm:grid-cols-2 gap-5 h-full">
+            <div className="about-profile-panels grid sm:grid-cols-2 gap-5 h-full">
               {/* Technical profile */}
               <div
                 className="rounded-sm border h-full flex flex-col"
@@ -976,7 +976,7 @@ function SkillsSection() {
           </h2>
         </FadeInSection>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
+        <div className="mobile-skill-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {SKILLS.map((group, i) => {
             const { Icon } = group;
             return (
@@ -991,7 +991,7 @@ function SkillsSection() {
                     (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)';
                   }}
                 >
-                  <div className="flex items-baseline gap-2 mb-4">
+                  <div className="skill-card-heading flex items-baseline gap-2 mb-4">
                     <Icon
                       size={13}
                       style={{ color: 'var(--accent)', flexShrink: 0, alignSelf: 'center' }}
@@ -1003,7 +1003,7 @@ function SkillsSection() {
                       S{group.sector} /
                     </span>
                     <span
-                      className="font-mono text-base tracking-widest uppercase"
+                      className="skill-card-label font-mono text-base tracking-widest uppercase"
                       style={{ color: 'var(--text-3)' }}
                     >
                       {group.label}

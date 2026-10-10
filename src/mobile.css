@@ -1,0 +1,444 @@
+/*
+ * PHONE-ONLY PRESENTATION LAYER
+ *
+ * Source-of-truth desktop styles live in style.css and solutions.css.
+ * Every rule below is contained in a portrait-sized or touch-landscape
+ * media query; this file intentionally has no unscoped CSS declarations.
+ *
+ * No feature, copy or interaction is hidden as a shortcut for fitting text.
+ */
+
+/* Portrait phones and narrow equivalent viewports. */
+@media screen and (max-width: 767px) {
+  html, body, #root { max-width: 100%; }
+  #root, #root main, .solutions { min-width: 0; }
+  #hero, #about, #experience, #projects, #skills, #contact {
+    scroll-margin-top: 80px;
+  }
+
+  /* The navigation must remain usable even if its sections fill the phone. */
+  .site-shared-nav > div:first-child { padding-inline: 18px; }
+  .site-shared-brand-section { font-size: 8px; letter-spacing: .01em; }
+  .portfolio-menu-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+  #site-mobile-navigation {
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .portfolio-mobile-trigger,
+  .portfolio-mobile-destination,
+  .portfolio-mobile-link,
+  .portfolio-mobile-solutions {
+    min-height: 44px;
+  }
+
+  /* Hero: retain the design, but allow the content to sit above a compact
+     visible 2x2 telemetry grid with status as a centered fifth datum. */
+  #hero {
+    min-height: max(100svh, 660px);
+    padding: 96px 0 151px;
+    box-sizing: border-box;
+  }
+  .hero-grid-marker,
+  .hero-scroll-cue { display: none; }
+  .hero-mobile-content {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: 16px;
+  }
+  .hero-mobile-content > .mb-6 { margin-bottom: 18px; }
+  .hero-mobile-content .font-mono.text-base { max-width: 100%; }
+  .hero-telemetry {
+    overflow-x: visible;
+    width: 100%;
+  }
+  .hero-telemetry-grid {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding: 12px 18px 13px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 15px;
+    align-items: start;
+    justify-content: stretch;
+  }
+  .hero-telemetry-item {
+    min-width: 0;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    white-space: normal;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .hero-telemetry-item > span:nth-child(2) { display: none; }
+  .hero-telemetry-item > span:last-child {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .hero-telemetry-item:last-child {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 7px;
+    border-top: 1px solid rgba(255,255,255,.075);
+  }
+
+  /* About and the profile boards: one full-width reading column followed by
+     readable panels, never miniature two-up cards with overflowing values. */
+  #about, #skills, #contact {
+    padding-inline: 18px;
+    padding-block: 70px;
+  }
+  #about h2, #skills h2 {
+    margin-bottom: 40px;
+    font-size: clamp(29px, 8vw, 39px);
+  }
+  #about .about-profile-panels {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  #about .about-profile-panels > div,
+  #about .about-profile-panels .flex-1 {
+    min-width: 0;
+  }
+  #about .about-profile-panels .flex-shrink-0 {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  #about .about-profile-panels .text-right {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  #about .space-y-4 { font-size: 14px; line-height: 1.76; }
+
+  /* Experience: compact nested rail, clear progression and natural prose
+     wrapping without squeezing the single-role employers. */
+  .renaissance-experience-section { padding: 73px 18px 67px; }
+  .renaissance-experience-intro { margin-bottom: 42px; }
+  .renaissance-experience-intro h2 {
+    font-size: clamp(31px, 8vw, 43px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-experience-intro p { font-size: 14px; line-height: 1.73; }
+  .renaissance-company-header { align-items: flex-start; }
+  .renaissance-company-details { flex: 1 1 auto; min-width: 0; }
+  .renaissance-company-name { overflow-wrap: anywhere; }
+  .renaissance-company-meta { overflow-wrap: anywhere; }
+  .renaissance-roles--single { margin-left: 0; }
+  .renaissance-roles--nested {
+    margin-left: 13px;
+    padding-left: 29px;
+    margin-top: 24px;
+  }
+  .renaissance-roles--nested .renaissance-role::before { left: -35px; }
+  .renaissance-roles--nested .renaissance-role:not(:last-child)::after {
+    left: -29px;
+  }
+  .renaissance-role-title-row { gap: 8px; }
+  .renaissance-role-period { overflow-wrap: anywhere; }
+
+  /* The hero projects and all technical rails reflow. Technology labels
+     become tidy phone-only tiles rather than a long horizontal ticker. */
+  .renaissance-project-section { padding: 73px 14px 76px; }
+  .renaissance-project-intro { margin-bottom: 42px; }
+  .renaissance-project-intro h2 {
+    font-size: clamp(35px, 9.5vw, 46px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-project-topline {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 7px;
+    padding: 14px 19px;
+    overflow-wrap: anywhere;
+  }
+  .renaissance-project-topline span { min-width: 0; max-width: 100%; }
+  .renaissance-flagship-story { padding: 26px 21px 24px; }
+  .renaissance-flagship-story h3 {
+    font-size: clamp(37px, 10vw, 58px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-flagship-lead { font-size: 18px; }
+  .renaissance-architecture { padding: 23px 20px 22px; }
+  .renaissance-architecture-caption {
+    margin-bottom: 24px;
+    overflow-wrap: anywhere;
+  }
+  .renaissance-architecture-step { gap: 12px; }
+  .renaissance-architecture-step-body { min-width: 0; }
+  .renaissance-project-actions { gap: 7px 17px; }
+  .renaissance-flagship-story .renaissance-primary-project-link {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .renaissance-primary-project-link,
+  .renaissance-text-project-link { min-height: 44px; }
+  .renaissance-secondary-body { padding: 26px 22px 22px; }
+  .renaissance-secondary-body h3 {
+    font-size: clamp(28px, 7.5vw, 38px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-supporting-projects { gap: 16px; }
+  .renaissance-tech-strip,
+  .renaissance-secondary-tech {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 8px;
+    padding: 14px;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  .renaissance-tech-strip span,
+  .renaissance-secondary-tech span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 7px 5px;
+    border: 1px solid rgba(255,255,255,.085);
+    background: rgba(255,255,255,.025);
+    font-size: 10.5px;
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .renaissance-secondary-tech span { font-size: 10px; }
+
+  /* The Skills section should retain every item. Its long titles and pills
+     may wrap rather than forcing any one card wider than the viewport. */
+  #skills .skill-card-heading {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px 9px;
+  }
+  #skills .skill-card-label {
+    min-width: 0;
+    font-size: 12px;
+    letter-spacing: .065em;
+    overflow-wrap: anywhere;
+  }
+  #skills .skill-chip {
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  /* Contact addresses and cards should not be forced beyond 320 CSS px. */
+  #contact .max-w-2xl { min-width: 0; width: 100%; }
+  #contact a.group { min-width: 0; gap: 10px; padding: 13px; }
+  #contact a.group > div { min-width: 0; }
+  #contact a.group .font-mono.text-sm {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  #contact a.group svg { flex-shrink: 0; }
+  footer .max-w-6xl { justify-content: center; text-align: center; }
+
+  /* Data Solutions: work within the existing responsive layout, improve
+     diagram labels, the services stack, details, and tap target sizing. */
+  .solutions .sol-container {
+    padding-left: clamp(16px, 4.5vw, 22px);
+    padding-right: clamp(16px, 4.5vw, 22px);
+    min-width: 0;
+  }
+  .solutions .sol-hero-layout {
+    padding-top: 96px;
+    padding-bottom: 38px;
+    gap: 28px;
+  }
+  .solutions .sol-hero-copy,
+  .solutions .sol-hero-art,
+  .solutions .sol-case-layout > div,
+  .solutions .sol-service-main,
+  .solutions .sol-service-detail {
+    min-width: 0;
+  }
+  .solutions .sol-hero h1 {
+    font-size: clamp(37px, 9.3vw, 59px);
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+  .solutions .sol-topline { flex-wrap: wrap; overflow-wrap: anywhere; }
+  .solutions .sol-flow-graphic { padding: 14px; }
+  .solutions .sol-flow-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-flow-footer { gap: 9px 13px; overflow-wrap: anywhere; }
+  .solutions .sol-hero-bottom {
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+  .solutions .sol-case-heading { flex-wrap: wrap; gap: 10px; }
+  .solutions .sol-case-tag { max-width: 100%; overflow-wrap: anywhere; }
+  .solutions .sol-case-fact { min-width: 0; }
+  .solutions .sol-case-fact p,
+  .solutions .sol-case-deck,
+  .solutions .sol-service-main p,
+  .solutions .sol-service-detail p,
+  .solutions .sol-deep-dive p,
+  .solutions .sol-deep-dive li {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-case-links a,
+  .solutions .sol-text-link,
+  .solutions .sol-mobile-nav a { min-height: 44px; }
+  .solutions .sol-service-tech span,
+  .solutions .sol-case-tech span {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-process-bottom { gap: 12px; }
+  .solutions .sol-process-bottom > span { min-width: 0; }
+  .solutions .sol-contact-email-address { overflow-wrap: anywhere; }
+  .solutions .sol-contact-copy { min-height: 44px; }
+}
+
+/* Very narrow portrait screens get comfortable tag widths and simpler facts. */
+@media screen and (max-width: 420px) {
+  .renaissance-tech-strip,
+  .renaissance-secondary-tech {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+  .solutions .sol-service-tech,
+  .solutions .sol-case-tech {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .solutions .sol-service-tech span,
+  .solutions .sol-case-tech span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    text-align: center;
+  }
+  #contact a.group .font-mono.text-sm { font-size: 11.5px; }
+}
+
+/* Landscape on actual short, touch-primary devices; desktops and laptops
+   keep their existing >=768px navigation and two-column compositions. */
+@media screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .portfolio-desktop-nav { display: none !important; }
+  .portfolio-menu-toggle {
+    display: flex !important;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+  .portfolio-mobile-panel {
+    display: block !important;
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  #hero {
+    min-height: 500px;
+    padding: 74px 0 111px;
+  }
+  .hero-grid-marker, .hero-scroll-cue { display: none; }
+  .hero-mobile-content { width: 100%; max-width: 100%; padding-inline: 20px; }
+  #hero .hero-mobile-content .font-display.font-bold {
+    font-size: clamp(49px, 8vw, 76px) !important;
+  }
+  .hero-mobile-content > .mb-6 { margin-bottom: 12px; }
+  .hero-telemetry { overflow-x: visible; }
+  .hero-telemetry-grid {
+    box-sizing: border-box;
+    display: grid;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    grid-template-columns: 1fr 1.25fr 1.5fr;
+    gap: 9px 15px;
+    padding: 10px 22px;
+    justify-content: stretch;
+  }
+  .hero-telemetry-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    min-width: 0;
+    flex-shrink: 1;
+    white-space: normal;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .hero-telemetry-item > span:nth-child(2) { display: none; }
+  .hero-telemetry-item > span:last-child {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .hero-telemetry-item:last-child { grid-column: 3; }
+
+  /* Wider landscape cards and profile panels without cramped three-up grids. */
+  .renaissance-tech-strip,
+  .renaissance-secondary-tech {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(110px,1fr));
+    gap: 8px;
+    padding: 15px;
+  }
+  .renaissance-tech-strip span,
+  .renaissance-secondary-tech span {
+    min-width: 0;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+  }
+  #skills .mobile-skill-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #skills .skill-card-heading { flex-wrap: wrap; }
+  #skills .skill-card-label { font-size: 13px; }
+  .renaissance-project-topline {
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .solutions .sol-hero-layout { padding-top: 90px; padding-bottom: 32px; gap: 26px; }
+  .solutions .sol-hero h1 { font-size: clamp(43px,6.2vw,62px); }
+  .solutions .sol-flow-row { min-height: 195px; }
+  .solutions .sol-flow-node { min-height: 142px; }
+  .solutions .sol-flow-top, .solutions .sol-flow-footer {
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-service-tech span, .solutions .sol-case-tech span {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}

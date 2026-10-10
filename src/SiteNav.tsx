@@ -293,7 +293,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           {page === 'solutions' && <small className="site-shared-brand-section"> / DATA SOLUTIONS</small>}
         </a>
 
-        <div className="hidden md:flex items-center gap-7 lg:gap-9" ref={desktopAreaRef}>
+        <div className="portfolio-desktop-nav hidden md:flex items-center gap-7 lg:gap-9" ref={desktopAreaRef}>
           {dropdown(groups[0])}
           {page === 'solutions' && solutionsDropdownReady ? dropdown(groups[1]) : (
             <a
@@ -336,7 +336,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
 
         <button
           type="button"
-          className="md:hidden flex flex-col gap-1.5 p-2"
+          className="portfolio-menu-toggle md:hidden flex flex-col gap-1.5 p-2"
           onClick={() => { setMobileOpen(!mobileOpen); if (mobileOpen) setMobileGroup(null); }}
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
@@ -365,7 +365,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            className="md:hidden overflow-hidden"
+            className="portfolio-mobile-panel md:hidden overflow-hidden"
             style={{ background: 'rgba(8,8,13,0.98)', borderBottom: '1px solid var(--border)' }}
           >
             <div className="px-6 py-4 flex flex-col gap-4">
