@@ -38,6 +38,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Browser route, interaction and viewport checks
         run: node scripts/check-software-page.mjs
+      - name: Verify differentiated motion and reduced-motion support
+        run: node scripts/check-solutions-motion.mjs
       - name: Build production main in a separate worktree (no deployment)
         run: |
           git worktree add /tmp/portfolio-production origin/main
