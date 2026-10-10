@@ -44,7 +44,7 @@ export const softwareProjects: SoftwareProject[] = [
     "description": "An interactive Formula 1 race-exploration product with coordinated views, historical playback, and detailed race context.",
     "problem": "Presenting dense, time-dependent race information as something people can explore instead of decipher.",
     "work": "Independently built the React and TypeScript experience, playback controls, MAP and CHASE visualizations, client-side timing, selective loading, and the supporting publication architecture.",
-    "outcome": "An interactive race library with timeline controls, responsive visualizations and data-rich views—an example of taking a complex domain through to a usable browser product.",
+    "outcome": "An interactive race library with timeline controls, responsive visualizations and data-rich views. It demonstrates how a complex domain can become a usable browser product.",
     "contribution": "Designed and implemented the product interface, replay architecture, spatial presentation, and supporting data publication system.",
     "architecture": [
       "React/TypeScript interface with a browser-owned replay clock",
