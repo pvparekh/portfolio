@@ -1,0 +1,130 @@
+/*
+ * Scoped motion signatures for Data Solutions and Software Solutions.
+ * No styles target the Portfolio page. Layout, spacing and copy are untouched.
+ * Reduced motion and missing JavaScript keep all content visible.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /* Data: sequential pipeline motion and upward, measured scroll entrances. */
+  .solutions.data-solutions .sol-topline {
+    animation: data-hero-rise .55s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.data-solutions .sol-hero h1 {
+    animation: data-hero-rise .82s .10s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.data-solutions .sol-hero-sub {
+    animation: data-hero-rise .72s .26s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.data-solutions .sol-actions {
+    animation: data-hero-rise .7s .37s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.data-solutions .sol-flow-graphic {
+    animation: data-pipeline-reveal .96s .20s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.data-solutions .sol-flow-node {
+    animation: data-hero-rise .62s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.data-solutions .sol-flow-node:nth-child(1) { animation-delay: .42s; }
+  .solutions.data-solutions .sol-flow-node:nth-child(3) { animation-delay: .64s; }
+  .solutions.data-solutions .sol-flow-node:nth-child(5) { animation-delay: .86s; }
+
+  .solutions.data-solutions.sol-motion-enabled .sol-reveal-target {
+    opacity:0;
+    transform:translate3d(0,25px,0);
+    transition: opacity .73s ease, transform .78s cubic-bezier(.22,1,.36,1);
+  }
+  .solutions.data-solutions.sol-motion-enabled .sol-reveal-target.sol-revealed {
+    opacity:1;
+    transform:none;
+  }
+  .solutions.data-solutions .sol-problem:nth-child(2).sol-reveal-target,
+  .solutions.data-solutions .sol-process-step:nth-child(2).sol-reveal-target { transition-delay:.085s; }
+  .solutions.data-solutions .sol-problem:nth-child(3).sol-reveal-target,
+  .solutions.data-solutions .sol-process-step:nth-child(3).sol-reveal-target { transition-delay:.17s; }
+  .solutions.data-solutions .sol-section-intro.sol-reveal-target::after {
+    content:""; position:absolute; left:0; bottom:-18px; height:2px; width:72px;
+    background:linear-gradient(90deg,var(--sol-accent),rgba(245,158,11,0));
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .74s .14s cubic-bezier(.22,1,.36,1);
+    pointer-events:none;
+  }
+  .solutions.data-solutions .sol-section-intro.sol-revealed::after { transform:scaleX(1); }
+
+  /* Software: a softer interface entrance with a subtle zoom rather than
+     the pipeline's sequential wipe. Keep the product UI fully readable. */
+  .solutions.software-solutions .sol-topline {
+    animation: software-hero-slide .58s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.software-solutions .sol-hero h1 {
+    animation: software-hero-slide .84s .11s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.software-solutions .sol-hero-sub {
+    animation: software-hero-slide .77s .26s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.software-solutions .sol-actions {
+    animation: software-hero-slide .73s .39s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.software-solutions .software-workspace {
+    animation: software-ui-appear .92s .20s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.software-solutions .software-task {
+    animation: software-row-enter .68s cubic-bezier(.22,1,.36,1) both;
+  }
+  .solutions.software-solutions .software-task:nth-child(2) { animation-delay:.56s; }
+  .solutions.software-solutions .software-task:nth-child(3) { animation-delay:.67s; }
+  .solutions.software-solutions .software-task:nth-child(4) { animation-delay:.78s; }
+  .solutions.software-solutions .software-details-center {
+    animation: software-ui-float 6s 1.2s ease-in-out infinite;
+  }
+
+  .solutions.software-solutions.sol-motion-enabled .sol-reveal-target {
+    opacity:0;
+    transform:translate3d(0,12px,0) scale(.974);
+    transition:opacity .77s ease,transform .85s cubic-bezier(.22,1,.36,1);
+  }
+  .solutions.software-solutions.sol-motion-enabled .sol-reveal-target.sol-revealed {
+    opacity:1;
+    transform:none;
+  }
+  .solutions.software-solutions .sol-problem:nth-child(2).sol-reveal-target,
+  .solutions.software-solutions .sol-process-step:nth-child(2).sol-reveal-target {transition-delay:.075s}
+  .solutions.software-solutions .sol-problem:nth-child(3).sol-reveal-target,
+  .solutions.software-solutions .sol-process-step:nth-child(3).sol-reveal-target {transition-delay:.15s}
+  .solutions.software-solutions .sol-section-intro.sol-reveal-target .sol-rule {
+    transform:scaleX(.35);transform-origin:left;
+    transition:transform .8s cubic-bezier(.22,1,.36,1);
+  }
+  .solutions.software-solutions .sol-section-intro.sol-revealed .sol-rule {transform:scaleX(1)}
+
+  @keyframes data-hero-rise {
+    from {opacity:0;transform:translate3d(0,24px,0)}
+    to {opacity:1;transform:translate3d(0,0,0)}
+  }
+  @keyframes data-pipeline-reveal {
+    from {opacity:0;clip-path:inset(0 100% 0 0)}
+    to {opacity:1;clip-path:inset(0 0 0 0)}
+  }
+  @keyframes software-hero-slide {
+    from {opacity:0;transform:translate3d(24px,0,0)}
+    to {opacity:1;transform:translate3d(0,0,0)}
+  }
+  @keyframes software-ui-appear {
+    from {opacity:0;transform:translate3d(0,25px,0) scale(.965)}
+    to {opacity:1;transform:translate3d(0,0,0) scale(1)}
+  }
+  @keyframes software-row-enter {
+    from {opacity:0;transform:translate3d(0,9px,0)}
+    to {opacity:1;transform:translate3d(0,0,0)}
+  }
+  @keyframes software-ui-float {
+    0%,100% {transform:translateY(0) rotate(-7deg)}
+    50% {transform:translateY(-5px) rotate(-4deg)}
+  }
+}
+
+/* Never gate visibility for reduced-motion users, printing, or no-JS. */
+@media (prefers-reduced-motion: reduce), print {
+  .solutions.data-solutions .sol-reveal-target,
+  .solutions.software-solutions .sol-reveal-target {
+    opacity:1!important;transform:none!important;transition:none!important;animation:none!important;
+  }
+}
