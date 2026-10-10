@@ -913,7 +913,7 @@ function ExperienceSection() {
                       {exp.company === 'DOWC'
                         ? <>Parsippany, NJ <span aria-hidden="true">·</span> On-site</>
                         : exp.company === 'Perfect Threading Salon'
-                          ? 'Async'
+                          ? 'Parsippany, NJ'
                           : exp.location}
                     </p>
                   </div>
