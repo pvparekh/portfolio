@@ -57,10 +57,17 @@ try {
   await desktop.waitForTimeout(650);
   const trigger=desktop.locator('button[aria-label="Show Software Solutions sections"]');
   assert.equal(await trigger.count(),1,'Active route disclosure should appear once pointer leaves');
-  await trigger.click();
+  // Hover may have opened the dropdown already. Keyboard toggles must be
+  // tested independently of a subsequent pointer click that would close it.
+  const initialExpanded = await trigger.getAttribute('aria-expanded');
+  await trigger.focus();
+  await desktop.keyboard.press('Enter');
+  assert.notEqual(await trigger.getAttribute('aria-expanded'),initialExpanded,
+    'Keyboard activation toggles the desktop disclosure');
+  if (await trigger.getAttribute('aria-expanded') !== 'true') await desktop.keyboard.press('Enter');
   assert.equal(await trigger.getAttribute('aria-expanded'),'true');
   assert.equal(await desktop.locator('a[href="/software#work"]').count(),1);
-  await trigger.focus(); await desktop.keyboard.press('Escape');
+  await desktop.keyboard.press('Escape');
   assert.equal(await trigger.getAttribute('aria-expanded'),'false');
   await desktop.locator('.portfolio-desktop-nav a[href="#contact"]').click();
   assert.equal(await desktop.locator('#contact').count(),1);
