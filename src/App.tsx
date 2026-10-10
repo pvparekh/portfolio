@@ -821,7 +821,7 @@ function ProjectsSection() {
    becomes three months on November 1, regardless of browser reload. */
 const EXPERIENCE_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
 
-function formatExperienceTenure(period: string, today: Date): string {
+function formatExperienceTenure(period: string, today: Date, showDuration = true): string {
   const match = /^([A-Za-z]+)\s+(\d{4})\s*[–-]\s*([A-Za-z]+)(?:\s+(\d{4}))?$/.exec(period.trim());
   if (!match) return period;
   const [, startName, startYearText, endName, endYearText] = match;
@@ -840,7 +840,8 @@ function formatExperienceTenure(period: string, today: Date): string {
   const duration = years > 0
     ? [years === 1 ? '1 yr' : `${years} yrs`, ...(months ? [months === 1 ? '1 mo' : `${months} mos`] : [])].join(' ')
     : total === 1 ? '1 mo' : `${total} mos`;
-  return `${EXPERIENCE_MONTHS[startMonth]} ${startYear} - ${present ? 'Present' : `${EXPERIENCE_MONTHS[endMonth]} ${endYear}`} · ${duration}`;
+  const dateRange = `${EXPERIENCE_MONTHS[startMonth]} ${startYear} - ${present ? 'Present' : `${EXPERIENCE_MONTHS[endMonth]} ${endYear}`}`;
+  return showDuration ? `${dateRange} · ${duration}` : dateRange;
 }
 
 function ExperienceSection() {
@@ -939,7 +940,7 @@ function ExperienceSection() {
                           )}
                         </div>
                         {employmentType && <p className="renaissance-role-type">{employmentType}</p>}
-                        <p className="renaissance-role-period">{formatExperienceTenure(role.period, asOf)}</p>
+                        <p className="renaissance-role-period">{formatExperienceTenure(role.period, asOf, exp.roles.length > 1)}</p>
                         {role.bullets && (
                           <ul className="renaissance-role-bullets">
                             {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
