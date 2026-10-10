@@ -1,0 +1,57 @@
+/* New software page only. Data Solutions selectors and tokens remain untouched. */
+.software-solutions .sol-hero h1 { max-width: 730px; }
+.software-solutions .sol-hero-sub { max-width: 555px; }
+.solutions.software-solutions .sol-flow-node strong { overflow-wrap: anywhere; }
+.software-solutions .sol-case:first-child {
+  border-top: 1px solid rgba(245,158,11,.24);
+  background: linear-gradient(120deg,rgba(245,158,11,.035),transparent 65%);
+  padding-inline: clamp(0px,2vw,24px);
+}
+.software-solutions .sol-case-tag { text-align: right; line-height:1.5; }
+.software-solutions .sol-service-detail summary { min-height:44px; }
+.software-solutions .sol-service-detail summary:hover,
+.software-solutions .sol-service-detail summary:focus-visible { color:var(--sol-accent); }
+.software-solutions .sol-case-links a { min-height:36px; }
+.software-solutions .sol-case-details summary { min-height:52px; }
+.software-solutions .sol-case-deck { max-width: 460px; }
+.software-solutions .sol-case-fact p { overflow-wrap:break-word; }
+.software-solutions .sol-contact-email-address { overflow-wrap:anywhere; }
+@media(max-width:767px){
+  .solutions.software-solutions .sol-hero h1 { font-size:clamp(2.65rem,10vw,4.15rem); }
+  .solutions.software-solutions .sol-flow-row { flex-direction:column; gap:12px; padding:20px 0; min-height:unset; }
+  .solutions.software-solutions .sol-flow-node { width:100%; min-height:unset; padding:18px; }
+  .solutions.software-solutions .sol-flow-node strong { font-size:clamp(16px,4.5vw,20px); margin-top:7px; }
+  .solutions.software-solutions .sol-flow-node small { font-size:12px; }
+  .solutions.software-solutions .sol-flow-icon { height:30px; }
+  .solutions.software-solutions .sol-flow-connector { transform:rotate(90deg); height:22px; flex:0 0 22px; }
+  .solutions.software-solutions .sol-flow-connector svg { width:18px; }
+  .software-solutions .sol-case:first-child { padding-inline:0; }
+  .software-solutions .sol-case-tag { max-width:58%; }
+}
+@media(max-width:380px){
+  .solutions.software-solutions .sol-topline { font-size:8px; }
+  .software-solutions .sol-hero-bottom>span { overflow-wrap:anywhere; }
+}
+@media(prefers-reduced-motion:reduce){
+  .solutions.software-solutions .sol-flow-trace { animation:none!important; }
+}
+
+.software-solutions .software-service-links { display:flex; align-items:center; flex-wrap:wrap; gap:10px 22px; }
+.software-solutions .software-service-links a { display:inline-flex; align-items:center; gap:6px; min-height:36px; }
+.software-solutions .software-service-proof { color:#bbc4d0; font:500 12px/1.4 'Space Grotesk',sans-serif; text-underline-offset:4px; }
+.software-solutions .software-service-proof:hover, .software-solutions .software-service-proof:focus-visible { color:var(--sol-accent); text-decoration:underline; }
+
+/* Small touch-landscape: keep the value proposition and actions in view.
+   Never affects Portfolio or Data Solutions, including their landscape layouts. */
+@media screen and (orientation:landscape) and (max-width:700px) and (max-height:430px) and (hover:none) and (pointer:coarse) {
+  .solutions.software-solutions .sol-hero-layout { padding-top:18px; gap:24px; }
+  .solutions.software-solutions .sol-hero h1 {
+    font-size:clamp(35px,6vw,42px); line-height:1.07; margin-top:13px;
+    max-width:100%; overflow-wrap:normal;
+  }
+  .solutions.software-solutions .sol-hero-sub { font-size:13px; line-height:1.55; margin-top:11px; }
+  .solutions.software-solutions .sol-actions {
+    grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:15px; gap:10px;
+  }
+  .solutions.software-solutions .sol-button { min-height:43px; padding:10px 13px; }
+}

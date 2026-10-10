@@ -7,6 +7,19 @@
     {
       "source": "/solutions/:path*",
       "destination": "/solutions/index.html"
+    },
+    {
+      "source": "/software",
+      "destination": "/software/index.html"
+    },
+    {
+      "source": "/software/:path*",
+      "destination": "/software/index.html"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "feat/software-solutions-client-experience": false
+    }
+  }
 }
