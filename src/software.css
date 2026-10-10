@@ -35,3 +35,8 @@
 @media(prefers-reduced-motion:reduce){
   .solutions.software-solutions .sol-flow-trace { animation:none!important; }
 }
+
+.software-solutions .software-service-links { display:flex; align-items:center; flex-wrap:wrap; gap:10px 22px; }
+.software-solutions .software-service-links a { display:inline-flex; align-items:center; gap:6px; min-height:36px; }
+.software-solutions .software-service-proof { color:#bbc4d0; font:500 12px/1.4 'Space Grotesk',sans-serif; text-underline-offset:4px; }
+.software-solutions .software-service-proof:hover, .software-solutions .software-service-proof:focus-visible { color:var(--sol-accent); text-decoration:underline; }
