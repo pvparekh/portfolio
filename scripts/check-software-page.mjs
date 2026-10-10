@@ -104,8 +104,13 @@ try {
   assert.deepEqual(errors,[], 'No browser errors at tested viewports');
 
   const portfolio=await browser.newPage();
-  await portfolio.goto(base+'/',{waitUntil:'domcontentloaded'});
-  await portfolio.locator('main #about').waitFor({state:'attached',timeout:10000});
+  const portfolioErrors=[];
+  portfolio.on('pageerror', e=>portfolioErrors.push(e.stack || e.message));
+  portfolio.on('console', msg=>{if(msg.type()==='error') portfolioErrors.push('console: '+msg.text())});
+  const portfolioResponse=await portfolio.goto(base+'/',{waitUntil:'domcontentloaded'});
+  await portfolio.waitForTimeout(800);
+  console.log('PORTFOLIO_DIAGNOSTIC', JSON.stringify({url:portfolio.url(),httpStatus:portfolioResponse?.status(),title:await portfolio.title(),rootHtml:(await portfolio.locator('#root').innerHTML()).slice(0,350),errors:portfolioErrors}));
+  await portfolio.locator('main #about').waitFor({state:'attached',timeout:4500});
   assert.equal(await portfolio.locator('.site-shared-brand-section').count(),0);
   await portfolio.close();
   const data=await browser.newPage();
