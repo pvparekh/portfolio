@@ -46,8 +46,8 @@ export const caseStudies: PublicCaseStudy[] = [
     ],
     stack: ['Python', 'Parquet', 'Data validation', 'Cloudflare R2', 'React', 'TypeScript'],
     liveUrl: 'https://formulavision.vercel.app',
-    sourceUrl: 'https://github.com/pvparekh/F1-Viewer',
-    docsUrl: 'https://github.com/pvparekh/F1-Viewer/blob/main/docs/v2/ENGINEERING_OVERVIEW.md',
+    sourceUrl: 'https://github.com/pvparekh/formula-vision-documentation',
+    docsUrl: 'https://github.com/pvparekh/formula-vision-documentation/blob/main/Documentation%20%28FULL%29/ENGINEERING_OVERVIEW.md',
     classification: 'Independent public project',
     publicationApproved: true
   },

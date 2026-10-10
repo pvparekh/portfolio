@@ -50,7 +50,7 @@ const PROJECTS = [
   description: 'Historical Formula 1 replay rebuilt as a verified data product: canonical Parquet, timing-authoritative race intelligence, immutable releases, and a client-owned replay engine.',
   tech: ['Python', 'FastF1', 'Parquet', 'React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Recharts', 'Vercel'],
   live: 'https://formulavision.vercel.app' as string | null,
-  github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
+  github: 'https://github.com/pvparekh/formula-vision-documentation' as string | null,
   accent: '#E8002D',
   accentDim: 'rgba(232,0,45,0.07)',
   glow: 'rgba(232,0,45,0.6)',
@@ -729,7 +729,7 @@ function ProjectsSection() {
                       Source Code <GithubIcon size={16} />
                     </a>
                   )}
-                  <a href="https://github.com/pvparekh/F1-Viewer/blob/main/docs/v2/ENGINEERING_OVERVIEW.md"
+                  <a href="https://github.com/pvparekh/formula-vision-documentation/blob/main/Documentation%20%28FULL%29/ENGINEERING_OVERVIEW.md"
                     target="_blank" rel="noreferrer" className="renaissance-text-project-link">
                     Architecture <ArrowUpRight size={15} aria-hidden="true" />
                   </a>
