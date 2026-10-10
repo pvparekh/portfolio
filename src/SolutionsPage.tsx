@@ -2,7 +2,9 @@ import { useRef, useState } from 'react';
 import { motion, MotionConfig, useInView, useReducedMotion } from 'framer-motion';
 import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
+import { deliveryExamples } from './deliveryExamples';
 import './solutions.css';
+import './deliveryProof.css';
 
 const email = 'pvparekh14@gmail.com';
 const projectEmail = 'mailto:' + email + '?subject=' + encodeURIComponent('Project inquiry | Data engineering') +
@@ -152,6 +154,29 @@ function EngagementProcess() {
   );
 }
 
+function DeliveryProof() {
+  return <div className="sol-proof">
+    <p className="sol-proof-disclosure">Completed engineering work in an employment setting. These examples are generalized to protect internal systems and data, not presented as independent client engagements.</p>
+    <div className="sol-proof-grid">
+      {deliveryExamples.map(item => <article key={item.id} className={`sol-proof-card ${item.featured ? 'sol-proof-featured' : ''}`}>
+        <div className="sol-proof-meta"><span>{item.number} / {item.category}</span><span className="sol-proof-delivered"><CheckCircle2 size={14} /> DELIVERED</span></div>
+        <div className="sol-proof-card-content">
+          <div className="sol-proof-head"><h3>{item.title}</h3><p>{item.lead}</p>
+            {item.featured && <div className="sol-proof-steps" aria-label="Data flow from incoming files to usable records"><span>Incoming files</span><ArrowRight size={16} aria-hidden="true" /><span>Clean + validate</span><ArrowRight size={16} aria-hidden="true" /><span>Ready-to-use data</span></div>}
+          </div>
+          <div className="sol-proof-facts">
+            <div><span>THE PROBLEM</span><p>{item.problem}</p></div>
+            <div><span>WHAT I BUILT</span><p>{item.delivered}</p></div>
+          </div>
+        </div>
+        <div className="sol-proof-result"><CheckCircle2 size={18} aria-hidden="true" /><div><span>THE RESULT</span><p>{item.result}</p></div></div>
+        <div className="sol-proof-tools" aria-label="Technologies involved">{item.tools.map(tool=><span key={tool}>{tool}</span>)}</div>
+      </article>)}
+    </div>
+    <div className="sol-proof-close"><p>Have a version of one of these problems? We can scope the smallest reliable fix around your existing systems.</p><a href="#contact">Discuss a similar project <ArrowUpRight size={16} /></a></div>
+  </div>;
+}
+
 function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) {
   return (
     <article className="sol-case" id={study.id}>
@@ -280,8 +305,8 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
 
         <section className="sol-section sol-work-section" id="work">
           <div className="sol-container">
-            <SectionIntro index="03" label="ENGINEERING EVIDENCE" title="See the systems behind the claims." accent="behind the claims." description="A closer look at how I design, build and validate systems, from the data architecture to the finished experience." />
-            <div className="sol-case-list">{caseStudies.filter(study => study.publicationApproved).map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
+            <SectionIntro index="03" label="SELECTED DELIVERY" title="Engineering work built for real operations" accent="real operations" description="Completed engineering projects that began with recurring operational problems and ended with working, validated systems." />
+            <DeliveryProof />
           </div>
         </section>
 
@@ -293,10 +318,17 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
           </div>
         </section>
 
+        <section className="sol-section sol-independent-section" id="independent">
+          <div className="sol-container">
+            <SectionIntro index="05" label="INDEPENDENT PRODUCTS" title="Products you can explore firsthand" accent="explore firsthand" description="Beyond professional data engineering, I build software products of my own. Explore the live experiences and their public repositories or documentation." />
+            <div className="sol-case-list">{caseStudies.filter(study => study.publicationApproved).map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
+          </div>
+        </section>
+
         <section className="sol-section sol-contact-section" id="contact">
           <div className="sol-container sol-contact-layout">
             <div>
-              <p className="sol-eyebrow">05 / LET'S TALK</p>
+              <p className="sol-eyebrow">06 / LET'S TALK</p>
               <h2>Have a data problem worth <em>solving?</em></h2>
               <p>Send me a short description of what's taking time, what systems are involved and what a successful result would look like. I'll let you know whether it's a fit for a scoped project.</p>
               <div className="sol-contact-email-block">

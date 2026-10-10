@@ -1088,3 +1088,100 @@
     letter-spacing: .10em;
   }
 }
+
+
+/* Selected delivery, phone-first reflow. The desktop proof-of-work cards
+   are in deliveryProof.css; these rules apply only on phone viewports. */
+@media screen and (max-width: 767px) {
+  .solutions .sol-proof-disclosure {
+    margin-bottom:19px;padding:10px 0 10px 13px;
+    font-size:11.5px;line-height:1.7;
+  }
+  .solutions .sol-proof-grid {grid-template-columns:minmax(0,1fr);gap:15px;}
+  .solutions .sol-proof-card,
+  .solutions .sol-proof-featured {grid-column:auto;min-width:0;}
+  .solutions .sol-proof-meta {
+    padding:14px 18px;gap:6px 12px;
+    font-size:9px;letter-spacing:.065em;
+  }
+  .solutions .sol-proof-delivered {font-size:9px;}
+  .solutions .sol-proof-card-content,
+  .solutions .sol-proof-featured .sol-proof-card-content {
+    grid-template-columns:minmax(0,1fr);
+    gap:21px;padding:24px 19px 21px;
+  }
+  .solutions .sol-proof-head h3,
+  .solutions .sol-proof-featured .sol-proof-head h3 {
+    max-width:100%;
+    font-size:clamp(26px,7.7vw,36px);
+    line-height:1.15;
+    overflow-wrap:anywhere;
+  }
+  .solutions .sol-proof-head>p,
+  .solutions .sol-proof-featured .sol-proof-head>p {
+    margin-top:12px;font-size:13px;line-height:1.76;
+  }
+  .solutions .sol-proof-steps {
+    display:grid;grid-template-columns:minmax(0,1fr);
+    justify-items:stretch;gap:4px;margin-top:20px;padding-top:18px;
+  }
+  .solutions .sol-proof-steps span {
+    justify-content:center;min-width:0;min-height:39px;
+    text-align:center;font-size:10px;
+  }
+  .solutions .sol-proof-steps svg {justify-self:center;transform:rotate(90deg);}
+  .solutions .sol-proof-facts {gap:14px;}
+  .solutions .sol-proof-facts>div+div {padding-top:15px;}
+  .solutions .sol-proof-facts p {font-size:13px;line-height:1.75;}
+  .solutions .sol-proof-result,
+  .solutions .sol-proof-featured .sol-proof-result {
+    margin:0 19px;padding:18px 0;gap:10px;
+  }
+  .solutions .sol-proof-result p {font-size:13px;line-height:1.7;}
+  .solutions .sol-proof-tools {
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;padding:13px 16px;
+  }
+  .solutions .sol-proof-tools span {
+    min-width:0;display:flex;align-items:center;justify-content:center;
+    min-height:35px;padding:7px 6px;font-size:9.5px;line-height:1.4;
+    overflow-wrap:anywhere;text-align:center;
+  }
+  .solutions .sol-proof-close {
+    display:grid;grid-template-columns:minmax(0,1fr);
+    justify-items:start;gap:13px;margin-top:17px;padding-top:19px;
+  }
+  .solutions .sol-proof-close p {font-size:13px;line-height:1.75;}
+  .solutions .sol-proof-close a {
+    min-height:44px;flex-shrink:1;white-space:normal;
+    font-size:13px;
+  }
+  .solutions .sol-independent-section .sol-section-intro {margin-bottom:20px;}
+}
+@media screen and (max-width: 370px) {
+  .solutions .sol-proof-meta {font-size:8.5px;}
+  .solutions .sol-proof-card-content,
+  .solutions .sol-proof-featured .sol-proof-card-content {padding-inline:16px;}
+  .solutions .sol-proof-result,
+  .solutions .sol-proof-featured .sol-proof-result {margin-inline:16px;}
+  .solutions .sol-proof-tools {padding-inline:13px;}
+}
+@media screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .solutions .sol-proof-grid {gap:12px;}
+  .solutions .sol-proof-card-content {padding:22px 19px;}
+  .solutions .sol-proof-featured .sol-proof-card-content {
+    grid-template-columns:minmax(0,1fr);gap:22px;
+    padding:26px 23px;
+  }
+  .solutions .sol-proof-meta {padding:14px 20px;}
+  .solutions .sol-proof-head h3 {font-size:clamp(24px,3.9vw,32px);}
+  .solutions .sol-proof-featured .sol-proof-head h3 {
+    font-size:clamp(30px,5vw,43px);
+  }
+  .solutions .sol-proof-steps {margin-top:22px;}
+  .solutions .sol-proof-result,
+  .solutions .sol-proof-featured .sol-proof-result {margin-inline:20px;}
+  .solutions .sol-proof-tools {padding:14px 18px;}
+  .solutions .sol-proof-tools span {min-width:0;overflow-wrap:anywhere;}
+  .solutions .sol-proof-close {flex-wrap:wrap;}
+}

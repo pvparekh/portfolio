@@ -1,0 +1,157 @@
+
+/* Selected completed engineering delivery.
+   Public proof of work, not a list of past freelance clients. */
+.solutions .sol-proof { margin-top: 6px; }
+.solutions .sol-proof-disclosure {
+  display:flex; align-items:center; margin:0 0 25px;
+  max-width:850px; border-left:2px solid rgba(245,165,36,.57);
+  padding:10px 0 10px 19px; color:#9daabd;
+  font:400 12px/1.75 Inter,sans-serif;
+}
+.solutions .sol-proof-grid {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:17px; align-items:stretch;
+}
+.solutions .sol-proof-card {
+  position:relative; min-width:0; overflow:hidden;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(222,232,246,.13);
+  background:linear-gradient(155deg,#13141e 0%,#0c0d15 79%);
+  transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease;
+}
+.solutions .sol-proof-card::before {
+  content:''; position:absolute; inset:0 0 auto;
+  height:2px; background:linear-gradient(90deg,#f5a524,rgba(245,165,36,.16) 72%,transparent);
+}
+@media (hover:hover) {
+  .solutions .sol-proof-card:hover {
+    border-color:rgba(245,165,36,.38); transform:translateY(-3px);
+    box-shadow:0 20px 50px rgba(0,0,0,.19);
+  }
+}
+.solutions .sol-proof-featured {
+  grid-column:1/-1;
+  background:radial-gradient(ellipse at 10% 0%,rgba(245,165,36,.085),transparent 58%),#11121b;
+}
+.solutions .sol-proof-featured::before {
+  height:3px;
+  background:linear-gradient(90deg,#f7aa37,rgba(245,165,36,.44) 62%,transparent);
+}
+.solutions .sol-proof-meta {
+  display:flex; align-items:center; flex-wrap:wrap; justify-content:space-between;
+  gap:10px 18px; padding:19px 28px;
+  border-bottom:1px solid rgba(255,255,255,.085);
+  color:#f2af4a; font:600 10px/1.5 'JetBrains Mono',monospace;
+  letter-spacing:.095em;
+}
+.solutions .sol-proof-delivered {
+  display:inline-flex; align-items:center; gap:7px; color:#9fe7bd;
+  font:500 9px/1.5 'JetBrains Mono',monospace;letter-spacing:.09em;
+}
+.solutions .sol-proof-delivered svg { flex-shrink:0; color:#6bd89e; }
+.solutions .sol-proof-card-content {
+  display:grid; grid-template-columns:minmax(0,1fr);
+  gap:26px; padding:30px 29px 28px; flex:1 1 auto;
+}
+.solutions .sol-proof-featured .sol-proof-card-content {
+  grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+  gap:clamp(32px,4.5vw,75px);padding:clamp(31px,4vw,49px);
+}
+.solutions .sol-proof-head { min-width:0; }
+.solutions .sol-proof-head h3 {
+  max-width:22ch; color:#f5f7fc; letter-spacing:-.048em;
+  font:650 clamp(25px,2.45vw,35px)/1.15 'Space Grotesk',sans-serif;
+  overflow-wrap:anywhere;
+}
+.solutions .sol-proof-featured .sol-proof-head h3 {
+  max-width:19ch;font-size:clamp(31px,3.6vw,51px);line-height:1.1;
+}
+.solutions .sol-proof-head>p {
+  margin-top:15px; max-width:48ch;
+  color:#aebbd0; font:400 14px/1.75 Inter,sans-serif;
+}
+.solutions .sol-proof-featured .sol-proof-head>p {
+  font-size:15px;line-height:1.7;
+}
+.solutions .sol-proof-steps {
+  display:flex;align-items:center;flex-wrap:wrap;gap:9px 11px;margin-top:32px;
+  padding-top:24px;border-top:1px solid rgba(245,165,36,.2);
+}
+.solutions .sol-proof-steps span {
+  display:inline-flex;min-height:34px;align-items:center;padding:8px 10px;
+  border:1px solid rgba(245,165,36,.22);color:#eacba1;
+  background:rgba(245,165,36,.055);
+  font:500 10px/1.5 'JetBrains Mono',monospace;
+  white-space:normal;
+}
+.solutions .sol-proof-steps svg {color:#f1ad48;flex-shrink:0;}
+.solutions .sol-proof-card-details {min-width:0;display:grid;gap:20px;align-content:start;}
+.solutions .sol-proof-facts {min-width:0;display:grid;gap:19px;align-content:start;}
+.solutions .sol-proof-facts>div {min-width:0;}
+.solutions .sol-proof-facts>div+div {border-top:1px solid rgba(255,255,255,.085);padding-top:18px;}
+.solutions .sol-proof-facts span {
+  display:block;margin-bottom:9px;color:#eeb66d;letter-spacing:.10em;
+  font:600 10px/1.4 'JetBrains Mono',monospace;
+}
+.solutions .sol-proof-facts p {
+  color:#c1cad7; font:400 13px/1.8 Inter,sans-serif;
+  overflow-wrap:anywhere;
+}
+.solutions .sol-proof-result {
+  display:flex;align-items:flex-start;gap:12px;margin:0 29px;
+  padding:22px 0 22px;border-top:1px solid rgba(255,255,255,.095);
+}
+.solutions .sol-proof-featured .sol-proof-result {margin-inline:clamp(31px,4vw,49px);}
+.solutions .sol-proof-result>svg {flex-shrink:0;margin-top:2px;color:#7fd7a3;}
+.solutions .sol-proof-result>div {min-width:0;}
+.solutions .sol-proof-result span {
+  display:block;color:#82dca9;letter-spacing:.1em;
+  font:600 10px/1.3 'JetBrains Mono',monospace;
+}
+.solutions .sol-proof-result p {
+  margin-top:8px;color:#e0e7f0;
+  font:500 14px/1.68 'Space Grotesk',sans-serif;
+  overflow-wrap:anywhere;
+}
+.solutions .sol-proof-tools {
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  padding:17px 27px;background:rgba(0,0,0,.17);
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.solutions .sol-proof-tools span {
+  padding:7px 9px;border:1px solid rgba(255,255,255,.09);
+  color:#9dacc0;font:500 10px/1.45 'JetBrains Mono',monospace;
+  white-space:normal;
+}
+.solutions .sol-proof-close {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px 40px;padding:29px 0 0;margin-top:18px;
+}
+.solutions .sol-proof-close p {
+  max-width:670px;color:#b0bbca;font:400 14px/1.73 Inter,sans-serif;
+}
+.solutions .sol-proof-close a {
+  display:inline-flex;align-items:center;flex-shrink:0;gap:10px;
+  min-height:44px;border-bottom:1px solid rgba(245,165,36,.48);
+  color:#f5b454;font:600 13px/1.4 'Space Grotesk',sans-serif;
+  transition:color .2s,border-color .2s;
+}
+.solutions .sol-proof-close a:hover {color:#ffd492;border-color:#ffd492;}
+.solutions .sol-independent-section {
+  background:linear-gradient(180deg,#0a0b12 0%,#0b0c14 100%);
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.solutions .sol-independent-section .sol-case:first-child {
+  border-top:1px solid rgba(255,255,255,.1);
+}
+/* The dedicated phone stylesheet follows this file; no changes to portfolio. */
+@media (max-width:980px) {
+  .solutions .sol-proof-featured .sol-proof-card-content {
+    grid-template-columns:minmax(0,1fr);gap:25px;
+  }
+  .solutions .sol-proof-close {flex-wrap:wrap;}
+}
+@media (prefers-reduced-motion:reduce) {
+  .solutions .sol-proof-card,.solutions .sol-proof-close a {transition:none;}
+  .solutions .sol-proof-card:hover {transform:none;}
+}
