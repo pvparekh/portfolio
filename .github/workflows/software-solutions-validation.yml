@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -33,6 +35,14 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Browser route, interaction and viewport checks
         run: node scripts/check-software-page.mjs
+      - name: Build production main in a separate worktree (no deployment)
+        run: |
+          git worktree add /tmp/portfolio-production origin/main
+          cd /tmp/portfolio-production
+          npm ci
+          npm run build
+      - name: Compare protected pages against production main
+        run: node scripts/compare-existing-routes.mjs
       - name: Attach local browser screenshots
         if: always()
         uses: actions/upload-artifact@v4

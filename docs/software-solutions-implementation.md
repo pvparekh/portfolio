@@ -51,6 +51,8 @@ The feature branch adds `git.deploymentEnabled[feat/software-solutions-client-ex
 - Four full-height screenshots were generated for 320, 390, 768 and 1440 widths; viewed representative top, middle and case-study crops.
 - Portfolio and Data Solutions load in the browser. Their original protected source files are not modified.
 
+**Additional release gate:** compare the existing Portfolio and Data Solutions pages with the original production main build at the same viewport dimensions; preserve exact rendered main content, section IDs and header heights, and do not introduce any additional horizontal overflow. This differential test is necessary because the existing Portfolio showed 17px of overflow at 768×1024 in a strict zero-overflow test. It may predate this change.
+
 **Remaining checks / publication limitations**
 - Source-level preservation is proven. Exact before/after rendered pixel comparisons of Portfolio and Data Solutions have not been performed.
 - Real Safari/iOS/Android browser and screen-reader testing, high browser zoom, and full WCAG audit have not been performed.
