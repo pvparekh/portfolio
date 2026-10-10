@@ -10,18 +10,26 @@ const currentPage = (): SitePage =>
 
 const pagePath = (page: SitePage) => page === 'solutions' ? '/solutions' : '/';
 
+const portfolioTitle = 'Parth Parekh | Data Engineer & Software Developer';
+const portfolioDescription =
+  'Parth Parekh is a data engineer and software developer building production data pipelines, automation systems, and interactive engineering products. Explore experience and independent projects.';
+const solutionTitle = 'Data Solutions | Parth Parekh';
 const solutionDescription =
   'Data pipelines, reporting automation, SQL modernization and system integrations built around the way your business works.';
 
 function setPageMetadata(page: SitePage) {
-  document.title = page === 'solutions' ? 'Data Solutions | Parth Parekh' : 'Parth Parekh | Full-Stack Engineer';
+  const isSolutions = page === 'solutions';
+  const title = isSolutions ? solutionTitle : portfolioTitle;
+  const description = isSolutions ? solutionDescription : portfolioDescription;
+  const socialDescription = isSolutions
+    ? 'Manual reporting, disconnected systems and fragile pipelines. I build focused, reliable data solutions.'
+    : 'Engineering experience, production data systems, and independent technical projects by Parth Parekh.';
+  const canonicalUrl = isSolutions ? 'https://parthparekh.dev/solutions' : 'https://parthparekh.dev/';
 
-  const setMeta = (selector: string, attr: 'name' | 'property', key: string, value: string | null) => {
+  document.title = title;
+
+  const setMeta = (selector: string, attr: 'name' | 'property', key: string, value: string) => {
     let tag = document.querySelector<HTMLMetaElement>(selector);
-    if (value === null) {
-      tag?.remove();
-      return;
-    }
     if (!tag) {
       tag = document.createElement('meta');
       tag.setAttribute(attr, key);
@@ -30,18 +38,14 @@ function setPageMetadata(page: SitePage) {
     tag.content = value;
   };
 
-  const isSolutions = page === 'solutions';
-  setMeta('meta[name="description"]', 'name', 'description', isSolutions ? solutionDescription : null);
-  setMeta('meta[property="og:title"]', 'property', 'og:title', isSolutions ? 'Data Solutions | Parth Parekh' : null);
-  setMeta('meta[property="og:description"]', 'property', 'og:description',
-    isSolutions ? 'Manual reporting, disconnected systems and fragile pipelines. I build focused, reliable data solutions.' : null);
-  setMeta('meta[property="og:url"]', 'property', 'og:url',
-    isSolutions ? 'https://parthparekh.dev/solutions' : null);
-  setMeta('meta[property="og:type"]', 'property', 'og:type', isSolutions ? 'website' : null);
-  setMeta('meta[name="twitter:card"]', 'name', 'twitter:card', isSolutions ? 'summary' : null);
-  setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', isSolutions ? 'Data Solutions | Parth Parekh' : null);
-  setMeta('meta[name="twitter:description"]', 'name', 'twitter:description',
-    isSolutions ? 'Data pipelines, reporting automation and systems integration by Parth Parekh.' : null);
+  setMeta('meta[name="description"]', 'name', 'description', description);
+  setMeta('meta[property="og:title"]', 'property', 'og:title', title);
+  setMeta('meta[property="og:description"]', 'property', 'og:description', socialDescription);
+  setMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
+  setMeta('meta[property="og:type"]', 'property', 'og:type', 'website');
+  setMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary');
+  setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', title);
+  setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', socialDescription);
 
   let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonical) {
@@ -49,7 +53,7 @@ function setPageMetadata(page: SitePage) {
     canonical.rel = 'canonical';
     document.head.appendChild(canonical);
   }
-  canonical.href = page === 'solutions' ? 'https://parthparekh.dev/solutions' : 'https://parthparekh.dev/';
+  canonical.href = canonicalUrl;
 }
 
 function PortfolioSite() {
@@ -110,7 +114,7 @@ function PortfolioSite() {
       {page === 'solutions' ? (
         <SolutionsPage onBackToPortfolio={() => navigate('portfolio')} />
       ) : (
-        <App />
+        <App onNavigateSolutions={() => navigate('solutions')} />
       )}
     </>
   );

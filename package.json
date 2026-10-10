@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "node scripts/check-experience-baseline.mjs && tsc && vite build",
+    "preview": "vite preview",
+    "check:experience": "node scripts/check-experience-baseline.mjs"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",
