@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feat/software-solutions-client-experience
+      - feat/software-hero-workspace
   workflow_dispatch:
 concurrency:
   group: software-solutions-qa-${{ github.ref }}

@@ -35,6 +35,10 @@ try {
   assert.match(await desktop.locator('h1').innerText(), /Custom software/);
   assert.match(await desktop.title(), /Software Solutions/);
   assert.equal(await desktop.locator('link[rel=canonical]').getAttribute('href'),'https://parthparekh.dev/software');
+  assert.equal(await desktop.locator('.software-workspace').count(),1,'Distinct software workspace illustration');
+  assert.equal(await desktop.locator('.sol-flow-graphic').count(),0,'Do not reuse Data Solutions hero diagram');
+  assert.equal(await desktop.locator('.software-task').count(),3,'Illustrative workspace features');
+  assert.equal((await desktop.locator('main').innerText()).includes('—'),false,'No em dashes in Software Solutions');
   assert.equal(await desktop.locator('.sol-service').count(),5);
   assert.equal(await desktop.locator('.sol-case').count(),5);
   assert.equal(await desktop.locator('.sol-case-tag').first().innerText(),'Client website · contract work');
@@ -103,10 +107,10 @@ try {
       documentWidth:document.documentElement.scrollWidth,
       windowWidth:document.documentElement.clientWidth,
       hero:document.querySelector('h1')?.getBoundingClientRect().width,
-      flowNodes:document.querySelectorAll('.sol-flow-node').length
+      workspaceRows:document.querySelectorAll('.software-task').length
     }));
     assert.ok(dimensions.documentWidth<=dimensions.windowWidth+2,`${width}x${height} overflow: ${JSON.stringify(dimensions)}`);
-    assert.equal(dimensions.flowNodes,3,`${width}x${height} flow stages`);
+    assert.equal(dimensions.workspaceRows,3,`${width}x${height} application workspace rows`);
     if (width<1024) {
       const toggle=page.getByRole('button',{name:'Toggle menu'});
       await toggle.click();

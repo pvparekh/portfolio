@@ -1,7 +1,6 @@
 /* New software page only. Data Solutions selectors and tokens remain untouched. */
 .software-solutions .sol-hero h1 { max-width: 730px; }
 .software-solutions .sol-hero-sub { max-width: 555px; }
-.solutions.software-solutions .sol-flow-node strong { overflow-wrap: anywhere; }
 .software-solutions .sol-case:first-child {
   border-top: 1px solid rgba(245,158,11,.24);
   background: linear-gradient(120deg,rgba(245,158,11,.035),transparent 65%);
@@ -18,22 +17,12 @@
 .software-solutions .sol-contact-email-address { overflow-wrap:anywhere; }
 @media(max-width:767px){
   .solutions.software-solutions .sol-hero h1 { font-size:clamp(2.65rem,10vw,4.15rem); }
-  .solutions.software-solutions .sol-flow-row { flex-direction:column; gap:12px; padding:20px 0; min-height:unset; }
-  .solutions.software-solutions .sol-flow-node { width:100%; min-height:unset; padding:18px; }
-  .solutions.software-solutions .sol-flow-node strong { font-size:clamp(16px,4.5vw,20px); margin-top:7px; }
-  .solutions.software-solutions .sol-flow-node small { font-size:12px; }
-  .solutions.software-solutions .sol-flow-icon { height:30px; }
-  .solutions.software-solutions .sol-flow-connector { transform:rotate(90deg); height:22px; flex:0 0 22px; }
-  .solutions.software-solutions .sol-flow-connector svg { width:18px; }
   .software-solutions .sol-case:first-child { padding-inline:0; }
   .software-solutions .sol-case-tag { max-width:58%; }
 }
 @media(max-width:380px){
   .solutions.software-solutions .sol-topline { font-size:8px; }
   .software-solutions .sol-hero-bottom>span { overflow-wrap:anywhere; }
-}
-@media(prefers-reduced-motion:reduce){
-  .solutions.software-solutions .sol-flow-trace { animation:none!important; }
 }
 
 .software-solutions .software-service-links { display:flex; align-items:center; flex-wrap:wrap; gap:10px 22px; }
@@ -54,4 +43,211 @@
     grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:15px; gap:10px;
   }
   .solutions.software-solutions .sol-button { min-height:43px; padding:10px 13px; }
+}
+
+/* Software-only hero artwork. An illustrative product interface rather than
+   the Data Solutions process architecture graphic. All classes are namespaced. */
+.software-solutions .software-workspace {
+  position:relative; isolation:isolate; overflow:hidden;
+  border:1px solid rgba(245,158,11,.24);
+  padding:18px;
+  background:
+    radial-gradient(ellipse at 89% 9%,rgba(245,158,11,.105),transparent 48%),
+    linear-gradient(145deg,#15131a 0%,#101018 52%,#0c0e16 100%);
+  box-shadow:0 30px 105px rgba(0,0,0,.36),inset 0 1px rgba(255,255,255,.045);
+}
+.software-solutions .software-workspace:before {
+  position:absolute;z-index:-1;content:"";inset:0;
+  background-image:radial-gradient(rgba(245,158,11,.15) .7px,transparent .7px);
+  background-size:17px 17px;
+  mask-image:linear-gradient(125deg,transparent 32%,#000 100%);opacity:.28;pointer-events:none;
+}
+.software-solutions .software-workspace-top,
+.software-solutions .software-workspace-footer {
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  color:#8792a4;font:500 9px/1.45 'JetBrains Mono',monospace;letter-spacing:.045em;
+}
+.software-solutions .software-workspace-top {padding-bottom:16px;}
+.software-solutions .software-workspace-top>span:first-child{color:#d5dce7;display:flex;align-items:center;gap:8px}
+.software-solutions .software-preview-spark {
+  width:5px;height:5px;background:var(--sol-accent);display:inline-block;transform:rotate(45deg);box-shadow:0 0 12px rgba(245,158,11,.65);
+}
+.software-solutions .software-workspace-browser {
+  overflow:hidden;border:1px solid rgba(255,255,255,.13);border-radius:8px;
+  background:#10121c;
+  box-shadow:0 14px 45px rgba(0,0,0,.29),0 0 0 1px rgba(0,0,0,.16);
+}
+.software-solutions .software-browser-bar {
+  min-height:39px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;gap:12px;padding:0 13px;
+  border-bottom:1px solid rgba(255,255,255,.095);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.013));
+}
+.software-solutions .software-window-dots{display:flex;gap:5px}
+.software-solutions .software-window-dots span{height:6px;width:6px;border-radius:50%;background:#626671}
+.software-solutions .software-window-dots span:first-child{background:#dc796d}
+.software-solutions .software-window-dots span:nth-child(2){background:#d4aa5d}
+.software-solutions .software-window-dots span:nth-child(3){background:#72a98e}
+.software-solutions .software-browser-location {
+  color:#788397;display:flex;justify-content:center;align-items:center;gap:7px;
+  font:500 9px/1.3 'JetBrains Mono',monospace;white-space:nowrap;
+}
+.software-solutions .software-browser-badge{
+  padding:5px 7px;border:1px solid rgba(245,158,11,.23);border-radius:3px;
+  background:rgba(245,158,11,.07);color:#f9b348;
+  font:600 8px/1 'JetBrains Mono',monospace;letter-spacing:.045em;white-space:nowrap;
+}
+.software-solutions .software-interface{display:grid;grid-template-columns:43px minmax(0,1fr);min-width:0}
+.software-solutions .software-interface-sidebar {
+  display:flex;flex-direction:column;align-items:center;gap:13px;padding:16px 5px;
+  background:linear-gradient(165deg,#161823,#11131d);
+  border-right:1px solid rgba(255,255,255,.07);
+}
+.software-solutions .software-sidebar-mark{
+  display:grid;place-items:center;color:#121015;background:var(--sol-accent);
+  border-radius:6px;height:27px;width:27px;margin-bottom:14px;
+}
+.software-solutions .software-sidebar-item{
+  display:grid;place-items:center;height:29px;width:29px;border-radius:6px;color:#707c8e;
+}
+.software-solutions .software-sidebar-item-active{color:var(--sol-accent);background:rgba(245,158,11,.11);box-shadow:inset 2px 0 var(--sol-accent)}
+.software-solutions .software-sidebar-avatar{
+  margin-top:auto;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(245,158,11,.25);background:rgba(245,158,11,.075);
+}
+.software-solutions .software-sidebar-avatar span{
+  height:8px;width:8px;border-radius:50%;background:#e9a83d;box-shadow:0 0 0 3px rgba(245,158,11,.09);
+}
+.software-solutions .software-interface-content{min-width:0;padding:17px 17px 19px;}
+.software-solutions .software-interface-overline,
+.software-solutions .software-panel-heading,
+.software-solutions .software-details-head {
+  display:flex;align-items:center;justify-content:space-between;gap:7px;
+  font:600 8px/1.45 'JetBrains Mono',monospace;letter-spacing:.035em;color:#818c9e;
+}
+.software-solutions .software-app-signal{display:flex;align-items:center;gap:6px;color:#9cb6a4}
+.software-solutions .software-app-signal span{
+  height:5px;width:5px;border-radius:50%;background:#78d7a0;box-shadow:0 0 9px rgba(120,215,160,.4);
+}
+.software-solutions .software-interface-headline{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  min-width:0;margin-top:17px;margin-bottom:19px;
+}
+.software-solutions .software-interface-headline h3{
+  font:600 clamp(20px,2.2vw,28px)/1.07 'Space Grotesk',sans-serif;letter-spacing:-.055em;color:#f0f1f5;
+}
+.software-solutions .software-interface-headline h3 em{display:block;color:#f3aa33;font-style:normal}
+.software-solutions .software-interface-headline p{
+  margin-top:7px;color:#9ca6b7;font:400 10px/1.4 Inter,sans-serif;
+}
+.software-solutions .software-product-emblem{
+  flex:0 0 53px;height:53px;border-radius:15px;display:grid;place-items:center;position:relative;
+  color:#f2b350;border:1px solid rgba(245,158,11,.18);
+  background:linear-gradient(145deg,rgba(245,158,11,.16),rgba(245,158,11,.03));
+  transform:rotate(-7deg);box-shadow:0 8px 23px rgba(0,0,0,.2);
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+}
+.software-solutions .software-product-emblem-glow{
+  position:absolute;inset:8px;border:1px solid rgba(245,158,11,.21);border-radius:8px;transform:rotate(14deg);
+}
+.software-solutions .software-workspace:hover .software-product-emblem{transform:rotate(0deg) translateY(-3px)}
+.software-solutions .software-dashboard{
+  display:grid;grid-template-columns:minmax(0,1.65fr) minmax(105px,.95fr);gap:10px;
+}
+.software-solutions .software-workflow-panel,
+.software-solutions .software-details-panel{
+  min-width:0;border:1px solid rgba(255,255,255,.085);border-radius:6px;background:#161924;
+}
+.software-solutions .software-workflow-panel{padding:12px 10px}
+.software-solutions .software-panel-heading{padding:0 1px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+.software-solutions .software-panel-heading>span:last-child{color:#d8a350}
+.software-solutions .software-task{
+  display:flex;align-items:center;gap:8px;min-width:0;padding:9px 0;
+}
+.software-solutions .software-task + .software-task{border-top:1px solid rgba(255,255,255,.055)}
+.software-solutions .software-task-icon{
+  display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;
+  border:1px solid rgba(245,158,11,.14);border-radius:5px;
+  color:#f0a834;background:rgba(245,158,11,.07);
+}
+.software-solutions .software-task-label{display:flex;flex-direction:column;gap:3px;min-width:0}
+.software-solutions .software-task-label strong{
+  color:#e5e9f1;font:600 10px/1.25 'Space Grotesk',sans-serif;letter-spacing:-.01em;
+}
+.software-solutions .software-task-label small{color:#7f8b9e;font:400 9px/1.3 Inter,sans-serif}
+.software-solutions .software-task-check{margin-left:auto;flex:0 0 14px;color:#82cda3}
+.software-solutions .software-details-panel{
+  display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;
+  padding:12px 10px;background:linear-gradient(145deg,#221b19,#151923 73%);
+  border-color:rgba(245,158,11,.13);
+}
+.software-solutions .software-details-head{color:#bfa784}
+.software-solutions .software-details-head svg{color:var(--sol-accent)}
+.software-solutions .software-details-illustration{
+  position:relative;min-height:98px;display:grid;place-items:center;overflow:hidden;
+}
+.software-solutions .software-details-ring{
+  position:absolute;border-radius:50%;border:1px solid rgba(245,158,11,.19);
+}
+.software-solutions .software-details-ring-one{width:84px;height:84px}
+.software-solutions .software-details-ring-two{width:59px;height:59px;border-style:dashed;opacity:.75}
+.software-solutions .software-details-center{
+  height:39px;width:39px;position:relative;display:grid;place-items:center;border-radius:11px;
+  background:linear-gradient(145deg,#ecac43,#b7781f);color:#20170d;
+  box-shadow:0 0 30px rgba(245,158,11,.15);transform:rotate(-7deg);
+}
+.software-solutions .software-orbit-dot{position:absolute;height:6px;width:6px;border-radius:50%;background:var(--sol-accent)}
+.software-solutions .software-orbit-dot-one{top:22%;left:25%;box-shadow:0 0 10px rgba(245,158,11,.4)}
+.software-solutions .software-orbit-dot-two{right:22%;bottom:18%;background:#8ca3b7}
+.software-solutions .software-details-panel>strong{
+  font:600 14px/1.15 'Space Grotesk',sans-serif;color:#f1f0eb;letter-spacing:-.035em;
+}
+.software-solutions .software-details-caption{
+  color:#947d5f;font:500 8px/1.6 'JetBrains Mono',monospace;letter-spacing:.025em;margin-top:5px;
+}
+.software-solutions .software-workspace-footer{
+  margin-top:15px;padding-top:13px;border-top:1px solid rgba(255,255,255,.075);
+}
+.software-solutions .software-workspace-footer>span:first-child{display:flex;align-items:center;gap:8px;color:#c2ccd7}
+.software-solutions .software-preview-pulse{
+  width:6px;height:6px;display:inline-block;border-radius:50%;background:#8fd4aa;
+  box-shadow:0 0 0 3px rgba(143,212,170,.08);
+}
+@media(max-width:1150px){
+  .software-solutions .software-workspace{padding:15px}
+  .software-solutions .software-interface-content{padding:14px 12px 15px}
+  .software-solutions .software-dashboard{grid-template-columns:minmax(0,1.8fr) minmax(95px,.9fr);gap:8px}
+  .software-solutions .software-workflow-panel{padding:10px 8px}
+  .software-solutions .software-details-panel{padding:10px 8px}
+  .software-solutions .software-task{gap:6px}
+  .software-solutions .software-task-icon{flex-basis:24px;width:24px;height:24px}
+  .software-solutions .software-details-illustration{min-height:90px}
+}
+@media(max-width:767px){
+  .software-solutions .software-workspace{max-width:520px;margin-inline:auto}
+  .software-solutions .software-interface-headline h3{font-size:clamp(22px,5vw,27px)}
+}
+@media(max-width:430px){
+  .software-solutions .software-workspace{padding:12px}
+  .software-solutions .software-workspace-top,.software-solutions .software-workspace-footer{font-size:8px}
+  .software-solutions .software-browser-bar{gap:7px;padding:0 9px}
+  .software-solutions .software-browser-location{font-size:8px;gap:5px}
+  .software-solutions .software-browser-badge{font-size:7px;padding:5px}
+  .software-solutions .software-interface{grid-template-columns:34px minmax(0,1fr)}
+  .software-solutions .software-interface-sidebar{padding:13px 3px;gap:10px}
+  .software-solutions .software-sidebar-mark{height:25px;width:25px}
+  .software-solutions .software-sidebar-item{width:25px;height:27px}
+  .software-solutions .software-interface-content{padding:14px 11px 15px}
+  .software-solutions .software-interface-headline{margin-top:13px;margin-bottom:15px}
+  .software-solutions .software-interface-headline h3{font-size:21px}
+  .software-solutions .software-product-emblem{flex-basis:44px;height:44px;border-radius:12px}
+  .software-solutions .software-dashboard{grid-template-columns:minmax(0,1fr)}
+  .software-solutions .software-details-panel{display:none}
+  .software-solutions .software-workflow-panel{padding:12px 11px}
+  .software-solutions .software-task{gap:9px}
+  .software-solutions .software-task-label strong{font-size:11px}
+  .software-solutions .software-task-label small{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .software-solutions .software-product-emblem{transition:none!important}
 }
