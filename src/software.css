@@ -40,3 +40,18 @@
 .software-solutions .software-service-links a { display:inline-flex; align-items:center; gap:6px; min-height:36px; }
 .software-solutions .software-service-proof { color:#bbc4d0; font:500 12px/1.4 'Space Grotesk',sans-serif; text-underline-offset:4px; }
 .software-solutions .software-service-proof:hover, .software-solutions .software-service-proof:focus-visible { color:var(--sol-accent); text-decoration:underline; }
+
+/* Small touch-landscape: keep the value proposition and actions in view.
+   Never affects Portfolio or Data Solutions, including their landscape layouts. */
+@media screen and (orientation:landscape) and (max-width:700px) and (max-height:430px) and (hover:none) and (pointer:coarse) {
+  .solutions.software-solutions .sol-hero-layout { padding-top:18px; gap:24px; }
+  .solutions.software-solutions .sol-hero h1 {
+    font-size:clamp(35px,6vw,42px); line-height:1.07; margin-top:13px;
+    max-width:100%; overflow-wrap:normal;
+  }
+  .solutions.software-solutions .sol-hero-sub { font-size:13px; line-height:1.55; margin-top:11px; }
+  .solutions.software-solutions .sol-actions {
+    grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:15px; gap:10px;
+  }
+  .solutions.software-solutions .sol-button { min-height:43px; padding:10px 13px; }
+}
