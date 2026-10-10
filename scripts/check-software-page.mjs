@@ -35,6 +35,11 @@ try {
   assert.match(await desktop.locator('h1').innerText(), /Custom software/);
   assert.match(await desktop.title(), /Software Solutions/);
   assert.equal(await desktop.locator('link[rel=canonical]').getAttribute('href'),'https://parthparekh.dev/software');
+  assert.match(await desktop.locator('h1').innerText(),/for your business/i,'Natural software headline');
+  assert.equal(await desktop.locator('.sol-section-intro h2').filter({hasText:'What I can build for you'}).count(),1);
+  assert.equal(await desktop.locator('.sol-section-intro h2').filter({hasText:'Software I have designed and built'}).count(),1);
+  assert.equal(await desktop.locator('.portfolio-desktop-nav button[aria-label="Show Portfolio sections"]').count(),0,'Inactive Portfolio has no disclosure');
+  assert.equal(await desktop.locator('.portfolio-desktop-nav button[aria-label="Show Data Solutions sections"]').count(),0,'Inactive Data Solutions has no disclosure');
   assert.equal(await desktop.locator('.software-workspace').count(),1,'Distinct software workspace illustration');
   assert.equal(await desktop.locator('.sol-flow-graphic').count(),0,'Do not reuse Data Solutions hero diagram');
   assert.equal(await desktop.locator('.software-task').count(),3,'Illustrative workspace features');
@@ -77,9 +82,56 @@ try {
   await desktop.waitForTimeout(150);
   assert.equal(await trigger.getAttribute('aria-expanded'),'false',
     'Dropdown must not reopen when the pointer has already left');
-  await desktop.locator('.portfolio-nav-destination[href="/"]').click();
+  await desktop.locator('.portfolio-desktop-nav a[href="/"]').click();
   await desktop.locator('#about').waitFor({state:'attached'});
   assert.match(await desktop.title(),/Data Engineer/);
+  assert.equal(new URL(desktop.url()).pathname,'/','Portfolio destination returns to canonical root');
+  assert.equal(await desktop.locator('.portfolio-desktop-nav button[aria-label="Show Data Solutions sections"]').count(),0);
+  assert.equal(await desktop.locator('.portfolio-desktop-nav button[aria-label="Show Software Solutions sections"]').count(),0);
+  // A mouse destination click should keep its original hitbox until pointer exit,
+  // matching the existing half-second gate on Data and Software.
+  await desktop.mouse.move(4,190);
+  await desktop.waitForTimeout(680);
+  const portfolioTrigger=desktop.locator('.portfolio-desktop-nav button[aria-label="Show Portfolio sections"]');
+  assert.equal(await portfolioTrigger.count(),1,'Active Portfolio gets its disclosure after pointer exit');
+  await portfolioTrigger.click();
+  assert.equal(await desktop.locator('.portfolio-desktop-nav a[href="/#projects"]').count(),1);
+  await desktop.locator('.portfolio-desktop-nav a[href="/#projects"]').click();
+  await desktop.waitForFunction(() => window.scrollY > 250);
+  await desktop.locator('.site-shared-brand').click();
+  assert.equal(new URL(desktop.url()).pathname,'/');
+  assert.equal(new URL(desktop.url()).hash,'','Brand removes stale Portfolio section fragments');
+  await desktop.waitForFunction(() => window.scrollY <= 2);
+  await desktop.reload();
+  assert.equal(new URL(desktop.url()).hash,'','Portfolio refresh stays at root');
+  await desktop.waitForFunction(() => window.scrollY <= 2);
+
+  // Regression: a direct /#projects visit should never make Projects the home
+  // location after clicking the brand, including on reload and browser history.
+  await desktop.goto(base+'/#projects',{waitUntil:'domcontentloaded'});
+  await desktop.waitForFunction(() => window.scrollY > 250);
+  await desktop.locator('.site-shared-brand').click();
+  assert.equal(new URL(desktop.url()).hash,'','Brand removes a directly loaded section hash');
+  await desktop.waitForFunction(() => window.scrollY <= 2);
+  await desktop.reload();
+  await desktop.waitForFunction(() => window.scrollY <= 2);
+  await desktop.locator('.portfolio-desktop-nav a[href="/solutions"]').click();
+  assert.match(await desktop.locator('h1').innerText(),/manual data work/i);
+  assert.equal(await desktop.locator('.portfolio-desktop-nav button[aria-label="Show Portfolio sections"]').count(),0);
+  await desktop.locator('.site-shared-brand').click();
+  await desktop.locator('#about').waitFor({state:'attached'});
+  assert.equal(new URL(desktop.url()).pathname,'/','Brand from Data Solutions returns to root');
+  await desktop.waitForFunction(() => window.scrollY <= 2);
+  await desktop.goBack();
+  assert.match(await desktop.locator('h1').innerText(),/manual data work/i);
+  await desktop.goBack();
+  await desktop.locator('#about').waitFor({state:'attached'});
+  await desktop.locator('.portfolio-desktop-nav a[href="/software"]').click();
+  assert.match(await desktop.locator('h1').innerText(),/Custom software/);
+  await desktop.locator('.site-shared-brand').click();
+  await desktop.locator('#about').waitFor({state:'attached'});
+  assert.equal(new URL(desktop.url()).pathname,'/','Brand from Software Solutions returns to root');
+  await desktop.waitForFunction(() => window.scrollY <= 2);
   await desktop.goBack();
   await desktop.locator('#sol-hero-title').waitFor({state:'attached'});
   assert.match(await desktop.locator('h1').innerText(),/Custom software/);
@@ -117,6 +169,8 @@ try {
       assert.equal(await toggle.getAttribute('aria-expanded'),'true');
       const link=page.locator('#site-mobile-navigation a[href="/software"]');
       assert.equal(await link.count(),1);
+      assert.equal(await page.locator('#site-mobile-navigation button[aria-label="Show Portfolio sections"]').count(),0,'Inactive Portfolio has no mobile sections');
+      assert.equal(await page.locator('#site-mobile-navigation button[aria-label="Show Data Solutions sections"]').count(),0,'Inactive Data Solutions has no mobile sections');
       if(width===390){
         await page.getByRole('button',{name:'Show Software Solutions sections'}).click();
         assert.equal(await page.locator('#site-mobile-software a').count(),5);
@@ -167,7 +221,23 @@ try {
   console.log('PORTFOLIO_DIAGNOSTIC', JSON.stringify({url:portfolio.url(),httpStatus:portfolioResponse?.status(),title:await portfolio.title(),rootHtml:(await portfolio.locator('#root').innerHTML()).slice(0,350),errors:portfolioErrors}));
   await portfolio.locator('main #about').waitFor({state:'attached',timeout:4500});
   assert.equal(await portfolio.locator('.site-shared-brand-section').count(),0);
+  assert.equal(await portfolio.locator('.portfolio-desktop-nav button[aria-label="Show Portfolio sections"]').count(),1,'Direct Portfolio visit has active section disclosure');
   await portfolio.close();
+  const mobilePortfolio=await browser.newPage({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
+  await mobilePortfolio.goto(base+'/');
+  await mobilePortfolio.getByRole('button',{name:'Toggle menu'}).click();
+  assert.equal(await mobilePortfolio.locator('#site-mobile-navigation button[aria-label="Show Portfolio sections"]').count(),1);
+  assert.equal(await mobilePortfolio.locator('#site-mobile-navigation button[aria-label="Show Data Solutions sections"]').count(),0);
+  assert.equal(await mobilePortfolio.locator('#site-mobile-navigation button[aria-label="Show Software Solutions sections"]').count(),0);
+  await mobilePortfolio.getByRole('button',{name:'Show Portfolio sections'}).click();
+  assert.equal(await mobilePortfolio.locator('#site-mobile-portfolio a').count(),5);
+  await mobilePortfolio.locator('#site-mobile-portfolio a[href="/#projects"]').click();
+  await mobilePortfolio.waitForFunction(() => window.scrollY > 250);
+  await mobilePortfolio.locator('.site-shared-brand').click();
+  assert.equal(new URL(mobilePortfolio.url()).pathname,'/');
+  assert.equal(new URL(mobilePortfolio.url()).hash,'');
+  await mobilePortfolio.waitForFunction(() => window.scrollY <= 2);
+  await mobilePortfolio.close();
   const data=await browser.newPage();
   await data.goto(base+'/solutions',{waitUntil:'domcontentloaded'});
   assert.match(await data.locator('h1').innerText(),/manual data work/i);

@@ -4,6 +4,7 @@ on:
     branches:
       - feat/software-solutions-client-experience
       - feat/software-hero-workspace
+      - fix/portfolio-home-navigation-and-software-copy
   workflow_dispatch:
 concurrency:
   group: software-solutions-qa-${{ github.ref }}

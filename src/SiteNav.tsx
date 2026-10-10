@@ -49,6 +49,28 @@ const groups: NavigationGroup[] = [
 /** One persistent header, shared across all routes. */
 export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const [scrolled, setScrolled] = useState(false);
+  const [portfolioDropdownReady, setPortfolioDropdownReady] = useState(page === 'portfolio');
+  const portfolioLinkMouseDown = useRef(false);
+  const portfolioLinkRef = useRef<HTMLAnchorElement>(null);
+  const suppressPortfolioHover = useRef(false);
+  const portfolioDropdownDelay = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelPortfolioDropdownDelay = () => {
+    if (portfolioDropdownDelay.current !== null) {
+      clearTimeout(portfolioDropdownDelay.current);
+      portfolioDropdownDelay.current = null;
+    }
+  };
+  const schedulePortfolioDropdown = () => {
+    cancelPortfolioDropdownDelay();
+    portfolioDropdownDelay.current = setTimeout(() => {
+      portfolioDropdownDelay.current = null;
+      // Preserve the active-link hitbox until the mouse moves away.
+      if (!portfolioLinkRef.current?.matches(':hover')) {
+        suppressPortfolioHover.current = true;
+        setPortfolioDropdownReady(true);
+      }
+    }, 500);
+  };
   // A mouse click into Solutions keeps its link under the pointer until exit.
   // Direct visits, keyboard activation, and touch navigation need no hover gate.
   const [solutionsDropdownReady, setSolutionsDropdownReady] = useState(page === 'solutions');
@@ -121,6 +143,23 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   }, [page]);
 
   useEffect(() => {
+    if (!portfolioDropdownReady) {
+      setDesktopGroup(current => current === 'portfolio' ? null : current);
+    }
+  }, [portfolioDropdownReady]);
+
+  useEffect(() => {
+    if (page !== 'portfolio') {
+      // Returning via the inactive Portfolio link must keep its pointer hitbox
+      // until mouseleave, matching the Data and Software navigation behavior.
+      setPortfolioDropdownReady(false);
+    } else if (!portfolioDropdownReady && !portfolioLinkRef.current?.matches(':hover')) {
+      schedulePortfolioDropdown();
+    }
+    return cancelPortfolioDropdownDelay;
+  }, [page, portfolioDropdownReady]);
+
+  useEffect(() => {
     if (!solutionsDropdownReady) {
       setDesktopGroup(current => current === 'solutions' ? null : current);
     }
@@ -187,6 +226,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
         className="portfolio-nav-dropdown"
         onPointerEnter={event => {
           if (event.pointerType !== 'mouse') return;
+          if (group.page === 'portfolio' && suppressPortfolioHover.current) return;
           if (group.page === 'solutions' && suppressSolutionsHover.current) return;
           if (group.page === 'software' && suppressSoftwareHover.current) return;
           reveal(group.page);
@@ -195,6 +235,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           // Focus may remain on a previously clicked link; it should not pin
           // the dropdown open after the mouse leaves the entire group.
           if (event.pointerType === 'mouse') {
+            if (group.page === 'portfolio') suppressPortfolioHover.current = false;
             if (group.page === 'solutions') suppressSolutionsHover.current = false;
             if (group.page === 'software') suppressSoftwareHover.current = false;
             setDesktopGroup(current => current === group.page ? null : current);
@@ -339,7 +380,25 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
         </a>
 
         <div className="portfolio-desktop-nav hidden lg:flex items-center gap-5 xl:gap-9" ref={desktopAreaRef}>
-          {dropdown(groups[0])}
+          {page === 'portfolio' && portfolioDropdownReady ? dropdown(groups[0]) : (
+            <a ref={portfolioLinkRef} href="/"
+              className="nav-link font-mono text-xs tracking-widest uppercase"
+              style={{ color: 'var(--text-2)' }}
+              onPointerDown={event => { portfolioLinkMouseDown.current = event.pointerType === 'mouse'; }}
+              onPointerEnter={event => { if (event.pointerType === 'mouse') cancelPortfolioDropdownDelay(); }}
+              onPointerLeave={event => {
+                if (event.pointerType !== 'mouse') return;
+                if (page === 'portfolio') schedulePortfolioDropdown();
+                else portfolioLinkMouseDown.current = false;
+              }}
+              onClick={event => {
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
+                if (page !== 'portfolio') setPortfolioDropdownReady(!portfolioLinkMouseDown.current);
+                portfolioLinkMouseDown.current = false;
+                navigate('portfolio');
+              }}>Portfolio</a>
+          )}
           {page === 'solutions' && solutionsDropdownReady ? dropdown(groups[1]) : (
             <a
               ref={solutionsLinkRef}
@@ -433,7 +492,12 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
             style={{ background: 'rgba(8,8,13,0.98)', borderBottom: '1px solid var(--border)' }}
           >
             <div className="px-6 py-4 flex flex-col gap-4">
-              {mobileDisclosure(groups[0])}
+              {page === 'portfolio' ? mobileDisclosure(groups[0]) : (
+                <a href="/" className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
+                  style={{ color: 'var(--accent)' }} onClick={event => followGroup('portfolio', event)}>
+                  Portfolio <ArrowUpRight size={14} aria-hidden="true" />
+                </a>
+              )}
               {page === 'solutions' ? mobileDisclosure(groups[1]) : (
                 <a
                   href="/solutions"

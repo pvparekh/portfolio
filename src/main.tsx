@@ -97,11 +97,18 @@ function PortfolioSite() {
   useEffect(() => { setPageMetadata(page); }, [page]);
 
   const navigate = useCallback((target: SitePage) => {
+    const destination = pagePath(target);
     if (target === page) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // A brand or destination click is a true home/top navigation, not a
+      // revisit to a previously selected section such as /#projects.
+      // Clearing the fragment also makes refresh and copied URLs deterministic.
+      if (window.location.pathname + window.location.search + window.location.hash !== destination) {
+        window.history.replaceState(window.history.state, '', destination);
+      }
+      window.scrollTo({ top: 0, behavior: 'instant' });
       return;
     }
-    window.history.pushState(null, '', pagePath(target));
+    window.history.pushState(null, '', destination);
     setPage(target);
   }, [page]);
 
