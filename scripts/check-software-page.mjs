@@ -105,7 +105,7 @@ try {
 
   const portfolio=await browser.newPage();
   await portfolio.goto(base+'/',{waitUntil:'domcontentloaded'});
-  await portfolio.locator('h1').first().waitFor({state:'visible',timeout:10000});
+  await portfolio.locator('main #about').waitFor({state:'attached',timeout:10000});
   assert.equal(await portfolio.locator('.site-shared-brand-section').count(),0);
   await portfolio.close();
   const data=await browser.newPage();
