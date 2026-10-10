@@ -30,6 +30,7 @@ Public live URLs are documented by the project owners but external HTTP verifica
 - Plaid customer stories: make the problem, delivered solution and observed result easily skimmable. https://plaid.com/customer-stories/
 - Linear and Vercel product experiences: restrained typography and coherent interaction language are more useful here than wholesale imitation. https://linear.app/ and https://vercel.com/
 - W3C reflow guidance: preserve vertical reading order and reflow at 320 CSS px. https://www.w3.org/WAI/WCAG22/Understanding/reflow.html
+- thoughtbot services: starts with client/project stage and user needs before technology-level offerings. Adapted as a small-scope solo-developer version, not an agency comparison. https://thoughtbot.com/services
 - Vercel Git configuration: branch-specific `git.deploymentEnabled` supports disabling automatic deployments. https://vercel.com/docs/project-configuration/git-configuration
 
 These are observed examples and transferable guidelines, not measured conversion gains. The service taxonomy and copy are editorial hypotheses to evaluate with actual customer feedback.
@@ -40,13 +41,26 @@ These are observed examples and transferable guidelines, not measured conversion
 ## Deployment lock
 The feature branch adds `git.deploymentEnabled[feat/software-solutions-client-experience] = false` in its own `vercel.json`. This relies on Vercel honoring documented branch configuration; authorization to inspect live Vercel project settings was unavailable. No manual deployment, production promotion or merge is authorized.
 
-## Checks still required before review/production
-- Run `npm ci && npm run build` (includes protected experience guard and TypeScript) in a clone with network/dependencies.
-- Automated browser interaction matrix: desktop hover transition and 500 ms delayed disclosure, keyboard Escape and focus, touch menu, modifier-click, refresh, Back/Forward, cross-page anchors, contact actions.
-- Screenshots and clipping checks at 320×568, 360×740, 390×844, 430×932, 667×375, 844×390, 768×1024, 1024×768, 1440×900, 1920×1080.
-- Compare Portfolio and Data Solutions appearance and exact content before and after.
-- Verify live public application URLs and link targets, plus copy/keyboard announcements and reduced-motion mode.
-- Independently verify any future numerical business claim before publication.
+## Validation summary, 2026-10-10
+
+**Passing validation:** GitHub Actions [run 38088477392](https://github.com/pvparekh/portfolio/actions/runs/38088477392) (commit `d0ccbc344d72868a9f18865a6af05b4ec1c91a97`).
+- `npm ci` and `npm run build` passed (protected experience baseline, TypeScript, and Vite).
+- All three static entrypoints were generated.
+- Headless Chromium route and interaction suite passed: Software hero, five services, five projects, correct classifications, private-source link exclusion, service disclosures, data/software navigation, browser back/forward, reload, keyboard dropdown controls, contact path, mailto draft, clipboard fallback.
+- Automated viewport reflow and mobile-menu checks passed at 320×568, 360×740, 390×844, 430×932, 667×375, 844×390, 768×1024, 1024×768, 1440×900, 1920×1080, with reduced-motion enabled.
+- Four full-height screenshots were generated for 320, 390, 768 and 1440 widths; viewed representative top, middle and case-study crops.
+- Portfolio and Data Solutions load in the browser. Their original protected source files are not modified.
+
+**Remaining checks / publication limitations**
+- Source-level preservation is proven. Exact before/after rendered pixel comparisons of Portfolio and Data Solutions have not been performed.
+- Real Safari/iOS/Android browser and screen-reader testing, high browser zoom, and full WCAG audit have not been performed.
+- Public application URL uptime was not independently confirmed; available browsers cannot access external live demos here.
+- Modifier-click native link behavior is preserved in code but not specifically automated.
+- The GitHub action may report upstream dependency vulnerability notices from `npm ci`; do not confuse a build pass with dependency-audit clearance.
+- Vercel project introspection is unauthorized in the current connection. The branch-specific deployment suppression is documented and configured, but no manual Vercel verification/deployment has been attempted.
+- Independently verify any future numerical business-impact claim before publication.
+
+Before a production release, review fresh browser screenshots, check live demos and run a manual cross-browser pass. Production merge and deployment remain explicitly unauthorized.
 
 ## Deferred cross-page ideas
 - Consider extracting the stable route-aware nav hover gate after visual regression coverage exists.

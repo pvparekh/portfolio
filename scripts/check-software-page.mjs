@@ -69,6 +69,17 @@ try {
   assert.equal(await desktop.locator('a[href="/software#work"]').count(),1);
   await desktop.keyboard.press('Escape');
   assert.equal(await trigger.getAttribute('aria-expanded'),'false');
+  await desktop.mouse.move(5,190);
+  await desktop.waitForTimeout(150);
+  assert.equal(await trigger.getAttribute('aria-expanded'),'false',
+    'Dropdown must not reopen when the pointer has already left');
+  await desktop.locator('.portfolio-nav-destination[href="/"]').click();
+  await desktop.locator('#about').waitFor({state:'attached'});
+  assert.match(await desktop.title(),/Data Engineer/);
+  await desktop.goBack();
+  await desktop.locator('#sol-hero-title').waitFor({state:'attached'});
+  assert.match(await desktop.locator('h1').innerText(),/Custom software/);
+
   await desktop.locator('.portfolio-desktop-nav a[href="#contact"]').click();
   assert.equal(await desktop.locator('#contact').count(),1);
   const directEmail = desktop.locator('.sol-contact-email-address');
