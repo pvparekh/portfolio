@@ -166,7 +166,7 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
           <p className="sol-case-deck">{study.description}</p>
           <div className="sol-case-links">
             {study.liveUrl && <a href={study.liveUrl} target="_blank" rel="noreferrer">Explore live project <ArrowUpRight size={15} /></a>}
-            <a href={study.sourceUrl} target="_blank" rel="noreferrer">Inspect the code <ArrowUpRight size={15} /></a>
+            <a href={study.sourceUrl} target="_blank" rel="noreferrer">{study.id === 'formula-vision' ? 'Documentation' : 'Inspect the code'} <ArrowUpRight size={15} /></a>
           </div>
         </div>
         <div className="sol-case-narrative">

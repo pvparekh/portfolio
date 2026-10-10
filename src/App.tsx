@@ -726,7 +726,7 @@ function ProjectsSection() {
                   )}
                   {flagship.github && (
                     <a href={flagship.github} target="_blank" rel="noreferrer" className="renaissance-text-project-link">
-                      Source Code <GithubIcon size={16} />
+                      Documentation <GithubIcon size={16} />
                     </a>
                   )}
                   <a href="https://github.com/pvparekh/formula-vision-documentation/blob/main/Documentation%20%28FULL%29/ENGINEERING_OVERVIEW.md"
