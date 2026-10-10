@@ -806,7 +806,21 @@ a.renaissance-company-name:hover { color: var(--accent); }
   min-width: 0; background: #111119; border: 1px solid rgba(255,255,255,.105);
   overflow: hidden;
 }
-.renaissance-supporting-project.is-review-bot { border-top: 2px solid rgba(245,158,11,.55); }
+/* Review Bot uses emerald accents; Formula Vision retains amber and AetherFlow purple. */
+.renaissance-supporting-project.is-review-bot {
+  --review-accent: #4ade80;
+  border-top: 2px solid rgba(74,222,128,.66);
+}
+.is-review-bot .renaissance-project-topline span:first-child,
+.is-review-bot .renaissance-project-overline,
+.is-review-bot .renaissance-mini-flow li span { color: var(--review-accent); }
+.is-review-bot .renaissance-text-project-link {
+  border-bottom-color: rgba(74,222,128,.50);
+}
+.is-review-bot .renaissance-text-project-link:hover {
+  color: var(--review-accent);
+  border-bottom-color: var(--review-accent);
+}
 .renaissance-supporting-project.is-aetherflow { border-top: 2px solid rgba(167,139,250,.55); }
 .renaissance-supporting-project.is-aetherflow .renaissance-project-overline { color: #b5a1ff; }
 .renaissance-supporting-project .renaissance-project-topline { padding-inline: 28px; font-size: 9px; }

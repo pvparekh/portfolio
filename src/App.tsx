@@ -66,9 +66,9 @@ const PROJECTS = [
     tech: ['Python', 'FastAPI', 'Claude', 'GitHub API', 'Webhooks', 'Railway'],
     live: null as string | null,
     github: 'https://github.com/pvparekh/github-review-bot' as string | null,
-    accent: '#F59E0B',
-    accentDim: 'rgba(245,158,11,0.07)',
-    glow: 'rgba(245,158,11,0.65)',
+    accent: '#4ADE80',
+    accentDim: 'rgba(74,222,128,0.07)',
+    glow: 'rgba(74,222,128,0.65)',
     note: null as string | null,
   },
   {
