@@ -69,7 +69,7 @@ try {
   const composition = await desktop.locator('.sol-contact-compose').getAttribute('href');
   assert.match(composition,/Software%20project%20inquiry/);
   await desktop.locator('.sol-contact-copy').click();
-  assert.match(await desktop.locator('[role=status]').innerText(),/copied|unavailable/i);
+  await desktop.waitForFunction(() => /copied|unavailable/i.test(document.querySelector('.sol-contact-copy-status')?.textContent ?? ''), { timeout: 5000 });
   assert.deepEqual(errors,[], 'No client render errors');
 
   for (const [width,height] of viewports) {
