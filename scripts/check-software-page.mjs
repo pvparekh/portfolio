@@ -5,8 +5,8 @@ import { chromium } from 'playwright';
 
 // Runs against Vite's local production preview. No hosted preview or deployment.
 const base = 'http://127.0.0.1:4173';
-const server = spawn('npm', ['run','preview','--','--host','127.0.0.1','--port','4173','--strictPort'], {
-  stdio: 'pipe', shell: process.platform === 'win32'
+const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js','preview','--host','127.0.0.1','--port','4173','--strictPort'], {
+  stdio: 'pipe'
 });
 let serverOutput = '';
 server.stderr.on('data', data => { serverOutput += String(data); });
@@ -128,4 +128,6 @@ try {
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
+  server.stdout.destroy();
+  server.stderr.destroy();
 }
