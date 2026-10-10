@@ -1,7 +1,7 @@
 # Software Solutions — implementation and review notes
 
 Branch: `feat/software-solutions-client-experience`  
-Baseline: `2bfcc89c76cce56f661d7a1bc7981f7ca97fd6da` (GitHub `main`, 2026-10-10). Production association in Vercel could not be inspected because the project read API denied access.
+Baseline: `2bfcc89c76cce56f661d7a1bc7981f7ca97fd6da` (GitHub `main`, 2026-10-10). Production baseline independently confirmed with Vercel on 2026-10-10: READY deployment `dpl_BCpJQM9RGWewT6C7doYSCRSx47TV` is sourced from the same `main` SHA.
 
 ## Positioning and information architecture
 Evaluated three directions: (A) idea-to-application, (B) software built for how a business works, (C) custom software for real business needs. Chose **Custom software, built for the way you work** for clarity and fit with the existing editorial hero.
@@ -38,31 +38,31 @@ These are observed examples and transferable guidelines, not measured conversion
 ## Protected existing content
 `src/App.tsx`, `src/SolutionsPage.tsx`, `src/solutionsData.ts`, `src/deliveryExamples.ts`, `src/solutions.css`, `src/mobile.css`, `src/style.css`, and existing professional experience wording are unchanged. Software's extra styling is scoped to `.software-solutions`. Shared files changed only for routing, navigation and the new static entrypoint.
 
-## Deployment lock
-The feature branch adds `git.deploymentEnabled[feat/software-solutions-client-experience] = false` in its own `vercel.json`. This relies on Vercel honoring documented branch configuration; authorization to inspect live Vercel project settings was unavailable. No manual deployment, production promotion or merge is authorized.
+## Deployment safeguards and release authorization
+The feature branch adds `git.deploymentEnabled[feat/software-solutions-client-experience] = false` in its own `vercel.json`. The branch setting suppresses automatic feature-branch deployment. Vercel project inspection (without an explicit team override) succeeded and identified the main production baseline. On 2026-10-10 the owner authorized a production merge after all build, mobile/landscape, and protected-page regression checks pass. Do not bypass failing checks.
 
 ## Validation summary, 2026-10-10
 
-**Passing validation:** GitHub Actions [run 38088477392](https://github.com/pvparekh/portfolio/actions/runs/38088477392) (commit `d0ccbc344d72868a9f18865a6af05b4ec1c91a97`).
+**Passing validation:** GitHub Actions [run 38089048588](https://github.com/pvparekh/portfolio/actions/runs/38089048588) (commit `12c7367f066718afe6dbafb1fa502b2220db07eb`), including separate production-baseline builds.
 - `npm ci` and `npm run build` passed (protected experience baseline, TypeScript, and Vite).
 - All three static entrypoints were generated.
 - Headless Chromium route and interaction suite passed: Software hero, five services, five projects, correct classifications, private-source link exclusion, service disclosures, data/software navigation, browser back/forward, reload, keyboard dropdown controls, contact path, mailto draft, clipboard fallback.
 - Automated viewport reflow and mobile-menu checks passed at 320×568, 360×740, 390×844, 430×932, 667×375, 844×390, 768×1024, 1024×768, 1440×900, 1920×1080, with reduced-motion enabled.
-- Four full-height screenshots were generated for 320, 390, 768 and 1440 widths; viewed representative top, middle and case-study crops.
-- Portfolio and Data Solutions load in the browser. Their original protected source files are not modified.
+- Screenshots generated at 320, 390, 768 and 1440 widths, plus 667×375 and 844×390 touch landscape captures at the hero, service, and work sections and 1024/1920 hero checks.
+- Portfolio and Data Solutions load in the browser; original protected source files are not modified. A side-by-side Chromium A/B build of `main` and this feature confirmed exact main-content text, identical section identifiers, equal navigation height and no additional horizontal overflow across ten screen sizes. Existing Portfolio width 769 CSS px at viewport 768px was 769px in **both** builds.
 
 **Additional release gate:** compare the existing Portfolio and Data Solutions pages with the original production main build at the same viewport dimensions; preserve exact rendered main content, section IDs and header heights, and do not introduce any additional horizontal overflow. This differential test is necessary because the existing Portfolio showed 17px of overflow at 768×1024 in a strict zero-overflow test. It may predate this change.
 
 **Remaining checks / publication limitations**
-- Source-level preservation is proven. Exact before/after rendered pixel comparisons of Portfolio and Data Solutions have not been performed.
+- Source-level preservation is proven. Pixel-by-pixel screenshot equality has not been asserted because a third navigation destination is an intentional visual change; main content equality and unchanged layout overflow were verified instead.
 - Real Safari/iOS/Android browser and screen-reader testing, high browser zoom, and full WCAG audit have not been performed.
-- Public application URL uptime was not independently confirmed; available browsers cannot access external live demos here.
+- Vercel reported READY project deployments for Perfect Threading, AetherFlow and Formula Vision, and the published domains were verified in their project settings. External end-user interactions within those deployed products were not re-tested.
 - Modifier-click native link behavior is preserved in code but not specifically automated.
 - The GitHub action may report upstream dependency vulnerability notices from `npm ci`; do not confuse a build pass with dependency-audit clearance.
-- Vercel project introspection is unauthorized in the current connection. The branch-specific deployment suppression is documented and configured, but no manual Vercel verification/deployment has been attempted.
+- Vercel production metadata was successfully inspected. Live portfolio baseline matches the GitHub main commit at the start of this work. Deployment of this change had not yet been performed at the time this note was authored.
 - Independently verify any future numerical business-impact claim before publication.
 
-Before a production release, review fresh browser screenshots, check live demos and run a manual cross-browser pass. Production merge and deployment remain explicitly unauthorized.
+The owner authorized release on 2026-10-10, conditional on passing automated release checks and protecting existing pages. Automated build, touch-landscape coverage, and side-by-side protected-page comparisons have passed. Real Safari/Android and full manual accessibility testing remain future enhancements; they are not represented as completed.
 
 ## Deferred cross-page ideas
 - Consider extracting the stable route-aware nav hover gate after visual regression coverage exists.
