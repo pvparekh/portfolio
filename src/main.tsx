@@ -2,14 +2,15 @@ import { StrictMode, useCallback, useEffect, useLayoutEffect, useState } from 'r
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import SolutionsPage from './SolutionsPage.tsx';
+import SoftwarePage from './SoftwarePage.tsx';
 import SiteNav, { type SitePage } from './SiteNav.tsx';
 import './style.css';
 import './mobile.css';
 
 const currentPage = (): SitePage =>
-  /^\/solutions(?:\/|$)/.test(window.location.pathname) ? 'solutions' : 'portfolio';
+  /^\/software(?:\/|$)/.test(window.location.pathname) ? 'software' : /^\/solutions(?:\/|$)/.test(window.location.pathname) ? 'solutions' : 'portfolio';
 
-const pagePath = (page: SitePage) => page === 'solutions' ? '/solutions' : '/';
+const pagePath = (page: SitePage) => page === 'software' ? '/software' : page === 'solutions' ? '/solutions' : '/';
 
 const portfolioTitle = 'Parth Parekh | Data Engineer & Software Developer';
 const portfolioDescription =
@@ -18,14 +19,18 @@ const solutionTitle = 'Data Solutions | Parth Parekh';
 const solutionDescription =
   'Data pipelines, reporting automation, SQL modernization and system integrations built around the way your business works.';
 
+const softwareTitle = 'Software Solutions | Parth Parekh';
+const softwareDescription = 'Custom web applications, business websites, backend integrations and focused AI-assisted software built around practical requirements.';
 function setPageMetadata(page: SitePage) {
   const isSolutions = page === 'solutions';
-  const title = isSolutions ? solutionTitle : portfolioTitle;
-  const description = isSolutions ? solutionDescription : portfolioDescription;
-  const socialDescription = isSolutions
-    ? 'Manual reporting, disconnected systems and fragile pipelines. I build focused, reliable data solutions.'
+  const isSoftware = page === 'software';
+  const title = isSoftware ? softwareTitle : isSolutions ? solutionTitle : portfolioTitle;
+  const description = isSoftware ? softwareDescription : isSolutions ? solutionDescription : portfolioDescription;
+  const socialDescription = isSoftware
+    ? 'Websites, web applications and software features designed, built and delivered around your needs.'
+    : isSolutions ? 'Manual reporting, disconnected systems and fragile pipelines. I build focused, reliable data solutions.'
     : 'Engineering experience, production data systems, and independent technical projects by Parth Parekh.';
-  const canonicalUrl = isSolutions ? 'https://parthparekh.dev/solutions' : 'https://parthparekh.dev/';
+  const canonicalUrl = isSoftware ? 'https://parthparekh.dev/software' : isSolutions ? 'https://parthparekh.dev/solutions' : 'https://parthparekh.dev/';
 
   document.title = title;
 
@@ -112,7 +117,9 @@ function PortfolioSite() {
   return (
     <>
       <SiteNav page={page} navigate={navigate} goToSection={goToSection} />
-      {page === 'solutions' ? (
+      {page === 'software' ? (
+        <SoftwarePage onBackToPortfolio={() => navigate('portfolio')} />
+      ) : page === 'solutions' ? (
         <SolutionsPage onBackToPortfolio={() => navigate('portfolio')} />
       ) : (
         <App onNavigateSolutions={() => navigate('solutions')} />

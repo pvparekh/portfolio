@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { AnimatePresence, motion, useReducedMotion, useScroll } from 'framer-motion';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 
-export type SitePage = 'portfolio' | 'solutions';
+export type SitePage = 'portfolio' | 'solutions' | 'software';
 
 const portfolioSections = [
   { label: 'About', id: 'about' },
@@ -17,6 +17,16 @@ const solutionSections = [
   { label: 'Work', id: 'work' },
   { label: 'Approach', id: 'approach' },
 ];
+
+const softwareSections = [
+  { label: 'Opportunity', id: 'opportunities' },
+  { label: 'Services', id: 'services' },
+  { label: 'Work', id: 'work' },
+  { label: 'Approach', id: 'approach' },
+  { label: 'Contact', id: 'contact' },
+];
+const hrefForPage = (target: SitePage) =>
+  target === 'portfolio' ? '/' : target === 'solutions' ? '/solutions' : '/software';
 
 type SiteNavProps = {
   page: SitePage;
@@ -33,9 +43,10 @@ type NavigationGroup = {
 const groups: NavigationGroup[] = [
   { label: 'Portfolio', page: 'portfolio', items: portfolioSections },
   { label: 'Data Solutions', page: 'solutions', items: solutionSections },
+  { label: 'Software Solutions', page: 'software', items: softwareSections },
 ];
 
-/** One persistent header, shared across both routes. */
+/** One persistent header, shared across all routes. */
 export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const [scrolled, setScrolled] = useState(false);
   // A mouse click into Solutions keeps its link under the pointer until exit.
@@ -66,11 +77,33 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
       }
     }, 500);
   };
+  // Match the established Data Solutions hover gate for the new active destination.
+  const [softwareDropdownReady, setSoftwareDropdownReady] = useState(page === 'software');
+  const softwareLinkMouseDown = useRef(false);
+  const softwareLinkRef = useRef<HTMLAnchorElement>(null);
+  const suppressSoftwareHover = useRef(false);
+  const softwareDropdownDelay = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelSoftwareDropdownDelay = () => {
+    if (softwareDropdownDelay.current !== null) {
+      clearTimeout(softwareDropdownDelay.current);
+      softwareDropdownDelay.current = null;
+    }
+  };
+  const scheduleSoftwareDropdown = () => {
+    cancelSoftwareDropdownDelay();
+    softwareDropdownDelay.current = setTimeout(() => {
+      softwareDropdownDelay.current = null;
+      if (!softwareLinkRef.current?.matches(':hover')) {
+        suppressSoftwareHover.current = true;
+        setSoftwareDropdownReady(true);
+      }
+    }, 500);
+  };
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGroup, setDesktopGroup] = useState<SitePage | null>(null);
   const [mobileGroup, setMobileGroup] = useState<SitePage | null>(null);
   const desktopAreaRef = useRef<HTMLDivElement>(null);
-  const desktopTriggers = useRef<Record<SitePage, HTMLButtonElement | null>>({ portfolio: null, solutions: null });
+  const desktopTriggers = useRef<Record<SitePage, HTMLButtonElement | null>>({ portfolio: null, solutions: null, software: null });
   const reducedMotion = !!useReducedMotion();
   const { scrollYProgress } = useScroll();
 
@@ -104,6 +137,16 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   }, [page, solutionsDropdownReady]);
 
   useEffect(() => {
+    if (!softwareDropdownReady) setDesktopGroup(current => current === 'software' ? null : current);
+  }, [softwareDropdownReady]);
+
+  useEffect(() => {
+    if (page === 'software' && !softwareDropdownReady &&
+        !softwareLinkRef.current?.matches(':hover')) scheduleSoftwareDropdown();
+    return cancelSoftwareDropdownDelay;
+  }, [page, softwareDropdownReady]);
+
+  useEffect(() => {
     const onOutsidePointer = (event: PointerEvent) => {
       if (desktopAreaRef.current && !desktopAreaRef.current.contains(event.target as Node)) {
         setDesktopGroup(null);
@@ -124,7 +167,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   };
 
   const destination = (targetPage: SitePage, id: string) =>
-    (targetPage === 'portfolio' ? '/' : '/solutions') + '#' + id;
+    hrefForPage(targetPage) + '#' + id;
 
   const reveal = (targetPage: SitePage) => setDesktopGroup(targetPage);
 
@@ -145,6 +188,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
         onPointerEnter={event => {
           if (event.pointerType !== 'mouse') return;
           if (group.page === 'solutions' && suppressSolutionsHover.current) return;
+          if (group.page === 'software' && suppressSoftwareHover.current) return;
           reveal(group.page);
         }}
         onPointerLeave={event => {
@@ -152,6 +196,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
           // the dropdown open after the mouse leaves the entire group.
           if (event.pointerType === 'mouse') {
             if (group.page === 'solutions') suppressSolutionsHover.current = false;
+            if (group.page === 'software') suppressSoftwareHover.current = false;
             setDesktopGroup(current => current === group.page ? null : current);
           }
         }}
@@ -168,7 +213,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
         }}
       >
         <a
-          href={group.page === 'portfolio' ? '/' : '/solutions'}
+          href={hrefForPage(group.page)}
           onClick={event => followGroup(group.page, event)}
           className="nav-link portfolio-nav-destination font-mono text-xs tracking-widest uppercase"
           style={{ color: 'var(--text-2)' }}
@@ -222,7 +267,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
       <div className="portfolio-mobile-group" key={group.page}>
         <div className="portfolio-mobile-disclosure-row">
           <a
-            href={group.page === 'portfolio' ? '/' : '/solutions'}
+            href={hrefForPage(group.page)}
             className="portfolio-mobile-destination font-mono text-xs tracking-widest uppercase"
             onClick={event => followGroup(group.page, event)}
           >{group.label}</a>
@@ -287,13 +332,13 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
             navigate('portfolio');
           }}
           className="site-shared-brand"
-          aria-label={page === 'solutions' ? 'Parth Parekh, back to portfolio' : 'Parth Parekh, back to top'}
+          aria-label={page !== 'portfolio' ? 'Parth Parekh, back to portfolio' : 'Parth Parekh, back to top'}
         >
           PARTH<span className="site-shared-brand-period">.</span>
-          {page === 'solutions' && <small className="site-shared-brand-section"> / DATA SOLUTIONS</small>}
+          {page !== 'portfolio' && <small className="site-shared-brand-section"> / {page === 'solutions' ? 'DATA SOLUTIONS' : 'SOFTWARE SOLUTIONS'}</small>}
         </a>
 
-        <div className="portfolio-desktop-nav hidden md:flex items-center gap-7 lg:gap-9" ref={desktopAreaRef}>
+        <div className="portfolio-desktop-nav hidden lg:flex items-center gap-5 xl:gap-9" ref={desktopAreaRef}>
           {dropdown(groups[0])}
           {page === 'solutions' && solutionsDropdownReady ? dropdown(groups[1]) : (
             <a
@@ -323,8 +368,27 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
               Data Solutions
             </a>
           )}
-          {page === 'solutions' ? (
-            <a href="#contact" onClick={event => goto('solutions', 'contact', event)}
+          {page === 'software' && softwareDropdownReady ? dropdown(groups[2]) : (
+            <a ref={softwareLinkRef} href="/software"
+              className="nav-link font-mono text-xs tracking-widest uppercase"
+              style={{ color:'var(--text-2)' }}
+              onPointerDown={event => { softwareLinkMouseDown.current = event.pointerType === 'mouse'; }}
+              onPointerEnter={event => { if (event.pointerType === 'mouse') cancelSoftwareDropdownDelay(); }}
+              onPointerLeave={event => {
+                if (event.pointerType !== 'mouse') return;
+                if (page === 'software') scheduleSoftwareDropdown();
+                else softwareLinkMouseDown.current = false;
+              }}
+              onClick={event => {
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
+                if (page !== 'software') setSoftwareDropdownReady(!softwareLinkMouseDown.current);
+                softwareLinkMouseDown.current = false;
+                navigate('software');
+              }}>Software Solutions</a>
+          )}
+          {page !== 'portfolio' ? (
+            <a href="#contact" onClick={event => goto(page, 'contact', event)}
               className="btn-primary font-mono text-xs tracking-widest px-4 py-2 rounded-sm font-semibold"
               style={{ background: 'var(--accent)', color: '#08080D' }}>Connect</a>
           ) : (
@@ -336,7 +400,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
 
         <button
           type="button"
-          className="portfolio-menu-toggle md:hidden flex flex-col gap-1.5 p-2"
+          className="portfolio-menu-toggle lg:hidden flex flex-col gap-1.5 p-2"
           onClick={() => { setMobileOpen(!mobileOpen); if (mobileOpen) setMobileGroup(null); }}
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
@@ -365,7 +429,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            className="portfolio-mobile-panel md:hidden overflow-hidden"
+            className="portfolio-mobile-panel lg:hidden overflow-hidden"
             style={{ background: 'rgba(8,8,13,0.98)', borderBottom: '1px solid var(--border)' }}
           >
             <div className="px-6 py-4 flex flex-col gap-4">
@@ -385,9 +449,15 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
                   Data Solutions <ArrowUpRight size={14} aria-hidden="true" />
                 </a>
               )}
-              {page === 'solutions' && (
+              {page === 'software' ? mobileDisclosure(groups[2]) : (
+                <a href="/software" className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
+                  style={{color:'var(--accent)'}} onClick={event => followGroup('software',event)}>
+                  Software Solutions <ArrowUpRight size={14} aria-hidden="true" />
+                </a>
+              )}
+              {page !== 'portfolio' && (
                 <a className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
-                  href="#contact" onClick={event => goto('solutions', 'contact', event)}
+                  href="#contact" onClick={event => goto(page, 'contact', event)}
                   style={{ color: 'var(--accent)' }}>Connect <ArrowUpRight size={14} aria-hidden="true" /></a>
               )}
             </div>
