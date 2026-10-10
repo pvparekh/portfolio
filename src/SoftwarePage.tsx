@@ -81,8 +81,8 @@ function SoftwarePreview() {
   return (
     <div className="software-workspace" role="img" aria-label="Illustrative custom application interface with a navigation rail, a project workspace, and software features designed around the user's workflow. This is a design concept, not a client application screenshot.">
       <div className="software-workspace-top">
-        <span><span className="software-preview-spark" /> A DIFFERENT KIND OF SOFTWARE</span>
-        <span>INTERFACE STUDY / 01</span>
+        <span><span className="software-preview-spark" /> MADE FOR YOUR WORK</span>
+        <span>UI STUDY / 01</span>
       </div>
 
       <div className="software-workspace-browser">
