@@ -4,6 +4,9 @@ on:
     branches:
       - feat/software-solutions-client-experience
   workflow_dispatch:
+concurrency:
+  group: software-solutions-qa-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
