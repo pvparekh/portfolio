@@ -741,3 +741,35 @@
 /* Shared persistent 64px navigation is outside the Solutions page tree.
    Reserve exactly its height so the opening hero never renders beneath it. */
 .solutions { padding-top: 64px; }
+
+
+/* Service scopes: clearer disclosure affordance without changing the
+   existing accordion content or resting layout geometry. */
+.solutions .sol-service-detail details > summary {
+  padding: 9px 12px;
+  margin: -9px -12px;
+  border-radius: 4px;
+  transition: color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+.solutions .sol-service-detail details > summary svg {
+  transition: transform .2s ease, color .18s ease;
+}
+@media (hover: hover) {
+  .solutions .sol-service-detail details > summary:hover {
+    color: #f5b454;
+    background-color: rgba(245,165,36,.075);
+    box-shadow: inset 0 0 0 1px rgba(245,165,36,.23);
+  }
+  .solutions .sol-service-detail details > summary:hover svg { color: #f5b454; }
+}
+.solutions .sol-service-detail details > summary:focus-visible {
+  color: #f5b454;
+  background-color: rgba(245,165,36,.075);
+  outline: 2px solid var(--sol-accent);
+  outline-offset: 3px;
+}
+.solutions .sol-service-detail details[open] > summary { color: #f5b454; }
+@media (prefers-reduced-motion: reduce) {
+  .solutions .sol-service-detail details > summary,
+  .solutions .sol-service-detail details > summary svg { transition: none; }
+}
