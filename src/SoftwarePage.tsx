@@ -109,7 +109,7 @@ function SoftwarePreview() {
             <div className="software-interface-headline">
               <div>
                 <h3>Built around <em>your workflow.</em></h3>
-                <p>Less friction. More progress.</p>
+                <p>Your team's work in one place.</p>
               </div>
               <div className="software-product-emblem" aria-hidden="true">
                 <span className="software-product-emblem-glow" />
@@ -145,7 +145,7 @@ function SoftwarePreview() {
                   <span className="software-orbit-dot software-orbit-dot-one" />
                   <span className="software-orbit-dot software-orbit-dot-two" />
                 </div>
-                <strong>Made to fit.</strong>
+                <strong>Designed for you</strong>
                 <span className="software-details-caption">NOT ANOTHER TEMPLATE</span>
               </div>
             </div>
@@ -243,7 +243,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
           <div className="sol-container sol-hero-layout">
             <div className="sol-hero-copy">
               <div className="sol-topline"><span className="sol-status-dot" /> SOFTWARE SOLUTIONS / PARTH PAREKH</div>
-              <h1 id="sol-hero-title">Custom software, <em>built for the way you work.</em></h1>
+              <h1 id="sol-hero-title">Custom software <em>for your business.</em></h1>
               <p className="sol-hero-sub">I design and develop business websites, web applications and focused software tools, from the first requirements to a working handoff. Explore real projects, then tell me what you need to build or improve.</p>
               <div className="sol-actions">
                 <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
@@ -279,7 +279,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
 
         <section className="sol-section sol-services-section" id="services">
           <div className="sol-container">
-            <SectionIntro index="02" label="HOW I CAN HELP" title="Practical software. Clear deliverables." accent="Clear deliverables." description="A useful project starts with what people need to do, not a list of programming languages. Each engagement is sized around a defined outcome." />
+            <SectionIntro index="02" label="HOW I CAN HELP" title="What I can build for you" accent="build for you" description="A useful project starts with what people need to do, not a list of programming languages. Each engagement is sized around a defined outcome." />
             <div className="sol-service-list">
               {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools, proof }) => (
                 <article className="sol-service" key={number}>
@@ -305,7 +305,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
 
         <section className="sol-section sol-independent-section software-work-section" id="work">
           <div className="sol-container">
-            <SectionIntro index="03" label="SELECTED SOFTWARE" title="Real applications. Different challenges." accent="Different challenges." description="Client delivery, independent products and academic work are identified separately. Explore what each application does, what I built and the engineering behind it." />
+            <SectionIntro index="03" label="SELECTED SOFTWARE" title="Software I have designed and built" accent="designed and built" description="Client delivery, independent products and academic work are identified separately. Explore what each application does, what I built and the engineering behind it." />
             <div className="sol-case-list">{softwareProjects.map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
           </div>
         </section>
@@ -313,7 +313,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
 
         <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
-            <SectionIntro index="04" label="WORKING TOGETHER" title="From first conversation to working software." accent="working software." description="A proportionate process, with defined requirements, meaningful checkpoints and clear ownership at launch." />
+            <SectionIntro index="04" label="WORKING TOGETHER" title="How we would work together" accent="work together" description="A proportionate process, with defined requirements, meaningful checkpoints and clear ownership at launch." />
             <EngagementProcess />
             <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Agreed features before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>
           </div>
