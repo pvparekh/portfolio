@@ -91,7 +91,11 @@ try {
   assert.deepEqual(errors,[], 'No client render errors');
 
   for (const [width,height] of viewports) {
-    const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
+    const emulateTouch = width <= 1024;
+    const page=await browser.newPage({
+      viewport:{width,height}, reducedMotion:'reduce',
+      hasTouch:emulateTouch, isMobile:emulateTouch
+    });
     page.on('pageerror',e=>errors.push(`${width}x${height}: ${e.message}`));
     await page.goto(base+'/software',{waitUntil:'domcontentloaded'});
     await page.evaluate(()=>document.fonts.ready);
@@ -117,9 +121,37 @@ try {
     }
     if([320,390,768,1440].includes(width))
       await page.screenshot({path:`qa-software-screenshots/software-${width}x${height}.png`,fullPage:true});
+    // Actual touch/pointer-coarse landscape emulation, not a desktop resized to landscape.
+    if([667,844].includes(width) && height < width) {
+      await page.screenshot({path:`qa-software-screenshots/landscape-${width}x${height}-hero.png`});
+      await page.locator('#services').scrollIntoViewIfNeeded();
+      await page.screenshot({path:`qa-software-screenshots/landscape-${width}x${height}-services.png`});
+      await page.locator('#work').scrollIntoViewIfNeeded();
+      await page.screenshot({path:`qa-software-screenshots/landscape-${width}x${height}-work.png`});
+    }
+    if([1024,1920].includes(width))
+      await page.screenshot({path:`qa-software-screenshots/desktop-${width}x${height}-hero.png`});
     await page.close();
   }
   assert.deepEqual(errors,[], 'No browser errors at tested viewports');
+
+  // Shared-route smoke tests on small portrait, actual touch landscape, tablet and desktop.
+  // These do not alter the existing pages; they detect runtime and reflow regressions.
+  for (const [width,height] of [[320,568],[667,375],[844,390],[768,1024],[1024,768],[1440,900]]) {
+    for (const [route,id] of [['/','#about'],['/solutions','#sol-hero-title']]) {
+      const touch=width<=1024;
+      const other=await browser.newPage({viewport:{width,height},hasTouch:touch,isMobile:touch});
+      other.on('pageerror',e=>errors.push(`${route} at ${width}x${height}: ${e.message}`));
+      await other.goto(base+route,{waitUntil:'domcontentloaded'});
+      await other.locator(id).waitFor({state:'attached',timeout:8000});
+      const sizes=await other.evaluate(()=>({
+        view:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth
+      }));
+      assert.ok(sizes.scroll<=sizes.view+2,`Existing ${route} route overflow at ${width}x${height}: ${JSON.stringify(sizes)}`);
+      await other.close();
+    }
+  }
+  assert.deepEqual(errors,[], 'No runtime errors across the existing routes');
 
   const portfolio=await browser.newPage();
   const portfolioErrors=[];
