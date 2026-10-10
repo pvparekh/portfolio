@@ -14,7 +14,7 @@ export const softwareProjects: SoftwareProject[] = [
     "description": "A service-focused website for a real salon, with clearer service information and an integrated way for customers to book.",
     "problem": "The business needed a more useful customer-facing destination and a booking flow that reduced reliance on telephone scheduling.",
     "work": "Worked with salon ownership to build and deploy a responsive Next.js website with service information and Calendly booking integration.",
-    "outcome": "Customers can browse services and move into an online booking flow. The owner has reported reduced reception workload; no independently audited impact figure is published here.",
+    "outcome": "Customers can explore services and access appointment booking through the website, giving the business a clearer customer-facing experience.",
     "contribution": "Built and delivered the site and booking integration in collaboration with ownership.",
     "architecture": [
       "Next.js and TypeScript website with mobile-responsive layouts",
