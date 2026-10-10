@@ -512,8 +512,62 @@
   }
   .solutions .sol-button svg { flex-shrink: 0; }
 
+  /* A three-across data pipeline reads poorly even on 600-700px portrait.
+     Make the entire phone-width range a proper vertical source → system →
+     output flow; the arrows rotate so direction remains meaningful. */
+  .solutions .sol-flow-row {
+    min-height: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px 0;
+  }
+  .solutions .sol-flow-node {
+    width: 100%;
+    min-width: 0;
+    min-height: 96px;
+    flex: none;
+    display: grid;
+    grid-template-columns: 41px minmax(0,1fr);
+    grid-template-rows: auto auto auto;
+    column-gap: 13px;
+    align-items: center;
+    padding: 13px 14px;
+  }
+  .solutions .sol-flow-icon {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+  }
+  .solutions .sol-flow-small {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 9px;
+  }
+  .solutions .sol-flow-node strong {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+  .solutions .sol-flow-node small {
+    grid-column: 2;
+    grid-row: 3;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+  .solutions .sol-flow-connector {
+    width: 24px;
+    height: 26px;
+    flex: 0 0 26px;
+    transform: rotate(90deg);
+  }
+  .solutions .sol-flow-connector svg { width: 17px; }
+  .solutions .sol-flow-connector span { display: none; }
+
   /* The infographic is information, not an illustration to be cropped.
-     Existing <=520px portrait rules convert its three steps to a column. */
+     All portrait phones now use its legible vertical three-step flow. */
   .solutions .sol-flow-graphic { padding: clamp(11px, 3.6vw, 17px); }
   .solutions .sol-flow-top,
   .solutions .sol-flow-footer {
