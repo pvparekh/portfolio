@@ -215,11 +215,20 @@ const TAGLINES = [
 
 function useTypingEffect(words: string[], typingSpeed = 60, pauseMs = 1800) {
   const [display, setDisplay] = useState('');
+  const [initialDelayElapsed, setInitialDelayElapsed] = useState(false);
   const [wordIdx, setWordIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
+  // Let the hero's delayed tagline fade-in begin while the text is still blank.
+  // The typing loop then starts once, rather than completing offscreen.
   useEffect(() => {
+    const start = setTimeout(() => setInitialDelayElapsed(true), 1450);
+    return () => clearTimeout(start);
+  }, []);
+
+  useEffect(() => {
+    if (!initialDelayElapsed) return;
     const current = words[wordIdx];
     let timeout: ReturnType<typeof setTimeout>;
 
@@ -241,7 +250,7 @@ function useTypingEffect(words: string[], typingSpeed = 60, pauseMs = 1800) {
     }
 
     return () => clearTimeout(timeout);
-  }, [charIdx, deleting, wordIdx, words, typingSpeed, pauseMs]);
+  }, [initialDelayElapsed, charIdx, deleting, wordIdx, words, typingSpeed, pauseMs]);
 
   return display;
 }
