@@ -156,7 +156,6 @@ function EngagementProcess() {
 
 function DeliveryProof() {
   return <div className="sol-proof">
-    <p className="sol-proof-disclosure">Completed engineering work in an employment setting. These examples are generalized to protect internal systems and data, not presented as independent client engagements.</p>
     <div className="sol-proof-grid">
       {deliveryExamples.map(item => <article key={item.id} className={`sol-proof-card ${item.featured ? 'sol-proof-featured' : ''}`}>
         <div className="sol-proof-meta"><span>{item.number} / {item.category}</span><span className="sol-proof-delivered"><CheckCircle2 size={14} /> DELIVERED</span></div>
@@ -305,7 +304,7 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
 
         <section className="sol-section sol-work-section" id="work">
           <div className="sol-container">
-            <SectionIntro index="03" label="SELECTED DELIVERY" title="Engineering work built for real operations" accent="real operations" description="Completed engineering projects that began with recurring operational problems and ended with working, validated systems." />
+            <SectionIntro index="03" label="SELECTED DELIVERY" title="Engineering work built for real operations" accent="real operations" description="Completed engineering projects in a corporate setting that began with recurring operational problems and ended with working, validated systems." />
             <DeliveryProof />
           </div>
         </section>
