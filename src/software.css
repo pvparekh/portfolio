@@ -1,7 +1,7 @@
 /* New software page only. Data Solutions selectors and tokens remain untouched. */
 .software-solutions .sol-hero h1 { max-width: 730px; }
 .software-solutions .sol-hero-sub { max-width: 555px; }
-.software-solutions .sol-flow-node strong { overflow-wrap: anywhere; }
+.solutions.software-solutions .sol-flow-node strong { overflow-wrap: anywhere; }
 .software-solutions .sol-case:first-child {
   border-top: 1px solid rgba(245,158,11,.24);
   background: linear-gradient(120deg,rgba(245,158,11,.035),transparent 65%);
@@ -17,21 +17,21 @@
 .software-solutions .sol-case-fact p { overflow-wrap:break-word; }
 .software-solutions .sol-contact-email-address { overflow-wrap:anywhere; }
 @media(max-width:767px){
-  .software-solutions .sol-hero h1 { font-size:clamp(2.65rem,10vw,4.15rem); }
-  .software-solutions .sol-flow-row { flex-direction:column; gap:12px; padding:20px 0; min-height:unset; }
-  .software-solutions .sol-flow-node { width:100%; min-height:unset; padding:18px; }
-  .software-solutions .sol-flow-node strong { font-size:clamp(16px,4.5vw,20px); margin-top:7px; }
-  .software-solutions .sol-flow-node small { font-size:12px; }
-  .software-solutions .sol-flow-icon { height:30px; }
-  .software-solutions .sol-flow-connector { transform:rotate(90deg); height:22px; flex:0 0 22px; }
-  .software-solutions .sol-flow-connector svg { width:18px; }
+  .solutions.software-solutions .sol-hero h1 { font-size:clamp(2.65rem,10vw,4.15rem); }
+  .solutions.software-solutions .sol-flow-row { flex-direction:column; gap:12px; padding:20px 0; min-height:unset; }
+  .solutions.software-solutions .sol-flow-node { width:100%; min-height:unset; padding:18px; }
+  .solutions.software-solutions .sol-flow-node strong { font-size:clamp(16px,4.5vw,20px); margin-top:7px; }
+  .solutions.software-solutions .sol-flow-node small { font-size:12px; }
+  .solutions.software-solutions .sol-flow-icon { height:30px; }
+  .solutions.software-solutions .sol-flow-connector { transform:rotate(90deg); height:22px; flex:0 0 22px; }
+  .solutions.software-solutions .sol-flow-connector svg { width:18px; }
   .software-solutions .sol-case:first-child { padding-inline:0; }
   .software-solutions .sol-case-tag { max-width:58%; }
 }
 @media(max-width:380px){
-  .software-solutions .sol-topline { font-size:8px; }
+  .solutions.software-solutions .sol-topline { font-size:8px; }
   .software-solutions .sol-hero-bottom>span { overflow-wrap:anywhere; }
 }
 @media(prefers-reduced-motion:reduce){
-  .software-solutions .sol-flow-trace { animation:none!important; }
+  .solutions.software-solutions .sol-flow-trace { animation:none!important; }
 }

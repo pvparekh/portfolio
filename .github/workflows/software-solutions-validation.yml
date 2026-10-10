@@ -1,0 +1,39 @@
+name: Software Solutions branch validation
+on:
+  push:
+    branches:
+      - feat/software-solutions-client-experience
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-build-and-browser-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Protected experience, TypeScript and Vite build
+        run: npm run build
+      - name: Confirm all three static entries
+        run: |
+          test -f dist/index.html
+          test -f dist/solutions/index.html
+          test -f dist/software/index.html
+      - name: Install headless browser (CI only)
+        run: |
+          npm install --no-save playwright@1.56.0
+          npx playwright install --with-deps chromium
+      - name: Browser route, interaction and viewport checks
+        run: node scripts/check-software-page.mjs
+      - name: Attach local browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: software-solutions-local-qa
+          path: qa-software-screenshots/
+          if-no-files-found: ignore
