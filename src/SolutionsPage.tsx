@@ -3,7 +3,9 @@ import { motion, MotionConfig, useInView, useReducedMotion } from 'framer-motion
 import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Database, FileCheck2, GitBranch, Layers3, Mail, Workflow } from 'lucide-react';
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
 import { deliveryExamples } from './deliveryExamples';
+import { useSolutionsScrollReveal } from './solutionsEffects';
 import './solutions.css';
+import './solutionsEffects.css';
 import './deliveryProof.css';
 
 const email = 'pvparekh14@gmail.com';
@@ -220,6 +222,7 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
 }
 
 function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
+  const pageRef = useSolutionsScrollReveal();
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   async function copyEmail() {
@@ -234,7 +237,7 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="solutions">
+      <div ref={pageRef} className="solutions data-solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <main id="sol-main">
         <section className="sol-hero" aria-labelledby="sol-hero-title">

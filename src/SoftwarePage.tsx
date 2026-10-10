@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Globe2, Layers3, Mail, PlugZap, PanelsTopLeft, Sparkles, Wrench } from 'lucide-react';
 import { softwareProjects, type SoftwareProject } from './softwareProjects';
+import { useSolutionsScrollReveal } from './solutionsEffects';
 import './solutions.css';
+import './solutionsEffects.css';
 import './software.css';
 
 const email = 'pvparekh14@gmail.com';
@@ -222,6 +224,7 @@ function CaseStudy({ study, index }: { study: SoftwareProject; index: number }) 
 }
 
 function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
+  const pageRef = useSolutionsScrollReveal();
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   async function copyEmail() {
@@ -236,7 +239,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="solutions software-solutions">
+      <div ref={pageRef} className="solutions software-solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <main id="sol-main">
         <section className="sol-hero" aria-labelledby="sol-hero-title">
