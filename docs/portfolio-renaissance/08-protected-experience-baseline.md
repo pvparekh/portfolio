@@ -1,8 +1,8 @@
-# 08 — Protected experience copy baseline (user-authorized 2026-10-09 update)
+# 08 — Protected experience copy baseline (updated 2026-10-11)
 
-Source: pvparekh/portfolio/src/App.tsx at `feat/solutions-client-acquisition`, commit `01e6f9510952776fcf1a39266270b686a5c224a4`, blob SHA `4f455e3278c53d4911c9b805826e212bd13f221b`.
+Original snapshot source: pvparekh/portfolio/src/App.tsx at `feat/solutions-client-acquisition`, commit `01e6f9510952776fcf1a39266270b686a5c224a4`, blob SHA `4f455e3278c53d4911c9b805826e212bd13f221b`. The active baseline below was synchronized with the user-edited `main` experience section on 2026-10-11.
 
-This file preserves the exact `const EXPERIENCE` source block captured on 2026-10-09. The fenced block below is the protected baseline, including every employer, link, role title, period, location and literal professional bullet. An automated comparison must extract the same block from future source and compare exact characters (or use an approved structured equivalence if the data model is moved). No bullets may be rewritten without explicit authorization.
+This file preserves the current user-approved exact `const EXPERIENCE` source block, with its first protected snapshot captured on 2026-10-09. The fenced block below is the protected baseline, including every employer, link, role title, period, location and literal professional bullet. An automated comparison must extract the same block from future source and compare exact characters (or use an approved structured equivalence if the data model is moved). No bullets may be rewritten without explicit authorization.
 
 ```tsx
 const EXPERIENCE = [
@@ -21,7 +21,9 @@ const EXPERIENCE = [
         current: true,
         bullets: [
           'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
-          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
+          'Developed a metadata-driven Airflow pipeline integrating 66 SQL Server sources into PostgreSQL using dynamic task mapping, schema discovery, bulk COPY, and transactional refreshes; validated source-to-target row counts across 3+ runs.',
+          'Engineered and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
+          'Leveraged Snowflake\'s columnar architecture for complex analytical workloads on multi-million-row datasets, reducing query runtimes from 20+ minutes in PostgreSQL to under 1 minute.',
         ],
       },
       {
@@ -31,7 +33,6 @@ const EXPERIENCE = [
         bullets: [
           'Reverse-engineered and translated complex, nested Power BI DAX logic into validated SQL for NetSuite accounting integration, decomposing 15+ production reports and 100+ measures; reproduced filter-context, cancellation, reinstatement, and transaction-reconstruction logic and validated outputs against production Power BI results.',
           'Designed and deployed a fully automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual reporting workflow with hourly, idempotent processing; built ~600 lines of dynamic Excel extraction, standardization, region mapping, and duplicate-prevention logic.',
-          'Automated manual Tableau reporting workflows using Selenium, enabling reports to be programmatically downloaded and routed into downstream data-processing/database workflows; also developed additional process automations using Power Automate.',
           'Audited four production Apache Airflow DAGs and developed a 400+ line config-driven reusable SFTP-to-PostgreSQL ETL framework, standardizing loading, metadata, archiving, connection handling, and pipeline structure while improving maintainability, observability, and retry safety.',
         ],
       },
@@ -96,3 +97,7 @@ The user directly requested replacement of **only** the Junior Data Engineer and
 
 ## User-approved refinement on 2026-10-09
 Salon bullet copy was expanded to highlight collaboration with ownership on the Next.js 14 website and Calendly integration reducing workload and call volume by ~30%. The call-volume claim is user-reported, not independently verified. No other employer experience data changed.
+
+
+## User-approved copy revision, 2026-10-11
+Synchronized the protected baseline with the latest main-branch DOWC experience bullets, including the 66-source SQL Server pipeline, the updated NESNA bullet, the Snowflake analytical performance bullet, and the removal of the redundant Tableau-internship bullet. The Snowflake possessive is an escaped TypeScript apostrophe (`Snowflake\'s`), rendered as `Snowflake's`. Other employers and roles were not modified. This update retains the build guard and reflects user-reported technical outcomes, not independent verification.
