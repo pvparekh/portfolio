@@ -104,7 +104,9 @@ const EXPERIENCE = [
         current: true,
         bullets: [
           'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
-          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
+          'Developed a metadata-driven Airflow pipeline integrating 66 SQL Server sources into PostgreSQL using dynamic task mapping, schema discovery, bulk COPY, and transactional refreshes; validated source-to-target row counts across 3+ runs.',
+          'Engineered and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
+          'Leveraged Snowflake&apos;s columnar architecture for complex analytical workloads on multi-million-row datasets, reducing query runtimes from 20+ minutes in PostgreSQL to under 1 minute.',
         ],
       },
       {
@@ -114,7 +116,6 @@ const EXPERIENCE = [
         bullets: [
           'Reverse-engineered and translated complex, nested Power BI DAX logic into validated SQL for NetSuite accounting integration, decomposing 15+ production reports and 100+ measures; reproduced filter-context, cancellation, reinstatement, and transaction-reconstruction logic and validated outputs against production Power BI results.',
           'Designed and deployed a fully automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual reporting workflow with hourly, idempotent processing; built ~600 lines of dynamic Excel extraction, standardization, region mapping, and duplicate-prevention logic.',
-          'Automated manual Tableau reporting workflows using Selenium, enabling reports to be programmatically downloaded and routed into downstream data-processing/database workflows; also developed additional process automations using Power Automate.',
           'Audited four production Apache Airflow DAGs and developed a 400+ line config-driven reusable SFTP-to-PostgreSQL ETL framework, standardizing loading, metadata, archiving, connection handling, and pipeline structure while improving maintainability, observability, and retry safety.',
         ],
       },
