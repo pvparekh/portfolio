@@ -124,9 +124,9 @@ const EXPERIENCE = [
   {
     company: 'Perfect Threading Salon',
     companyUrl: 'https://perfect-threading.vercel.app' as string | null,
-    logo: '/perfect-threading-logo.svg' as string | null,
-    logoBg: null as string | null,
-    logoScale: null as number | null,
+    logo: '/perfect-threading-mark.png' as string | null,
+    logoBg: '#FBF8F3' as string | null,
+    logoScale: 1.65 as number | null,
     companyPeriod: 'May 2025 – June 2025',
     location: 'Contract' as string | null,
     roles: [
