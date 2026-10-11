@@ -1,0 +1,1244 @@
+/*
+ * PHONE-ONLY PRESENTATION LAYER
+ *
+ * Source-of-truth desktop styles live in style.css and solutions.css.
+ * Every rule below is contained in a portrait-sized or touch-landscape
+ * media query; this file intentionally has no unscoped CSS declarations.
+ *
+ * No feature, copy or interaction is hidden as a shortcut for fitting text.
+ */
+
+/* Portrait phones and narrow equivalent viewports. */
+@media screen and (max-width: 767px) {
+  html, body, #root { max-width: 100%; }
+  #root, #root main, .solutions { min-width: 0; }
+  #hero, #about, #experience, #projects, #skills, #contact {
+    scroll-margin-top: 80px;
+  }
+
+  /* The navigation must remain usable even if its sections fill the phone. */
+  .site-shared-nav > div:first-child { padding-inline: 18px; }
+  .site-shared-brand-section { font-size: 8px; letter-spacing: .01em; }
+  .portfolio-menu-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+  #site-mobile-navigation {
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .portfolio-mobile-trigger,
+  .portfolio-mobile-destination,
+  .portfolio-mobile-link,
+  .portfolio-mobile-solutions {
+    min-height: 44px;
+  }
+
+  /* Hero: retain the design, but allow the content to sit above a compact
+     visible 2x2 telemetry grid with status as a centered fifth datum. */
+  #hero {
+    min-height: max(100svh, 660px);
+    padding: 96px 0 151px;
+    box-sizing: border-box;
+  }
+  .hero-grid-marker,
+  .hero-scroll-cue { display: none; }
+  .hero-mobile-content {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: 16px;
+  }
+  .hero-mobile-content > .mb-6 { margin-bottom: 18px; }
+  .hero-mobile-content .font-mono.text-base { max-width: 100%; }
+  .hero-telemetry {
+    overflow-x: visible;
+    width: 100%;
+  }
+  .hero-telemetry-grid {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding: 12px 18px 13px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 15px;
+    align-items: start;
+    justify-content: stretch;
+  }
+  .hero-telemetry-item {
+    min-width: 0;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    white-space: normal;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .hero-telemetry-item > span:nth-child(2) { display: none; }
+  .hero-telemetry-item > span:last-child {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .hero-telemetry-item:last-child {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 7px;
+    border-top: 1px solid rgba(255,255,255,.075);
+  }
+
+  /* About and the profile boards: one full-width reading column followed by
+     readable panels, never miniature two-up cards with overflowing values. */
+  #about, #skills, #contact {
+    padding-inline: 18px;
+    padding-block: 70px;
+  }
+  #about h2, #skills h2 {
+    margin-bottom: 40px;
+    font-size: clamp(29px, 8vw, 39px);
+  }
+  #about .about-profile-panels {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  #about .about-profile-panels > div,
+  #about .about-profile-panels .flex-1 {
+    min-width: 0;
+  }
+  #about .about-profile-panels .flex-shrink-0 {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  #about .about-profile-panels .text-right {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  #about .space-y-4 { font-size: 14px; line-height: 1.76; }
+
+  /* Experience: compact nested rail, clear progression and natural prose
+     wrapping without squeezing the single-role employers. */
+  .renaissance-experience-section { padding: 73px 18px 67px; }
+  .renaissance-experience-intro { margin-bottom: 42px; }
+  .renaissance-experience-intro h2 {
+    font-size: clamp(31px, 8vw, 43px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-experience-intro p { font-size: 14px; line-height: 1.73; }
+  .renaissance-company-header { align-items: flex-start; }
+  .renaissance-company-details { flex: 1 1 auto; min-width: 0; }
+  .renaissance-company-name { overflow-wrap: anywhere; }
+  .renaissance-company-meta { overflow-wrap: anywhere; }
+  .renaissance-roles--single { margin-left: 0; }
+  .renaissance-roles--nested {
+    margin-left: 13px;
+    padding-left: 29px;
+    margin-top: 24px;
+  }
+  .renaissance-roles--nested .renaissance-role::before { left: -35px; }
+  .renaissance-roles--nested .renaissance-role:not(:last-child)::after {
+    left: -29px;
+  }
+  .renaissance-role-title-row { gap: 8px; }
+  .renaissance-role-period { overflow-wrap: anywhere; }
+
+  /* The hero projects and all technical rails reflow. Technology labels
+     become tidy phone-only tiles rather than a long horizontal ticker. */
+  .renaissance-project-section { padding: 73px 14px 76px; }
+  .renaissance-project-intro { margin-bottom: 42px; }
+  .renaissance-project-intro h2 {
+    font-size: clamp(35px, 9.5vw, 46px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-project-topline {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 7px;
+    padding: 14px 19px;
+    overflow-wrap: anywhere;
+  }
+  .renaissance-project-topline span { min-width: 0; max-width: 100%; }
+  .renaissance-flagship-story { padding: 26px 21px 24px; }
+  .renaissance-flagship-story h3 {
+    font-size: clamp(37px, 10vw, 58px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-flagship-lead { font-size: 18px; }
+  .renaissance-architecture { padding: 23px 20px 22px; }
+  .renaissance-architecture-caption {
+    margin-bottom: 24px;
+    overflow-wrap: anywhere;
+  }
+  .renaissance-architecture-step { gap: 12px; }
+  .renaissance-architecture-step-body { min-width: 0; }
+  .renaissance-project-actions { gap: 7px 17px; }
+  .renaissance-flagship-story .renaissance-primary-project-link {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .renaissance-primary-project-link,
+  .renaissance-text-project-link { min-height: 44px; }
+  .renaissance-secondary-body { padding: 26px 22px 22px; }
+  .renaissance-secondary-body h3 {
+    font-size: clamp(28px, 7.5vw, 38px);
+    overflow-wrap: anywhere;
+  }
+  .renaissance-supporting-projects { gap: 16px; }
+  .renaissance-tech-strip,
+  .renaissance-secondary-tech {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 8px;
+    padding: 14px;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  .renaissance-tech-strip span,
+  .renaissance-secondary-tech span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 7px 5px;
+    border: 1px solid rgba(255,255,255,.085);
+    background: rgba(255,255,255,.025);
+    font-size: 10.5px;
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .renaissance-secondary-tech span { font-size: 10px; }
+
+  /* The Skills section should retain every item. Its long titles and pills
+     may wrap rather than forcing any one card wider than the viewport. */
+  #skills .skill-card-heading {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px 9px;
+  }
+  #skills .skill-card-label {
+    min-width: 0;
+    font-size: 12px;
+    letter-spacing: .065em;
+    overflow-wrap: anywhere;
+  }
+  #skills .skill-chip {
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  /* Contact addresses and cards should not be forced beyond 320 CSS px. */
+  #contact .max-w-2xl { min-width: 0; width: 100%; }
+  #contact a.group { min-width: 0; gap: 10px; padding: 13px; }
+  #contact a.group > div { min-width: 0; }
+  #contact a.group .font-mono.text-sm {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  #contact a.group svg { flex-shrink: 0; }
+  footer .max-w-6xl { justify-content: center; text-align: center; }
+
+  /* Data Solutions: work within the existing responsive layout, improve
+     diagram labels, the services stack, details, and tap target sizing. */
+  .solutions .sol-container {
+    padding-left: clamp(16px, 4.5vw, 22px);
+    padding-right: clamp(16px, 4.5vw, 22px);
+    min-width: 0;
+  }
+  .solutions .sol-hero-layout {
+    padding-top: 96px;
+    padding-bottom: 38px;
+    gap: 28px;
+  }
+  .solutions .sol-hero-copy,
+  .solutions .sol-hero-art,
+  .solutions .sol-case-layout > div,
+  .solutions .sol-service-main,
+  .solutions .sol-service-detail {
+    min-width: 0;
+  }
+  .solutions .sol-hero h1 {
+    font-size: clamp(37px, 9.3vw, 59px);
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+  .solutions .sol-topline { flex-wrap: wrap; overflow-wrap: anywhere; }
+  .solutions .sol-flow-graphic { padding: 14px; }
+  .solutions .sol-flow-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-flow-footer { gap: 9px 13px; overflow-wrap: anywhere; }
+  .solutions .sol-hero-bottom {
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+  .solutions .sol-case-heading { flex-wrap: wrap; gap: 10px; }
+  .solutions .sol-case-tag { max-width: 100%; overflow-wrap: anywhere; }
+  .solutions .sol-case-fact { min-width: 0; }
+  .solutions .sol-case-fact p,
+  .solutions .sol-case-deck,
+  .solutions .sol-service-main p,
+  .solutions .sol-service-detail p,
+  .solutions .sol-deep-dive p,
+  .solutions .sol-deep-dive li {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-case-links a,
+  .solutions .sol-text-link,
+  .solutions .sol-mobile-nav a { min-height: 44px; }
+  .solutions .sol-service-tech span,
+  .solutions .sol-case-tech span {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-process-bottom { gap: 12px; }
+  .solutions .sol-process-bottom > span { min-width: 0; }
+  .solutions .sol-contact-email-address { overflow-wrap: anywhere; }
+  .solutions .sol-contact-copy { min-height: 44px; }
+}
+
+/* Very narrow portrait screens get comfortable tag widths and simpler facts. */
+@media screen and (max-width: 420px) {
+  .renaissance-tech-strip,
+  .renaissance-secondary-tech {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+  .solutions .sol-service-tech,
+  .solutions .sol-case-tech {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .solutions .sol-service-tech span,
+  .solutions .sol-case-tech span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    text-align: center;
+  }
+  #contact a.group .font-mono.text-sm { font-size: 11.5px; }
+}
+
+/* Landscape on actual short, touch-primary devices; desktops and laptops
+   keep their existing >=768px navigation and two-column compositions. */
+@media screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .portfolio-desktop-nav { display: none !important; }
+  .portfolio-menu-toggle {
+    display: flex !important;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+  .portfolio-mobile-panel {
+    display: block !important;
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  #hero {
+    min-height: 500px;
+    padding: 74px 0 111px;
+  }
+  .hero-grid-marker, .hero-scroll-cue { display: none; }
+  .hero-mobile-content { width: 100%; max-width: 100%; padding-inline: 20px; }
+  #hero .hero-mobile-content .font-display.font-bold {
+    font-size: clamp(49px, 8vw, 76px) !important;
+  }
+  .hero-mobile-content > .mb-6 { margin-bottom: 12px; }
+  .hero-telemetry { overflow-x: visible; }
+  .hero-telemetry-grid {
+    box-sizing: border-box;
+    display: grid;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    grid-template-columns: 1fr 1.25fr 1.5fr;
+    gap: 9px 15px;
+    padding: 10px 22px;
+    justify-content: stretch;
+  }
+  .hero-telemetry-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    min-width: 0;
+    flex-shrink: 1;
+    white-space: normal;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .hero-telemetry-item > span:nth-child(2) { display: none; }
+  .hero-telemetry-item > span:last-child {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .hero-telemetry-item:last-child { grid-column: 3; }
+
+  /* Wider landscape cards and profile panels without cramped three-up grids. */
+  .renaissance-tech-strip,
+  .renaissance-secondary-tech {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(110px,1fr));
+    gap: 8px;
+    padding: 15px;
+  }
+  .renaissance-tech-strip span,
+  .renaissance-secondary-tech span {
+    min-width: 0;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+  }
+  #skills .mobile-skill-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #skills .skill-card-heading { flex-wrap: wrap; }
+  #skills .skill-card-label { font-size: 13px; }
+  .renaissance-project-topline {
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .solutions .sol-hero-layout { padding-top: 90px; padding-bottom: 32px; gap: 26px; }
+  .solutions .sol-hero h1 { font-size: clamp(43px,6.2vw,62px); }
+  .solutions .sol-flow-row { min-height: 195px; }
+  .solutions .sol-flow-node { min-height: 142px; }
+  .solutions .sol-flow-top, .solutions .sol-flow-footer {
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-service-tech span, .solutions .sol-case-tech span {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+
+/*
+ * DATA SOLUTIONS — MOBILE PRESENTATION REFINEMENT
+ * Source audit: SolutionsPage.tsx, solutions.css, mobile.css.
+ * All selectors target .solutions and remain within mobile-only media queries.
+ * No portfolio or desktop visual, content, or interaction changes.
+ */
+@media screen and (max-width: 767px) {
+  .solutions .sol-container,
+  .solutions .sol-hero-copy,
+  .solutions .sol-hero-art,
+  .solutions .sol-flow-graphic,
+  .solutions .sol-service,
+  .solutions .sol-service-main,
+  .solutions .sol-service-detail,
+  .solutions .sol-case,
+  .solutions .sol-case-layout,
+  .solutions .sol-case-lead,
+  .solutions .sol-case-narrative,
+  .solutions .sol-contact-layout {
+    min-width: 0;
+  }
+
+  /* First screen: bring the value proposition closer to the shared navbar.
+     Keep both calls to action visible and the pipeline illustration below. */
+  .solutions .sol-hero-layout {
+    min-height: 0;
+    padding-top: clamp(28px, 7vw, 47px);
+    padding-bottom: 29px;
+    gap: clamp(22px, 5vw, 34px);
+  }
+  .solutions .sol-topline {
+    gap: 9px;
+    font-size: 10px;
+    line-height: 1.6;
+    letter-spacing: .045em;
+  }
+  .solutions .sol-hero h1 {
+    margin-top: 17px;
+    font-size: clamp(35px, 9.2vw, 53px);
+    line-height: 1.08;
+    letter-spacing: -.052em;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-hero-sub {
+    margin-top: 16px;
+    max-width: 62ch;
+    font-size: clamp(14px, 3.85vw, 16px);
+    line-height: 1.72;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    gap: 10px;
+    margin-top: 23px;
+  }
+  .solutions .sol-button {
+    min-width: 0;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    justify-content: space-between;
+    gap: 13px;
+    white-space: normal;
+    text-align: left;
+  }
+  .solutions .sol-button svg { flex-shrink: 0; }
+
+  /* A three-across data pipeline reads poorly even on 600-700px portrait.
+     Make the entire phone-width range a proper vertical source → system →
+     output flow; the arrows rotate so direction remains meaningful. */
+  .solutions .sol-flow-row {
+    min-height: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px 0;
+  }
+  .solutions .sol-flow-node {
+    width: 100%;
+    min-width: 0;
+    min-height: 96px;
+    flex: none;
+    display: grid;
+    grid-template-columns: 41px minmax(0,1fr);
+    grid-template-rows: auto auto auto;
+    column-gap: 13px;
+    align-items: center;
+    padding: 13px 14px;
+  }
+  .solutions .sol-flow-icon {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+  }
+  .solutions .sol-flow-small {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 9px;
+  }
+  .solutions .sol-flow-node strong {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+  .solutions .sol-flow-node small {
+    grid-column: 2;
+    grid-row: 3;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+  .solutions .sol-flow-connector {
+    width: 24px;
+    height: 26px;
+    flex: 0 0 26px;
+    transform: rotate(90deg);
+  }
+  .solutions .sol-flow-connector svg { width: 17px; }
+  .solutions .sol-flow-connector span { display: none; }
+
+  /* The infographic is information, not an illustration to be cropped.
+     All portrait phones now use its legible vertical three-step flow. */
+  .solutions .sol-flow-graphic { padding: clamp(11px, 3.6vw, 17px); }
+  .solutions .sol-flow-top,
+  .solutions .sol-flow-footer {
+    min-width: 0;
+    gap: 6px 12px;
+    font-size: 9px;
+    line-height: 1.65;
+    letter-spacing: .055em;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-flow-top > span,
+  .solutions .sol-flow-footer > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-flow-node strong,
+  .solutions .sol-flow-node small {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-hero-bottom {
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 6px 15px;
+    padding-top: 0;
+    padding-bottom: 16px !important;
+  }
+  .solutions .sol-hero-bottom > span {
+    white-space: normal;
+    max-width: 100%;
+    font-size: 9px;
+    line-height: 1.7;
+    letter-spacing: .055em;
+    overflow-wrap: anywhere;
+  }
+
+  /* Consistent section rhythm; headings are allowed to reflow naturally. */
+  .solutions .sol-section {
+    padding-top: clamp(59px, 10vw, 75px);
+    padding-bottom: clamp(60px, 10vw, 76px);
+  }
+  .solutions .sol-section-intro { margin-bottom: 28px; }
+  .solutions .sol-section-index {
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 17px;
+    font-size: 10px;
+    letter-spacing: .11em;
+  }
+  .solutions .sol-section-intro h2 {
+    max-width: 100%;
+    font-size: clamp(29px, 8.2vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -.048em;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-section-intro > p {
+    margin-top: 15px;
+    max-width: 64ch;
+    font-size: 14px;
+    line-height: 1.74;
+  }
+  .solutions .sol-problems { gap: 12px; }
+  .solutions .sol-problem {
+    min-height: 0;
+    padding: 24px 22px 26px;
+  }
+  .solutions .sol-problem-num { margin-bottom: 18px; }
+  .solutions .sol-problem h3 {
+    max-width: 100%;
+    font-size: clamp(21px, 5.7vw, 25px);
+    line-height: 1.24;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-problem p { font-size: 13.5px; line-height: 1.72; }
+
+  /* Services should read like a clear sequence: service identity, buyer
+     problem, deliverable, example, optional scope, tools, next action. */
+  .solutions .sol-service {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 29px 0 32px;
+  }
+  .solutions .sol-service-identity {
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .solutions .sol-service-identity svg {
+    width: 27px;
+    height: 27px;
+    flex-shrink: 0;
+  }
+  .solutions .sol-service-main h3 {
+    font-size: clamp(26px, 7vw, 33px);
+    line-height: 1.17;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-service-main .sol-service-promise {
+    margin-top: 12px;
+    font-size: 16px;
+    line-height: 1.48;
+  }
+  .solutions .sol-service-main > p:last-child {
+    margin-top: 12px;
+    font-size: 13.5px;
+    line-height: 1.75;
+  }
+  .solutions .sol-service-detail {
+    min-width: 0;
+    border-left: 0;
+    border-top: 1px solid rgba(245,165,36,.18);
+    padding: 17px 0 0;
+  }
+  .solutions .sol-service-detail > div,
+  .solutions .sol-service-detail > div > p {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-service-detail details {
+    margin: 15px 0;
+    padding: 4px 0;
+  }
+  .solutions .sol-service-detail summary {
+    min-height: 44px;
+    gap: 14px;
+    line-height: 1.5;
+  }
+  .solutions .sol-service-detail summary svg { flex-shrink: 0; }
+  .solutions .sol-service-detail details p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+  .solutions .sol-service-detail .sol-service-tech,
+  .solutions .sol-case-tech {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 125px), 1fr));
+    gap: 8px;
+    margin-top: 17px;
+    margin-bottom: 16px;
+    align-items: stretch;
+  }
+  .solutions .sol-service-tech span,
+  .solutions .sol-case-tech span {
+    display: flex;
+    min-width: 0;
+    min-height: 36px;
+    max-width: 100%;
+    padding: 8px 6px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 10.5px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  .solutions .sol-service-detail .sol-text-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .solutions .sol-tooling-note {
+    margin-top: 26px;
+    padding: 20px 16px;
+    column-gap: 12px;
+  }
+  .solutions .sol-tooling-note > div { min-width: 0; }
+  .solutions .sol-tooling-note strong {
+    font-size: 17px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-tooling-note p {
+    font-size: 13px;
+    line-height: 1.73;
+  }
+  .solutions .sol-tooling-note > a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Case studies: replace the compressed label+paragraph two-column rail
+     with an editorial label-above-copy sequence on narrow devices. */
+  .solutions .sol-case {
+    min-width: 0;
+    padding: 31px 0 38px;
+  }
+  .solutions .sol-case-heading {
+    margin-bottom: 22px;
+    gap: 10px 14px;
+    flex-wrap: wrap;
+  }
+  .solutions .sol-case-count { font-size: 10px; }
+  .solutions .sol-case-tag {
+    max-width: 100%;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .solutions .sol-case-layout {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 25px;
+  }
+  .solutions .sol-case-lead h3 {
+    font-size: clamp(32px, 8.7vw, 43px);
+    line-height: 1.09;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-case-deck {
+    max-width: 63ch;
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.73;
+  }
+  .solutions .sol-case-links {
+    margin-top: 17px;
+    gap: 5px 17px;
+  }
+  .solutions .sol-case-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 13px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-case-links svg { flex-shrink: 0; }
+  .solutions .sol-case-narrative { gap: 0; }
+  .solutions .sol-case-fact {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 6px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,.085);
+  }
+  .solutions .sol-case-fact:first-child { padding-top: 0; }
+  .solutions .sol-case-fact:last-child { padding-bottom: 0; border-bottom: 0; }
+  .solutions .sol-case-fact span {
+    min-width: 0;
+    padding-top: 0;
+    font-size: 10px;
+    letter-spacing: .075em;
+  }
+  .solutions .sol-case-fact p {
+    min-width: 0;
+    font-size: 13.5px;
+    line-height: 1.76;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-case-details { margin-top: 23px; }
+  .solutions .sol-case-details summary {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    line-height: 1.45;
+    font-size: 13px;
+  }
+  .solutions .sol-case-details summary svg { flex-shrink: 0; }
+  .solutions .sol-deep-dive {
+    grid-template-columns: minmax(0,1fr);
+    gap: 24px;
+    padding: 20px 15px;
+  }
+  .solutions .sol-deep-dive > div,
+  .solutions .sol-deep-dive li {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-case-tech { margin-top: 17px; }
+
+  /* Five-step process becomes one legible vertical sequence. Numbered
+     cards retain every sentence, with decorative sideways arrows omitted. */
+  .solutions .sol-process {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 9px;
+  }
+  .solutions .sol-process-track,
+  .solutions .sol-process-next { display: none; }
+  .solutions .sol-process-step,
+  .solutions .sol-process-step:first-child {
+    min-width: 0;
+    min-height: 0;
+    padding: 21px 19px 22px;
+    border: 1px solid rgba(226,232,240,.14);
+  }
+  .solutions .sol-process-step h3 {
+    margin-top: 12px;
+    font-size: 22px;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-process-step p {
+    margin-top: 9px;
+    font-size: 13.5px;
+    line-height: 1.72;
+  }
+  .solutions .sol-process-bottom {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 9px;
+    margin-top: 20px;
+  }
+  .solutions .sol-process-bottom > span {
+    min-width: 0;
+    padding: 9px 12px;
+    border: 1px solid rgba(255,255,255,.08);
+    font-size: 11px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-process-bottom svg { flex-shrink: 0; }
+
+  /* Direct, friction-free contact on phone. Do not change the clipboard
+     action, mailto link, status announcements or business copy. */
+  .solutions .sol-contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 26px;
+  }
+  .solutions .sol-contact-section h2 {
+    max-width: 100%;
+    font-size: clamp(32px, 8.8vw, 46px);
+    line-height: 1.11;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-contact-section p:not(.sol-eyebrow) {
+    font-size: 14px;
+    line-height: 1.76;
+  }
+  .solutions .sol-contact-email-block {
+    margin-top: 26px;
+    padding-top: 18px;
+  }
+  .solutions .sol-contact-email-row {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    justify-items: start;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .solutions .sol-contact-email-address {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    font-size: clamp(20px, 6vw, 27px);
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-contact-copy {
+    min-height: 44px;
+    padding: 12px 15px;
+  }
+  .solutions .sol-contact-copy-status {
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  .solutions .sol-contact-compose {
+    min-height: 44px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    gap: 7px;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-contact-panel {
+    padding: 23px 19px;
+    min-width: 0;
+  }
+  .solutions .sol-contact-panel > div { gap: 12px; }
+  .solutions .sol-contact-panel > div > p { min-width: 0; }
+  .solutions .sol-footer-inner {
+    padding-top: 23px;
+    padding-bottom: 24px;
+    gap: 17px;
+    text-align: center;
+  }
+  .solutions .sol-footer-links {
+    width: 100%;
+    justify-content: center;
+    gap: 16px 26px;
+  }
+  .solutions .sol-footer-links a {
+    min-height: 44px;
+    align-items: center;
+  }
+}
+
+/* Extra-narrow phone portrait: never shrink descriptions to unreadable
+   8px captions to force them into the pipeline graphic. */
+@media screen and (max-width: 420px) {
+  .solutions .sol-flow-top {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 3px;
+    padding-bottom: 12px;
+  }
+  .solutions .sol-flow-row { padding-block: 14px; }
+  .solutions .sol-flow-node {
+    min-width: 0;
+    width: 100%;
+    min-height: 92px;
+    padding: 13px 12px;
+    grid-template-columns: 35px minmax(0,1fr);
+    column-gap: 11px;
+  }
+  .solutions .sol-flow-node strong {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .solutions .sol-flow-node small {
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
+  .solutions .sol-flow-footer { font-size: 8.5px; }
+  .solutions .sol-service-detail .sol-service-tech,
+  .solutions .sol-case-tech {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+  .solutions .sol-tooling-note {
+    grid-template-columns: 33px minmax(0,1fr);
+    padding: 18px 14px;
+    gap: 11px;
+  }
+  .solutions .sol-tooling-symbol {
+    width: 33px;
+    height: 33px;
+  }
+  .solutions .sol-case-heading { align-items: flex-start; }
+  .solutions .sol-case-tag { padding: 6px 8px; }
+}
+
+/* Short touch-landscape only; ordinary mouse/trackpad desktop screens do
+   not match these capability-aware conditions. Keep the page scrollable. */
+@media screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .solutions .sol-hero-layout {
+    min-height: 0;
+    padding-top: 29px;
+    padding-bottom: 26px;
+    gap: 24px;
+  }
+  .solutions .sol-hero h1 {
+    margin-top: 16px;
+    font-size: clamp(35px, 5.15vw, 48px);
+    line-height: 1.07;
+  }
+  .solutions .sol-hero-sub {
+    margin-top: 15px;
+    font-size: 14.5px;
+    line-height: 1.68;
+  }
+  .solutions .sol-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(205px,1fr));
+    gap: 10px;
+    margin-top: 19px;
+  }
+  .solutions .sol-button {
+    min-height: 46px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .solutions .sol-flow-graphic { padding: 15px; }
+  .solutions .sol-flow-top,
+  .solutions .sol-flow-footer {
+    flex-wrap: wrap;
+    gap: 6px 13px;
+    overflow-wrap: anywhere;
+  }
+  .solutions .sol-flow-node { min-width: 0; }
+  .solutions .sol-flow-node strong,
+  .solutions .sol-flow-node small { overflow-wrap: anywhere; }
+  .solutions .sol-section {
+    padding-top: 57px;
+    padding-bottom: 59px;
+  }
+  .solutions .sol-section-intro { margin-bottom: 27px; }
+  .solutions .sol-service-main,
+  .solutions .sol-service-detail,
+  .solutions .sol-case-lead,
+  .solutions .sol-case-narrative { min-width: 0; }
+  .solutions .sol-service-detail .sol-service-tech,
+  .solutions .sol-case-tech {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(126px,1fr));
+    gap: 8px;
+  }
+  .solutions .sol-service-tech span,
+  .solutions .sol-case-tech span {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    min-width: 0;
+  }
+  .solutions .sol-service-detail summary,
+  .solutions .sol-case-details summary,
+  .solutions .sol-case-links a,
+  .solutions .sol-contact-copy { min-height: 44px; }
+  .solutions .sol-contact-email-address { overflow-wrap: anywhere; }
+}
+
+
+/* Phone-only telemetry hierarchy. The JSX supplies inline key colors, so
+   only the five key spans require a scoped override; values stay untouched. */
+@media screen and (max-width: 767px) and (hover: none) and (pointer: coarse),
+       screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .hero-telemetry-item > span:first-child {
+    color: #D6DFEA !important;
+    font-weight: 700;
+    letter-spacing: .10em;
+  }
+}
+
+
+/* Selected delivery, phone-first reflow. The desktop proof-of-work cards
+   are in deliveryProof.css; these rules apply only on phone viewports. */
+@media screen and (max-width: 767px) {
+  .solutions .sol-proof-disclosure {
+    margin-bottom:19px;padding:10px 0 10px 13px;
+    font-size:11.5px;line-height:1.7;
+  }
+  .solutions .sol-proof-grid {grid-template-columns:minmax(0,1fr);gap:15px;}
+  .solutions .sol-proof-card,
+  .solutions .sol-proof-featured {grid-column:auto;min-width:0;}
+  .solutions .sol-proof-meta {
+    padding:14px 18px;gap:6px 12px;
+    font-size:9px;letter-spacing:.065em;
+  }
+  .solutions .sol-proof-delivered {font-size:9px;}
+  .solutions .sol-proof-card-content,
+  .solutions .sol-proof-featured .sol-proof-card-content {
+    grid-template-columns:minmax(0,1fr);
+    gap:21px;padding:24px 19px 21px;
+  }
+  .solutions .sol-proof-head h3,
+  .solutions .sol-proof-featured .sol-proof-head h3 {
+    max-width:100%;
+    font-size:clamp(26px,7.7vw,36px);
+    line-height:1.15;
+    overflow-wrap:anywhere;
+  }
+  .solutions .sol-proof-head>p,
+  .solutions .sol-proof-featured .sol-proof-head>p {
+    margin-top:12px;font-size:13px;line-height:1.76;
+  }
+  .solutions .sol-proof-steps {
+    display:grid;grid-template-columns:minmax(0,1fr);
+    justify-items:stretch;gap:4px;margin-top:20px;padding-top:18px;
+  }
+  .solutions .sol-proof-steps span {
+    justify-content:center;min-width:0;min-height:39px;
+    text-align:center;font-size:10px;
+  }
+  .solutions .sol-proof-steps svg {justify-self:center;transform:rotate(90deg);}
+  .solutions .sol-proof-facts {gap:14px;}
+  .solutions .sol-proof-facts>div+div {padding-top:15px;}
+  .solutions .sol-proof-facts p {font-size:13px;line-height:1.75;}
+  .solutions .sol-proof-result,
+  .solutions .sol-proof-featured .sol-proof-result {
+    margin:0 19px;padding:18px 0;gap:10px;
+  }
+  .solutions .sol-proof-result p {font-size:13px;line-height:1.7;}
+  .solutions .sol-proof-tools {
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;padding:13px 16px;
+  }
+  .solutions .sol-proof-tools span {
+    min-width:0;display:flex;align-items:center;justify-content:center;
+    min-height:35px;padding:7px 6px;font-size:9.5px;line-height:1.4;
+    overflow-wrap:anywhere;text-align:center;
+  }
+  .solutions .sol-proof-close {
+    display:grid;grid-template-columns:minmax(0,1fr);
+    justify-items:start;gap:13px;margin-top:17px;padding-top:19px;
+  }
+  .solutions .sol-proof-close p {font-size:13px;line-height:1.75;}
+  .solutions .sol-proof-close a {
+    min-height:44px;flex-shrink:1;white-space:normal;
+    font-size:13px;
+  }
+  .solutions .sol-independent-section .sol-section-intro {margin-bottom:20px;}
+}
+@media screen and (max-width: 370px) {
+  .solutions .sol-proof-meta {font-size:8.5px;}
+  .solutions .sol-proof-card-content,
+  .solutions .sol-proof-featured .sol-proof-card-content {padding-inline:16px;}
+  .solutions .sol-proof-result,
+  .solutions .sol-proof-featured .sol-proof-result {margin-inline:16px;}
+  .solutions .sol-proof-tools {padding-inline:13px;}
+}
+@media screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .solutions .sol-proof-grid {gap:12px;}
+  .solutions .sol-proof-card-content {padding:22px 19px;}
+  .solutions .sol-proof-featured .sol-proof-card-content {
+    grid-template-columns:minmax(0,1fr);gap:22px;
+    padding:26px 23px;
+  }
+  .solutions .sol-proof-meta {padding:14px 20px;}
+  .solutions .sol-proof-head h3 {font-size:clamp(24px,3.9vw,32px);}
+  .solutions .sol-proof-featured .sol-proof-head h3 {
+    font-size:clamp(30px,5vw,43px);
+  }
+  .solutions .sol-proof-steps {margin-top:22px;}
+  .solutions .sol-proof-result,
+  .solutions .sol-proof-featured .sol-proof-result {margin-inline:20px;}
+  .solutions .sol-proof-tools {padding:14px 18px;}
+  .solutions .sol-proof-tools span {min-width:0;overflow-wrap:anywhere;}
+  .solutions .sol-proof-close {flex-wrap:wrap;}
+}
+
+/* Explicit precedence for the new proof cards. Vite can hoist imported
+   component CSS in different orders; the mobile structure must not depend
+   on whether deliveryProof.css or mobile.css comes last. */
+@media screen and (max-width: 767px) {
+  .solutions .sol-work-section .sol-proof-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .solutions .sol-work-section .sol-proof-card {
+    grid-column: auto;
+    min-width: 0;
+  }
+  .solutions .sol-work-section .sol-proof-card-content,
+  .solutions .sol-work-section .sol-proof-featured .sol-proof-card-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 21px;
+    padding: 24px 19px 21px;
+  }
+  .solutions .sol-work-section .sol-proof-head h3,
+  .solutions .sol-work-section .sol-proof-featured .sol-proof-head h3 {
+    max-width: 100%;
+    font-size: clamp(26px, 7.7vw, 36px);
+  }
+  .solutions .sol-work-section .sol-proof-steps {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .solutions .sol-work-section .sol-proof-tools {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .solutions .sol-work-section .sol-proof-result,
+  .solutions .sol-work-section .sol-proof-featured .sol-proof-result {
+    margin-inline: 19px;
+  }
+}
+@media screen and (max-width: 370px) {
+  .solutions .sol-work-section .sol-proof-card-content,
+  .solutions .sol-work-section .sol-proof-featured .sol-proof-card-content {
+    padding-inline: 16px;
+  }
+  .solutions .sol-work-section .sol-proof-result,
+  .solutions .sol-work-section .sol-proof-featured .sol-proof-result {
+    margin-inline: 16px;
+  }
+}
+@media screen and (orientation: landscape) and (max-width: 980px) and (max-height: 560px) and (hover: none) and (pointer: coarse) {
+  .solutions .sol-work-section .sol-proof-featured .sol-proof-card-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    padding: 26px 23px;
+  }
+}

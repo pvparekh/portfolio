@@ -4,7 +4,6 @@ import {
   useScroll,
   useTransform,
   useInView,
-  AnimatePresence,
   type Variants,
 } from 'framer-motion';
 import {
@@ -18,7 +17,7 @@ import {
   Brain,
   Box,
   Database,
-  Download,
+  FileText,
 } from 'lucide-react';
 
 /* ── Brand icon SVGs (lucide-react v1 dropped these) ── */
@@ -48,10 +47,10 @@ const PROJECTS = [
   number: '01',
   name: 'Formula Vision',
   tagline: 'F1 Race Replay Platform',
-  description: 'Full-scale race replay platform with real-time telemetry visualization, lap comparison tools, and multi-driver sync, built for the fan who cares about the milliseconds.',
-  tech: ['React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Python', 'Vercel'],
+  description: 'Historical Formula 1 replay rebuilt as a verified data product: canonical Parquet, timing-authoritative race intelligence, immutable releases, and a client-owned replay engine.',
+  tech: ['Python', 'FastF1', 'Parquet', 'React', 'TypeScript', 'Vite', 'Cloudflare R2', 'Recharts', 'Vercel'],
   live: 'https://formulavision.vercel.app' as string | null,
-  github: 'https://github.com/pvparekh/F1-Viewer' as string | null,
+  github: 'https://github.com/pvparekh/formula-vision-documentation' as string | null,
   accent: '#E8002D',
   accentDim: 'rgba(232,0,45,0.07)',
   glow: 'rgba(232,0,45,0.6)',
@@ -63,22 +62,22 @@ const PROJECTS = [
     name: 'GitHub Review Bot',
     tagline: 'AI-Powered Code Review Automation',
     description:
-      'Production-grade GitHub App that reviews pull requests using Claude AI, posts inline comments, and integrates natively with any CI/CD pipeline. Deployed on AWS EC2.',
-    tech: ['Python', 'FastAPI', 'Claude API', 'Docker', 'AWS EC2', 'GitHub Actions'],
-    live: 'https://github.com/pvparekh/github-review-bot' as string | null,
+      'GitHub App code-review agent using signed webhooks, a custom diff-position parser, and a two-pass Claude workflow for structured findings and inline feedback.',
+    tech: ['Python', 'FastAPI', 'Claude', 'GitHub API', 'Webhooks', 'Railway'],
+    live: null as string | null,
     github: 'https://github.com/pvparekh/github-review-bot' as string | null,
-    accent: '#F59E0B',
-    accentDim: 'rgba(245,158,11,0.07)',
-    glow: 'rgba(245,158,11,0.65)',
+    accent: '#4ADE80',
+    accentDim: 'rgba(74,222,128,0.07)',
+    glow: 'rgba(74,222,128,0.65)',
     note: null as string | null,
   },
   {
     id: 'aetherflow',
     number: '03',
     name: 'AetherFlow',
-    tagline: 'AI Expense Intelligence SaaS',
+    tagline: 'Expense Data & Analytics Product',
     description:
-      'Next-gen expense intelligence platform that uses GPT-4o to analyze spending patterns, predict cash flow, and surface actionable financial insights in real time.',
+      'Expense intelligence product that ingests business files, categorizes transactions with AI, computes deterministic anomalies and vendor metrics, and presents actionable analyses.',
     tech: ['Next.js 15', 'GPT-4o', 'Supabase', 'PostgreSQL', 'TypeScript', 'Tailwind'],
     live: 'https://aetherflow-three.vercel.app' as string | null,
     github: 'https://github.com/pvparekh/aetherflow' as string | null,
@@ -104,7 +103,8 @@ const EXPERIENCE = [
         period: 'Sept 2026 – Present',
         current: true,
         bullets: [
-          'Building and maintaining production data pipelines and platform workflows across Python, SQL, PostgreSQL, Snowflake, and Apache Airflow.',
+          'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
+          'Developed and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
         ],
       },
       {
@@ -112,10 +112,10 @@ const EXPERIENCE = [
         period: 'June 2026 – Sept 2026',
         current: false,
         bullets: [
-          'Engineered and maintained production ETL/ELT pipelines across SFTP, PostgreSQL, SQL Server, and Apache Airflow for recurring ingestion, validation, transformation, and reporting workflows.',
-          'Designed and deployed an automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual workflow with hourly, idempotent processing.',
-          'Reverse-engineered complex Power BI DAX into validated SQL for a NetSuite accounting integration, decomposing 15+ production reports and 100+ measures.',
-          'Audited four production Airflow DAGs and developed a 400+ line config-driven SFTP-to-PostgreSQL framework that standardized loading, metadata, archiving, connection handling, and retries.',
+          'Reverse-engineered and translated complex, nested Power BI DAX logic into validated SQL for NetSuite accounting integration, decomposing 15+ production reports and 100+ measures; reproduced filter-context, cancellation, reinstatement, and transaction-reconstruction logic and validated outputs against production Power BI results.',
+          'Designed and deployed a fully automated email-to-database ingestion pipeline using Power Automate, Azure SFTP, Airflow, Python, and PostgreSQL, replacing a manual reporting workflow with hourly, idempotent processing; built ~600 lines of dynamic Excel extraction, standardization, region mapping, and duplicate-prevention logic.',
+          'Automated manual Tableau reporting workflows using Selenium, enabling reports to be programmatically downloaded and routed into downstream data-processing/database workflows; also developed additional process automations using Power Automate.',
+          'Audited four production Apache Airflow DAGs and developed a 400+ line config-driven reusable SFTP-to-PostgreSQL ETL framework, standardizing loading, metadata, archiving, connection handling, and pipeline structure while improving maintainability, observability, and retry safety.',
         ],
       },
     ],
@@ -134,7 +134,8 @@ const EXPERIENCE = [
         period: 'May 2025 – June 2025',
         current: false,
         bullets: [
-          'Built and deployed a full-stack booking platform with Next.js 14 and Calendly API integration, reducing receptionist workload by ~30%.',
+          'Partnered with salon ownership to modernize its booking experience, building and deploying a full-stack website using Next.js 14.',
+          'Integrated the Calendly API into the booking workflow, reducing receptionist workload and call volume by ~30%.',
         ],
       },
     ],
@@ -172,7 +173,7 @@ const SKILLS = [
     sector: '02',
     label: 'Data Engineering',
     Icon: Database,
-    skills: ['Apache Airflow', 'Snowflake', 'PostgreSQL', 'SQL Server', 'ETL / ELT', 'SFTP'],
+    skills: ['Apache Airflow', 'Snowflake', 'PostgreSQL', 'SQL Server', 'ETL / ELT', 'SFTP', 'Selenium', 'Power Automate', 'Tableau', 'Power BI / DAX'],
   },
   {
     sector: '03',
@@ -214,11 +215,20 @@ const TAGLINES = [
 
 function useTypingEffect(words: string[], typingSpeed = 60, pauseMs = 1800) {
   const [display, setDisplay] = useState('');
+  const [initialDelayElapsed, setInitialDelayElapsed] = useState(false);
   const [wordIdx, setWordIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
+  // Let the hero's delayed tagline fade-in begin while the text is still blank.
+  // The typing loop then starts once, rather than completing offscreen.
   useEffect(() => {
+    const start = setTimeout(() => setInitialDelayElapsed(true), 1450);
+    return () => clearTimeout(start);
+  }, []);
+
+  useEffect(() => {
+    if (!initialDelayElapsed) return;
     const current = words[wordIdx];
     let timeout: ReturnType<typeof setTimeout>;
 
@@ -240,7 +250,7 @@ function useTypingEffect(words: string[], typingSpeed = 60, pauseMs = 1800) {
     }
 
     return () => clearTimeout(timeout);
-  }, [charIdx, deleting, wordIdx, words, typingSpeed, pauseMs]);
+  }, [initialDelayElapsed, charIdx, deleting, wordIdx, words, typingSpeed, pauseMs]);
 
   return display;
 }
@@ -276,142 +286,13 @@ function SectionLabel({ label }: { label: string }) {
     <div className="flex items-center justify-center gap-3 mb-5">
       <span className="h-px w-8" style={{ background: 'var(--accent)', opacity: 0.5 }} />
       <span
-        className="font-mono text-xs tracking-[0.25em] uppercase"
+        className="font-mono text-sm tracking-[0.22em] uppercase"
         style={{ color: 'var(--accent)' }}
       >
         {label}
       </span>
       <span className="h-px w-8" style={{ background: 'var(--accent)', opacity: 0.5 }} />
     </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   NAV
-───────────────────────────────────────────────────────────── */
-
-function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setMenuOpen(false);
-  };
-
-  const links = [
-    { label: 'About', id: 'about' },
-    { label: 'Experience', id: 'experience' },
-    { label: 'Projects', id: 'projects' },
-    { label: 'Skills', id: 'skills' },
-    { label: 'Contact', id: 'contact' },
-  ];
-
-  return (
-    <motion.nav
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease }}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        background: scrolled ? 'rgba(8,8,13,0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--border)' : 'none',
-      }}
-    >
-      <div className="w-full px-6 md:px-10 h-16 flex items-center justify-between">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-2"
-        >
-          <span
-            className="font-display font-bold text-lg tracking-tight"
-            style={{ color: 'var(--accent)' }}
-          >
-            Parth
-          </span>
-          <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: 'var(--accent)', opacity: 0.5 }}
-          />
-        </button>
-
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((l) => (
-            <button
-              key={l.id}
-              onClick={() => scrollTo(l.id)}
-              className="nav-link font-mono text-xs tracking-widest uppercase"
-              style={{ color: 'var(--text-2)' }}
-            >
-              {l.label}
-            </button>
-          ))}
-          <a
-            href="mailto:pvparekh14@gmail.com"
-            className="btn-primary font-mono text-xs tracking-widest px-4 py-2 rounded-sm font-semibold"
-            style={{ background: 'var(--accent)', color: '#08080D' }}
-          >
-            Connect
-          </a>
-        </div>
-
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 p-2"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="block w-5 h-px transition-all duration-300"
-              style={{
-                background: 'var(--text-2)',
-                transform:
-                  i === 0 && menuOpen
-                    ? 'rotate(45deg) translate(3.5px, 3.5px)'
-                    : i === 2 && menuOpen
-                    ? 'rotate(-45deg) translate(3.5px, -3.5px)'
-                    : '',
-                opacity: i === 1 && menuOpen ? 0 : 1,
-              }}
-            />
-          ))}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden"
-            style={{ background: 'rgba(8,8,13,0.97)', borderBottom: '1px solid var(--border)' }}
-          >
-            <div className="px-6 py-4 flex flex-col gap-5">
-              {links.map((l) => (
-                <button
-                  key={l.id}
-                  onClick={() => scrollTo(l.id)}
-                  className="text-left font-mono text-xs tracking-widest uppercase"
-                  style={{ color: 'var(--text-2)' }}
-                >
-                  {l.label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
   );
 }
 
@@ -486,7 +367,7 @@ function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 1 }}
-        className="absolute top-20 right-6 md:right-14 font-display text-right select-none pointer-events-none"
+        className="hero-grid-marker absolute top-20 right-6 md:right-14 font-display text-right select-none pointer-events-none"
       >
         <div
           className="font-bold leading-none"
@@ -500,7 +381,7 @@ function HeroSection() {
       </motion.div>
 
       {/* Hero content */}
-      <motion.div style={{ y, opacity: op }} className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+      <motion.div style={{ y, opacity: op }} className="hero-mobile-content relative z-10 text-center px-6 max-w-5xl mx-auto">
         {/* Status pill */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -578,48 +459,12 @@ function HeroSection() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.3, duration: 0.6, ease }}
-          className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-12 px-4"
+          className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-6 px-4"
           style={{ color: 'var(--text-3)' }}
         >
-          Building reliable systems across data, software, and AI.
+          Building dependable data platforms and ambitious software, from production pipelines to interactive products.
         </motion.p>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.6, ease }}
-          className="flex flex-wrap items-center justify-center gap-4"
-        >
-          <button
-            onClick={() =>
-              document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className="btn-primary font-display font-semibold text-sm px-7 py-3.5 rounded-sm flex items-center gap-2"
-            style={{ background: 'var(--accent)', color: '#08080D' }}
-          >
-            View My Work
-            <ArrowUpRight size={16} strokeWidth={2.5} />
-          </button>
-          <button
-            onClick={() =>
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className="btn-secondary font-display font-medium text-sm px-7 py-3.5 rounded-sm border"
-            style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
-          >
-            Get In Touch
-          </button>
-          <a
-            href="/resume.pdf"
-            download="Parth_Parekh_Resume.pdf"
-            className="btn-secondary font-display font-medium text-sm px-7 py-3.5 rounded-sm border flex items-center gap-2"
-            style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}
-          >
-            Download Resume
-            <Download size={16} strokeWidth={2.5} />
-          </a>
-        </motion.div>
       </motion.div>
 
       {/* F1 telemetry bar */}
@@ -627,19 +472,20 @@ function HeroSection() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.9, duration: 0.7, ease }}
-        className="absolute bottom-0 left-0 right-0 border-t font-mono text-xs"
+        className="hero-telemetry absolute bottom-0 left-0 right-0 border-t font-mono text-[10px] lg:text-[10px] 2xl:text-xs overflow-x-auto"
         style={{ borderColor: 'var(--border)' }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap gap-x-8 gap-y-1 items-center justify-between">
+        <div className="hero-telemetry-grid max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
           {[
-            { label: 'DRIVER', value: 'PAREKH' },
-            { label: 'TEAM',   value: "RUTGERS '26" },
+            { label: 'ROLE', value: 'DATA ENGINEER' },
+            { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB" },
             { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
+            { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
             { label: 'STATUS', value: 'AVAILABLE' },
           ].map((item) => (
-            <div key={item.label} className="flex items-center gap-3">
+            <div key={item.label} className="hero-telemetry-item flex shrink-0 items-center gap-1.5 lg:gap-2 whitespace-nowrap">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
-              <span className="h-px w-4" style={{ background: 'var(--border)' }} />
+              <span className="h-px w-2 lg:w-3 shrink-0" style={{ background: 'var(--border)' }} />
               <span style={{ color: item.label === 'STATUS' ? '#22C55E' : 'var(--text-2)' }}>
                 {item.value}
               </span>
@@ -653,7 +499,7 @@ function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 0.6 }}
-        className="absolute bottom-14 left-1/2 -translate-x-1/2"
+        className="hero-scroll-cue absolute bottom-14 left-1/2 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 7, 0] }}
@@ -696,9 +542,9 @@ function AboutSection() {
           </h2>
         </FadeInSection>
 
-        <div className="grid md:grid-cols-5 gap-10 items-stretch">
+        <div className="grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-8 items-stretch">
           {/* Bio */}
-          <FadeInSection delay={0.1} className="md:col-span-2">
+          <FadeInSection delay={0.1} className="md:col-span-1">
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
               <p>
                 I'm a Data Engineer with a B.S. in Computer Science and a
@@ -715,8 +561,7 @@ function AboutSection() {
                 .
               </p>
               <p>
-                I like to solve problems, especially ones that involve building systems that need to be reliable, scalable, and useful. Whether it's building autonomous code reviewers, streaming 440MB of telemetry data in
-                real-time, or engineering two-pass LLM pipelines.
+                I like solving problems that call for reliable, scalable, and useful systems. At work, that means building production data pipelines and automating how information moves between systems. On my own time, I've rebuilt Formula Vision around validated race data and efficient browser delivery, and developed an autonomous code reviewer with a two-pass LLM pipeline.
               </p>
               <p>
                 Outside of work I'm probably playing sports, working out, or hanging out with
@@ -726,8 +571,8 @@ function AboutSection() {
           </FadeInSection>
 
           {/* Profile boards */}
-          <FadeInSection delay={0.22} className="md:col-span-3">
-            <div className="grid sm:grid-cols-2 gap-5 h-full">
+          <FadeInSection delay={0.22} className="md:col-span-1">
+            <div className="about-profile-panels grid sm:grid-cols-2 gap-5 h-full">
               {/* Technical profile */}
               <div
                 className="rounded-sm border h-full flex flex-col"
@@ -796,19 +641,21 @@ function AboutSection() {
           </FadeInSection>
 
           {/* Social links */}
-          <FadeInSection delay={0.3} className="md:col-span-2">
+          <FadeInSection delay={0.3} className="md:col-span-1">
             <div className="flex flex-wrap justify-center gap-3">
               {[
-                { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon },
-                { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon },
-                { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail },
-              ].map(({ href, label, Icon }) => (
+                { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon, download: undefined },
+                { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon, download: undefined },
+                { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail, download: undefined },
+                { href: '/resume.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
+              ].map(({ href, label, Icon, download }) => (
                 <a
                   key={label}
                   href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 font-mono text-xs tracking-wide px-4 py-2 rounded-sm border transition-all duration-200"
+                  download={download}
+                  target={download ? undefined : '_blank'}
+                  rel={download ? undefined : 'noreferrer'}
+                  className="flex items-center whitespace-nowrap min-h-10 gap-2 font-mono text-xs tracking-wide px-3.5 py-2 rounded-sm border transition-all duration-200"
                   style={{
                     borderColor: 'var(--border)',
                     color: 'var(--text-2)',
@@ -839,155 +686,126 @@ function AboutSection() {
    PROJECTS
 ───────────────────────────────────────────────────────────── */
 
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: (typeof PROJECTS)[0];
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 36 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.14, ease }}
-      className="flex flex-col h-full"
-    >
-      <div
-        className="project-card rounded-sm border relative overflow-hidden flex flex-col h-full"
-        style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
-      >
-        {/* Livery stripe */}
-        <div className="h-0.5 w-full flex-shrink-0" style={{ background: project.accent }} />
-
-        {/* Top glow */}
-        <div
-          className="absolute top-0 left-0 right-0 h-20 pointer-events-none"
-          style={{ background: `linear-gradient(180deg, ${project.accentDim} 0%, transparent 100%)` }}
-        />
-
-        <div className="p-6 flex flex-col flex-1 relative z-10">
-          <div className="flex items-start justify-between mb-5">
-            <span
-              className="font-mono text-xs tracking-widest"
-              style={{ color: project.accent, opacity: 0.7 }}
-            >
-              {project.number}
-            </span>
-            <div className="flex gap-2.5">
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="GitHub repository"
-                  className="p-2.5 rounded-md border transition-all duration-200"
-                  style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = project.accent;
-                    e.currentTarget.style.color = project.accent;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.color = 'var(--text-2)';
-                  }}
-                >
-                  <GithubIcon size={18} />
-                </a>
-              )}
-              {project.live && (
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Live site"
-                  className="live-link-glow p-2.5 rounded-md border flex items-center justify-center transition-transform duration-200 hover:scale-110"
-                  style={
-                    {
-                      borderColor: project.accent,
-                      color: project.accent,
-                      background: project.accentDim,
-                      '--glow-color': project.glow,
-                    } as React.CSSProperties
-                  }
-                >
-                  <ExternalLink size={18} strokeWidth={2.4} />
-                </a>
-              )}
-            </div>
-          </div>
-
-          <h3 className="font-display font-bold text-2xl mb-1" style={{ color: 'var(--text-1)' }}>
-            {project.name}
-            {project.note && (
-              <span style={{ color: project.accent }} aria-hidden="true">
-                {' '}
-                *
-              </span>
-            )}
-          </h3>
-          <p className="font-mono text-xs tracking-wide mb-4" style={{ color: project.accent }}>
-            {project.tagline}
-          </p>
-          <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-2)' }}>
-            {project.description}
-          </p>
-
-          {project.note && (
-            <p
-              className="mb-6 text-xs leading-relaxed flex gap-1.5"
-              style={{ color: 'var(--text-3)' }}
-            >
-              <span style={{ color: project.accent }}>*</span>
-              <span>{project.note}</span>
-            </p>
-          )}
-
-          <div className="flex flex-wrap gap-1.5 mt-auto">
-            {project.tech.map((t) => (
-              <span
-                key={t}
-                className="font-mono text-xs px-2.5 py-1 rounded-sm border"
-                style={{ borderColor: 'var(--border)', color: 'var(--text-2)', background: 'var(--bg-2)' }}
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 function ProjectsSection() {
+  const flagship = PROJECTS[0];
+  const supporting = PROJECTS.slice(1);
+
   return (
-    <section id="projects" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
-      <div className="max-w-6xl mx-auto">
+    <section id="projects" className="renaissance-project-section">
+      <div className="renaissance-project-wrap">
         <FadeInSection>
-          <SectionLabel label="Projects" />
-          <h2
-            className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-4 leading-[1.15] text-center"
-            style={{ color: 'var(--text-1)' }}
-          >
-            Things I've <span style={{ color: 'var(--accent)' }}>built</span> and shipped.
-          </h2>
-          <p
-            className="text-base mb-16 max-w-xl mx-auto text-center"
-            style={{ color: 'var(--text-2)' }}
-          >
-            A few projects I've designed, built, and shipped end to end.
-          </p>
+          <div className="renaissance-project-intro">
+            <SectionLabel label="Projects" />
+            <h2 className="font-display">Things I've <span>built</span></h2>
+            <p>Projects spanning data engineering, developer automation, and full-stack software, with the code and architecture available to explore.</p>
+          </div>
         </FadeInSection>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {PROJECTS.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
-          ))}
+        <FadeInSection>
+          <article className="renaissance-flagship" aria-labelledby="formula-vision-title">
+            <div className="renaissance-project-topline">
+              <span>01 / FEATURED SYSTEM</span>
+              <span>DATA PLATFORM + INTERACTIVE PRODUCT</span>
+            </div>
+            <div className="renaissance-flagship-grid">
+              <div className="renaissance-flagship-story">
+                <p className="renaissance-project-overline">{flagship.tagline}</p>
+                <h3 id="formula-vision-title">{flagship.name}</h3>
+                <p className="renaissance-flagship-lead">An actual racing product. An engineering system underneath.</p>
+                <p className="renaissance-project-description">{flagship.description}</p>
+                <div className="renaissance-proof-points" aria-label="Engineering highlights">
+                  <div><span>01</span><p>Official timing determines race order, while telemetry positions the cars on the circuit.</p></div>
+                  <div><span>02</span><p>Canonical data and browser delivery are separate contracts.</p></div>
+                  <div><span>03</span><p>Valid releases publish atomically; broken races are quarantined.</p></div>
+                </div>
+                <div className="renaissance-project-actions">
+                  {flagship.live && (
+                    <a href={flagship.live} target="_blank" rel="noreferrer" className="renaissance-primary-project-link">
+                      Explore Live Replay <ArrowUpRight size={16} aria-hidden="true" />
+                    </a>
+                  )}
+                  {flagship.github && (
+                    <a href={flagship.github} target="_blank" rel="noreferrer" className="renaissance-text-project-link">
+                      Documentation <GithubIcon size={16} />
+                    </a>
+                  )}
+                  <a href="https://github.com/pvparekh/formula-vision-documentation/blob/main/Documentation%20%28FULL%29/ENGINEERING_OVERVIEW.md"
+                    target="_blank" rel="noreferrer" className="renaissance-text-project-link">
+                    Architecture <ArrowUpRight size={15} aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="renaissance-architecture" aria-label="Formula Vision architecture diagram">
+                <div className="renaissance-architecture-caption">
+                  <span>BUILD / VALIDATE / DEPLOY</span>
+                </div>
+                <div className="renaissance-architecture-flow">
+                  {[
+                    { label: 'Acquire', tech: 'FastF1 + source timing', detail: 'Ingest authoritative race data', code: '01' },
+                    { label: 'Canonical truth', tech: 'Typed Parquet + lineage', detail: 'Normalize and version race products', code: '02' },
+                    { label: 'Validate', tech: 'Quality gates + quarantine', detail: 'Reject inconsistent sessions', code: '03' },
+                    { label: 'Publish', tech: 'Immutable R2 artifacts', detail: 'Verify objects, promote catalog', code: '04' },
+                    { label: 'Replay', tech: 'React + client-owned clock', detail: 'Load only needed data chunks', code: '05' },
+                  ].map((step, i) => (
+                    <div key={step.code} className="renaissance-architecture-step">
+                      <span className="renaissance-architecture-index">{step.code}</span>
+                      <div className="renaissance-architecture-step-body">
+                        <strong>{step.label}</strong>
+                        <small>{step.tech}</small>
+                        <p>{step.detail}</p>
+                      </div>
+                      {i !== 4 && <span className="renaissance-architecture-connector" aria-hidden="true" />}
+                    </div>
+                  ))}
+                </div>
+                
+              </div>
+            </div>
+            <div className="renaissance-tech-strip" aria-label="Formula Vision technologies">
+              {flagship.tech.map(tech => <span key={tech}>{tech}</span>)}
+            </div>
+          </article>
+        </FadeInSection>
+
+        <div className="renaissance-supporting-projects">
+          {supporting.map((project, index) => {
+            const isReviewBot = project.id === 'github-review-bot';
+            const flow = isReviewBot
+              ? ['Verify webhook', 'Parse pull-request diff', 'Two-pass AI review', 'Post inline feedback']
+              : ['Upload expense files', 'Categorize in batches', 'Compute deterministic statistics', 'Explore analysis'];
+            return (
+              <FadeInSection key={project.id} delay={index * .07}>
+                <article className={`renaissance-supporting-project ${isReviewBot ? 'is-review-bot' : 'is-aetherflow'}`}>
+                  <div className="renaissance-project-topline">
+                    <span>{project.number} / ENGINEERING PROJECT</span>
+                    <span>{isReviewBot ? 'GITHUB INTEGRATION + DEVELOPER TOOLING' : 'FILE INGESTION + ANALYTICS'}</span>
+                  </div>
+                  <div className="renaissance-secondary-body">
+                    <div>
+                      <p className="renaissance-project-overline">{project.tagline}</p>
+                      <h3>{project.name}</h3>
+                      <p className="renaissance-project-description">{project.description}</p>
+                    </div>
+                    <ol className="renaissance-mini-flow" aria-label={`${project.name} system workflow`}>
+                      {flow.map((step, i) => <li key={step}><span>0{i+1}</span>{step}</li>)}
+                    </ol>
+                    <div className="renaissance-project-actions">
+                      {project.github && <a className="renaissance-text-project-link" href={project.github} target="_blank" rel="noreferrer">
+                        Examine Repository <GithubIcon size={16} />
+                      </a>}
+                      {project.live && <a className="renaissance-text-project-link" href={project.live} target="_blank" rel="noreferrer">
+                        Open Product <ArrowUpRight size={15} aria-hidden="true" />
+                      </a>}
+                    </div>
+                  </div>
+                  <div className="renaissance-secondary-tech" aria-label={`${project.name} technologies`}>
+                    {project.tech.map(tech => <span key={tech}>{tech}</span>)}
+                  </div>
+                </article>
+              </FadeInSection>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -998,218 +816,143 @@ function ProjectsSection() {
    EXPERIENCE
 ───────────────────────────────────────────────────────────── */
 
+
+/* Calendar-month tenure: Jun-Sep is four inclusive months; Sep-Present
+   becomes three months on November 1, regardless of browser reload. */
+const EXPERIENCE_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
+
+function formatExperienceTenure(period: string, today: Date, showDuration = true): string {
+  const match = /^([A-Za-z]+)\s+(\d{4})\s*[–-]\s*([A-Za-z]+)(?:\s+(\d{4}))?$/.exec(period.trim());
+  if (!match) return period;
+  const [, startName, startYearText, endName, endYearText] = match;
+  const monthIndex = (name: string) => EXPERIENCE_MONTHS.findIndex(month => month.toLowerCase() === name.slice(0, 3).toLowerCase());
+  const startMonth = monthIndex(startName);
+  const present = endName.toLowerCase() === 'present';
+  const endMonth = present ? today.getMonth() : monthIndex(endName);
+  if (startMonth < 0 || endMonth < 0) return period;
+  const startYear = Number(startYearText);
+  const endYear = present ? today.getFullYear() : Number(endYearText);
+  if (!Number.isInteger(startYear) || !Number.isInteger(endYear)) return period;
+  const total = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+  if (total <= 0) return period;
+  const years = Math.floor(total / 12);
+  const months = total % 12;
+  const duration = years > 0
+    ? [years === 1 ? '1 yr' : `${years} yrs`, ...(months ? [months === 1 ? '1 mo' : `${months} mos`] : [])].join(' ')
+    : total === 1 ? '1 mo' : `${total} mos`;
+  const dateRange = `${EXPERIENCE_MONTHS[startMonth]} ${startYear} - ${present ? 'Present' : `${EXPERIENCE_MONTHS[endMonth]} ${endYear}`}`;
+  return showDuration ? `${dateRange} · ${duration}` : dateRange;
+}
+
 function ExperienceSection() {
+  const [asOf, setAsOf] = useState(() => new Date());
+
+  // Refresh while the tab stays open; finished roles keep their fixed end date.
+  useEffect(() => {
+    const checkDate = () => {
+      const now = new Date();
+      setAsOf(previous =>
+        previous.getFullYear() === now.getFullYear() && previous.getMonth() === now.getMonth()
+          ? previous
+          : now
+      );
+    };
+    const interval = window.setInterval(checkDate, 60_000);
+    document.addEventListener('visibilitychange', checkDate);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', checkDate);
+    };
+  }, []);
+
   return (
-    <section id="experience" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-1)' }}>
-      <div className="max-w-6xl mx-auto">
+    <section id="experience" className="renaissance-experience-section" style={{ background: 'var(--bg-1)' }}>
+      <div className="renaissance-experience-wrap">
         <FadeInSection>
-          <SectionLabel label="Experience" />
-          <h2
-            className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-16 leading-[1.15] text-center"
-            style={{ color: 'var(--text-1)' }}
-          >
-            Where I've <span style={{ color: 'var(--accent)' }}>worked</span>.
-          </h2>
+          <div className="renaissance-experience-intro">
+            <SectionLabel label="Experience" />
+            <h2 className="font-display">
+              Engineering across <span>data and software</span>
+            </h2>
+            <p>
+              I build production data pipelines, automate reporting and integrations, and develop end-to-end software. These roles trace my progression across data engineering, analytics, and application development.
+            </p>
+          </div>
         </FadeInSection>
 
-        <div className="relative max-w-3xl mx-auto">
-          {/* Company-level timeline */}
-          <div
-            className="absolute left-[11px] top-2 bottom-2 w-px"
-            style={{ background: 'var(--border)' }}
-          />
-
-          <div className="space-y-14">
-            {EXPERIENCE.map((exp, i) => {
-              const companyIsCurrent = exp.roles.some((role) => role.current);
-
-              return (
-                <FadeInSection key={exp.company} delay={i * 0.1}>
-                  <div className="flex gap-7 relative">
-                    {/* Company timeline node */}
-                    <div className="flex-shrink-0 relative z-10 mt-1.5">
-                      <div
-                        className="w-6 h-6 rounded-full border-2 flex items-center justify-center"
-                        style={{
-                          borderColor: companyIsCurrent ? 'var(--accent)' : 'var(--border)',
-                          background: companyIsCurrent
-                            ? 'rgba(245,158,11,0.1)'
-                            : 'var(--bg-0)',
-                        }}
-                      >
-                        {companyIsCurrent && (
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{ background: 'var(--accent)' }}
-                          />
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      {/* Company identity */}
-                      <div className="mb-5">
-                        <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                          {exp.logo && (
-                            <span
-                              className="inline-flex items-center justify-center w-8 h-8 rounded-md border flex-shrink-0 p-1"
-                              style={{
-                                borderColor: 'var(--border)',
-                                background: exp.logoBg ?? 'var(--bg-2)',
-                              }}
-                            >
-                              <img
-                                src={exp.logo}
-                                alt={`${exp.company} logo`}
-                                className="max-w-full max-h-full object-contain"
-                                style={
-                                  exp.logoScale
-                                    ? { transform: `scale(${exp.logoScale})` }
-                                    : undefined
-                                }
-                              />
-                            </span>
-                          )}
-
-                          {exp.companyUrl ? (
-                            <a
-                              href={exp.companyUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="font-display font-bold text-2xl flex items-center gap-1 transition-colors duration-200"
-                              style={{ color: 'var(--text-1)' }}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.color = 'var(--accent)')
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.color = 'var(--text-1)')
-                              }
-                            >
-                              {exp.company}
-                              <ArrowUpRight size={15} />
-                            </a>
-                          ) : (
-                            <span
-                              className="font-display font-bold text-2xl"
-                              style={{ color: 'var(--text-1)' }}
-                            >
-                              {exp.company}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex flex-wrap gap-x-3 gap-y-1 items-center pl-0 sm:pl-[42px]">
-                          <span className="font-mono text-xs" style={{ color: '#6B7280' }}>
-                            {exp.companyPeriod}
-                          </span>
-                          {exp.location && (
-                            <span
-                              className="font-mono text-xs flex items-center gap-1"
-                              style={{ color: '#6B7280' }}
-                            >
-                              <span style={{ opacity: 0.6 }}>•</span>
-                              {exp.location}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Role-level timeline inside the company */}
-                      <div className="relative ml-1 sm:ml-4 pl-7">
-                        {exp.roles.length > 1 && (
-                          <div
-                            className="absolute left-[5px] top-2 bottom-2 w-px"
-                            style={{ background: 'var(--border)' }}
-                          />
-                        )}
-
-                        <div className="space-y-8">
-                          {exp.roles.map((role, roleIndex) => (
-                            <div key={`${exp.company}-${role.role}`} className="relative">
-                              {/* Role node / connector */}
-                              <div
-                                className="absolute -left-7 top-[7px] w-3 h-3 rounded-full border-2 z-10"
-                                style={{
-                                  borderColor: role.current
-                                    ? 'var(--accent)'
-                                    : 'var(--border)',
-                                  background: role.current
-                                    ? 'var(--accent)'
-                                    : 'var(--bg-1)',
-                                  boxShadow: role.current
-                                    ? '0 0 0 4px rgba(245,158,11,0.08)'
-                                    : 'none',
-                                }}
-                              />
-
-                              <div className="flex flex-wrap items-center gap-2 mb-1">
-                                <h3
-                                  className="font-display font-semibold text-lg"
-                                  style={{
-                                    color: role.current
-                                      ? 'var(--text-1)'
-                                      : 'var(--text-1)',
-                                  }}
-                                >
-                                  {role.role}
-                                </h3>
-
-                                {role.current && (
-                                  <span
-                                    className="font-mono text-[10px] tracking-wider px-2 py-0.5 rounded-sm border"
-                                    style={{
-                                      borderColor: 'rgba(34,197,94,0.3)',
-                                      color: '#22C55E',
-                                      background: 'rgba(34,197,94,0.08)',
-                                    }}
-                                  >
-                                    CURRENT
-                                  </span>
-                                )}
-                              </div>
-
-                              <div className="font-mono text-xs mb-3" style={{ color: '#6B7280' }}>
-                                {role.period}
-                              </div>
-
-                              {role.bullets && (
-                                <ul className="space-y-2 mt-3">
-                                  {role.bullets.map((bullet) => (
-                                    <li
-                                      key={bullet}
-                                      className="text-sm leading-relaxed flex gap-2.5"
-                                      style={{ color: 'var(--text-2)' }}
-                                    >
-                                      <span
-                                        className="mt-[0.65em] w-1 h-1 rounded-full flex-shrink-0"
-                                        style={{ background: 'var(--accent)', opacity: 0.8 }}
-                                      />
-                                      <span>{bullet}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-
-                              {/* Subtle separator between roles, not after the last one */}
-                              {roleIndex < exp.roles.length - 1 && (
-                                <div
-                                  className="mt-7 h-px w-full"
-                                  style={{
-                                    background:
-                                      'linear-gradient(90deg, var(--border), transparent)',
-                                  }}
-                                />
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+        <div className="renaissance-company-list">
+          {EXPERIENCE.map((exp, companyIndex) => (
+            <FadeInSection key={exp.company} delay={companyIndex * 0.06}>
+              <article className="renaissance-company" aria-label={exp.company}>
+                <header className="renaissance-company-header">
+                  {exp.logo && (
+                    <span
+                      className={`renaissance-company-logo ${exp.company === 'DOWC' ? 'is-dowc' : ''}`}
+                      style={{ background: exp.company === 'DOWC' ? '#050508' : (exp.logoBg ?? 'var(--bg-2)') }}
+                    >
+                      <img
+                        src={exp.company === 'DOWC' ? '/dowc-logo-supplied.png' : exp.logo}
+                        alt=""
+                        loading="lazy"
+                        style={exp.logoScale ? { transform: `scale(${exp.logoScale})` } : undefined}
+                      />
+                    </span>
+                  )}
+                  <div className="renaissance-company-details">
+                    <h3>
+                      {exp.companyUrl ? (
+                        <a className="renaissance-company-name" href={exp.companyUrl} target="_blank" rel="noreferrer">
+                          {exp.company}<ArrowUpRight size={17} aria-hidden="true" />
+                        </a>
+                      ) : (
+                        <span className="renaissance-company-name">{exp.company}</span>
+                      )}
+                    </h3>
+                    <p className="renaissance-company-meta">{formatExperienceTenure(exp.companyPeriod, asOf)}</p>
+                    <p className="renaissance-company-meta">
+                      {exp.company === 'DOWC'
+                        ? <>Parsippany, NJ <span aria-hidden="true">·</span> On-site</>
+                        : exp.company === 'Perfect Threading Salon'
+                          ? 'Parsippany, NJ'
+                          : exp.location}
+                    </p>
                   </div>
-                </FadeInSection>
-              );
-            })}
-          </div>
+                </header>
+
+                <div
+                  className={`renaissance-roles ${exp.roles.length > 1 ? 'renaissance-roles--nested' : 'renaissance-roles--single'}`}
+                  aria-label={`${exp.company} roles`}
+                >
+                  {exp.roles.map((role) => {
+                    const employmentType = role.role === 'Junior Data Engineer'
+                      ? 'Full-time'
+                      : role.role.includes('Intern')
+                        ? 'Internship'
+                        : exp.location === 'Contract'
+                          ? 'Contract'
+                          : null;
+                    return (
+                      <div className={`renaissance-role ${role.current ? 'is-current' : ''}`} key={`${exp.company}-${role.role}`}>
+                        <div className="renaissance-role-title-row">
+                          <h4 className="renaissance-role-title">{role.role}</h4>
+                          {role.current && (
+                            <span className="renaissance-current-marker">CURRENT</span>
+                          )}
+                        </div>
+                        {employmentType && <p className="renaissance-role-type">{employmentType}</p>}
+                        <p className="renaissance-role-period">{formatExperienceTenure(role.period, asOf, exp.roles.length > 1)}</p>
+                        {role.bullets && (
+                          <ul className="renaissance-role-bullets">
+                            {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
+                          </ul>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </article>
+            </FadeInSection>
+          ))}
         </div>
       </div>
     </section>
@@ -1230,11 +973,11 @@ function SkillsSection() {
             className="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-16 leading-[1.15] text-center"
             style={{ color: 'var(--text-1)' }}
           >
-            The full <span style={{ color: 'var(--accent)' }}>technical</span> stack.
+            The full <span style={{ color: 'var(--accent)' }}>technical</span> stack
           </h2>
         </FadeInSection>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div className="mobile-skill-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {SKILLS.map((group, i) => {
             const { Icon } = group;
             return (
@@ -1249,7 +992,7 @@ function SkillsSection() {
                     (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)';
                   }}
                 >
-                  <div className="flex items-baseline gap-2 mb-4">
+                  <div className="skill-card-heading flex items-baseline gap-2 mb-4">
                     <Icon
                       size={13}
                       style={{ color: 'var(--accent)', flexShrink: 0, alignSelf: 'center' }}
@@ -1261,7 +1004,7 @@ function SkillsSection() {
                       S{group.sector} /
                     </span>
                     <span
-                      className="font-mono text-base tracking-widest uppercase"
+                      className="skill-card-label font-mono text-base tracking-widest uppercase"
                       style={{ color: 'var(--text-3)' }}
                     >
                       {group.label}
@@ -1271,7 +1014,7 @@ function SkillsSection() {
                     {group.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="skill-chip font-mono text-xs px-2.5 py-1.5 rounded-sm border cursor-default"
+                        className="skill-chip font-mono text-xs px-2 py-1.5 rounded-sm border cursor-default"
                         style={{ borderColor: 'var(--border)', color: 'var(--text-2)', background: 'var(--bg-2)' }}
                       >
                         {skill}
@@ -1292,7 +1035,7 @@ function SkillsSection() {
    CONTACT
 ───────────────────────────────────────────────────────────── */
 
-function ContactSection() {
+function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
   return (
     <section
       id="contact"
@@ -1320,7 +1063,7 @@ function ContactSection() {
             >
               Let's build something
               <br />
-              <span style={{ color: 'var(--accent)' }}>together.</span>
+              <span style={{ color: 'var(--accent)' }}>together</span>
             </h2>
           </FadeInSection>
 
@@ -1332,6 +1075,11 @@ function ContactSection() {
               Open to full-time roles, interesting contracts, or a conversation about
               building something new.
             </p>
+            <div className="flex justify-center -mt-8 mb-11">
+              <button type="button" onClick={onNavigateSolutions} className="renaissance-solutions-text-link">
+                Explore Data Solutions <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
+              </button>
+            </div>
           </FadeInSection>
 
           <FadeInSection delay={0.3}>
@@ -1426,17 +1174,16 @@ function Footer() {
    ROOT
 ───────────────────────────────────────────────────────────── */
 
-export default function App() {
+export default function App({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
   return (
     <>
-      <Nav />
       <main>
         <HeroSection />
         <AboutSection />
         <ExperienceSection />
         <ProjectsSection />
         <SkillsSection />
-        <ContactSection />
+        <ContactSection onNavigateSolutions={onNavigateSolutions} />
       </main>
       <Footer />
     </>
