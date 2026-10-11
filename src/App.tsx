@@ -647,7 +647,7 @@ function AboutSection() {
                 { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon, download: undefined },
                 { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon, download: undefined },
                 { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail, download: undefined },
-                { href: '/resume.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
+                { href: '/Resume_Oct_10.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
               ].map(({ href, label, Icon, download }) => (
                 <a
                   key={label}
