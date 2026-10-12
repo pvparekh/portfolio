@@ -925,7 +925,7 @@ function ExperienceSection() {
                   aria-label={`${exp.company} roles`}
                 >
                   {exp.roles.map((role) => {
-                    const employmentType = role.role === 'Junior Data Engineer'
+                    const employmentType = role.role === 'Data Engineer I'
                       ? 'Full-time'
                       : role.role.includes('Intern')
                         ? 'Internship'
@@ -944,7 +944,28 @@ function ExperienceSection() {
                         <p className="renaissance-role-period">{formatExperienceTenure(role.period, asOf, exp.roles.length > 1)}</p>
                         {role.bullets && (
                           <ul className="renaissance-role-bullets">
-                            {role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
+                            {role.bullets.map((bullet) => {
+                              const salonUrl = 'https://perfect-threading.vercel.app';
+                              const linkAt = exp.company === 'Perfect Threading Salon' ? bullet.indexOf(salonUrl) : -1;
+                              return (
+                                <li key={bullet}>
+                                  {linkAt === -1 ? bullet : (
+                                    <>
+                                      {bullet.slice(0, linkAt)}
+                                      <a
+                                        href={salonUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="underline underline-offset-2"
+                                        style={{ color: 'var(--accent)', overflowWrap: 'anywhere' }}
+                                      >
+                                        {salonUrl}
+                                      </a>
+                                    </>
+                                  )}
+                                </li>
+                              );
+                            })}
                           </ul>
                         )}
                       </div>

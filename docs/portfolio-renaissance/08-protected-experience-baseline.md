@@ -16,7 +16,7 @@ const EXPERIENCE = [
     location: 'Parsippany, NJ' as string | null,
     roles: [
       {
-        role: 'Junior Data Engineer',
+        role: 'Data Engineer I',
         period: 'Sept 2026 – Present',
         current: true,
         bullets: [
@@ -52,7 +52,7 @@ const EXPERIENCE = [
         period: 'May 2025 – June 2025',
         current: false,
         bullets: [
-          'Partnered with salon ownership to modernize its booking experience, building and deploying a full-stack website using Next.js 14.',
+          'Partnered with salon ownership to modernize its booking experience, building and deploying a full-stack website using Next.js 14. URL: https://perfect-threading.vercel.app',
           'Integrated the Calendly API into the booking workflow, reducing receptionist workload and call volume by ~30%.',
         ],
       },
