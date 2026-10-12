@@ -105,7 +105,7 @@ const EXPERIENCE = [
         bullets: [
           'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
           'Developed a metadata-driven Airflow pipeline integrating 66 SQL Server sources into PostgreSQL using dynamic task mapping, schema discovery, bulk COPY, and transactional refreshes; validated source-to-target row counts across 3+ runs.',
-          'Engineered and productionized an end-to-end pipeline for NESNA, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
+          'Engineered and productionized an end-to-end pipeline for NISSAN, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
           'Leveraged Snowflake\'s columnar architecture for complex analytical workloads on multi-million-row datasets, reducing query runtimes from 20+ minutes in PostgreSQL to under 1 minute.',
         ],
       },
