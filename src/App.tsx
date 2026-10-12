@@ -131,7 +131,7 @@ const EXPERIENCE = [
     location: 'Contract' as string | null,
     roles: [
       {
-        role: 'Web Developer',
+        role: 'Software Engineer',
         period: 'May 2025 – June 2025',
         current: false,
         bullets: [
