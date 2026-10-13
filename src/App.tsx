@@ -549,10 +549,10 @@ function AboutSection() {
             <figure className="about-portrait">
               <div className="about-portrait-frame">
                 <img
-                  src="/about-portrait.webp"
-                  alt="Parth Parekh"
-                  width={264}
-                  height={330}
+                  src="/IMG_2395.jpeg"
+                  alt="Parth Parekh photographed in front of a colorful mural"
+                  width={1114}
+                  height={1536}
                   loading="lazy"
                   decoding="async"
                 />
