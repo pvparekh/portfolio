@@ -205,7 +205,7 @@ const SKILLS = [
 const TAGLINES = [
   'Data Engineer',
   'Fitness Enthusiast',
-  'Formula One Fan',
+  'Motorsports Fan',
   'AI Systems Builder',
   'Rutgers CS Grad',
 ];
