@@ -562,7 +562,7 @@ function AboutSection() {
                 .
               </p>
               <p>
-                I like solving problems that call for reliable, scalable, and useful systems. At work, that means building production data pipelines and automating how information moves between systems. On my own time, I've rebuilt Formula Vision around validated race data and efficient browser delivery, and developed an autonomous code reviewer with a two-pass LLM pipeline.
+                I like solving problems that call for reliable, scalable, and useful systems. At work, that means building production data pipelines and automating how information moves between systems. As a Formula 1 fan, I built Formula Vision, an interactive race replay and telemetry platform spanning 170+ historical races, powered by Python data pipelines, automated validation, and a custom React/TypeScript playback engine. I also developed an autonomous code reviewer with a two-pass LLM pipeline.
               </p>
               <p>
                 Outside of work I'm probably playing sports, working out, or hanging out with
