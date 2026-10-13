@@ -909,3 +909,34 @@ a.renaissance-company-name:hover { color: var(--accent); }
   .renaissance-solutions-text-link svg { transition: none; }
   .renaissance-solutions-text-link:hover svg { transform: none; }
 }
+
+
+/* About portrait: compact editorial image beside the existing profile boards.
+   Only the About section is affected; no changes to the hero or other pages. */
+#about .about-portrait {
+  width: min(100%, 208px);
+  margin: 0 0 26px;
+}
+#about .about-portrait-frame {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--accent-border);
+  border-radius: 14px;
+  background: var(--bg-card);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+}
+#about .about-portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@media screen and (max-width: 767px) {
+  #about .about-portrait {
+    width: min(48vw, 184px);
+    margin: 0 auto 26px;
+  }
+  #about .about-portrait-frame {
+    border-radius: 12px;
+  }
+}

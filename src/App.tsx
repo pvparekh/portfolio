@@ -546,6 +546,18 @@ function AboutSection() {
         <div className="grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-8 items-stretch">
           {/* Bio */}
           <FadeInSection delay={0.1} className="md:col-span-1">
+            <figure className="about-portrait">
+              <div className="about-portrait-frame">
+                <img
+                  src="/about-portrait.webp"
+                  alt="Parth Parekh"
+                  width={264}
+                  height={330}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </figure>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
               <p>
                 I'm a Data Engineer with a B.S. in Computer Science and a
