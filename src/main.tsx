@@ -4,8 +4,10 @@ import App from './App.tsx';
 import SolutionsPage from './SolutionsPage.tsx';
 import SoftwarePage from './SoftwarePage.tsx';
 import SiteNav, { type SitePage } from './SiteNav.tsx';
+import SpatialMount from './spatial/dom/SpatialMount.tsx';
 import './style.css';
 import './mobile.css';
+import './spatial.css';
 
 const currentPage = (): SitePage =>
   /^\/software(?:\/|$)/.test(window.location.pathname) ? 'software' : /^\/solutions(?:\/|$)/.test(window.location.pathname) ? 'solutions' : 'portfolio';
@@ -123,6 +125,7 @@ function PortfolioSite() {
 
   return (
     <>
+      <SpatialMount page={page} />
       <SiteNav page={page} navigate={navigate} goToSection={goToSection} />
       {page === 'software' ? (
         <SoftwarePage onBackToPortfolio={() => navigate('portfolio')} />

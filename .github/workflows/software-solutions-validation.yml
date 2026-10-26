@@ -6,6 +6,8 @@ on:
       - feat/software-hero-workspace
       - fix/portfolio-home-navigation-and-software-copy
       - feat/distinct-solutions-motion
+      - feat/spatial-universe
+      - 'feat/spatial-**'
   workflow_dispatch:
 concurrency:
   group: software-solutions-qa-${{ github.ref }}
@@ -27,6 +29,8 @@ jobs:
       - run: npm ci
       - name: Protected experience, TypeScript and Vite build
         run: npm run build
+      - name: Spatial core unit tests
+        run: npm run test:unit
       - name: Confirm all three static entries
         run: |
           test -f dist/index.html
@@ -40,6 +44,10 @@ jobs:
         run: node scripts/check-software-page.mjs
       - name: Verify differentiated motion and reduced-motion support
         run: node scripts/check-solutions-motion.mjs
+      - name: Verify the spatial layer (software WebGL)
+        run: node scripts/check-spatial.mjs
+        env:
+          SPATIAL_GPU: swiftshader
       - name: Build production main in a separate worktree (no deployment)
         run: |
           git worktree add /tmp/portfolio-production origin/main

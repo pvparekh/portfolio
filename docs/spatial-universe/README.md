@@ -21,6 +21,7 @@ Evolve the homepage's six amber speed lines into **SLIPSTREAM**: a real-time Web
 | 08 | [Branches and milestones](08-branch-and-milestones.md) | 9. Development branch and milestone plan |
 | 09 | [Prompt bank](09-prompt-bank.md) | 10. Implementation prompt bank (P00–P14) |
 | 10 | [Acceptance criteria](10-acceptance-criteria.md) | 11. Acceptance criteria and verification plan |
+| 11 | [Implementation log](11-implementation-log.md) | Desktop build: what shipped, deviations, measurements, review notes |
 
 Visual overview (live filament sketch + illustrated storyboard frames): [`slipstream-blueprint.html`](slipstream-blueprint.html), also published privately at https://claude.ai/artifact/6pzPXFFHjqSWGZGrqWaFQ8.
 

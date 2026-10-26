@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import {
   motion,
+  useMotionValueEvent,
   useScroll,
   useTransform,
   useInView,
@@ -19,6 +20,8 @@ import {
   Database,
   FileText,
 } from 'lucide-react';
+import { sceneAnchor } from './spatial/dom/sceneAnchor';
+import { isSceneActive, useSpatial } from './spatial/core/store';
 
 /* ── Brand icon SVGs (lucide-react v1 dropped these) ── */
 function GithubIcon({ size = 16 }: { size?: number }) {
@@ -312,7 +315,7 @@ const SPEED_LINES = [
 
 const containerVariants: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.07 } },
+  visible: { transition: { staggerChildren: 0.045 } },
 };
 
 const letterVariants: Variants = {
@@ -320,14 +323,43 @@ const letterVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: 'easeOut' },
+    transition: { duration: 0.55, ease: 'easeOut' },
   },
 };
+
+/* With the spatial scene active, the two name lines part as the camera
+   dollies through them (docs/spatial-universe/04-storyboard.md, S0). */
+function useNameOpening() {
+  const sceneActive = useSpatial(state => isSceneActive(state) && state.motion === 'full');
+  const active = useRef(sceneActive);
+  active.current = sceneActive;
+  const { scrollY } = useScroll();
+  const [opening, setOpening] = useState(false);
+  useMotionValueEvent(scrollY, 'change', value => setOpening(active.current && value > 2));
+  const progress = (value: number) => {
+    if (!active.current) return 0;
+    const t = Math.min(Math.max(value / (window.innerHeight * 0.72), 0), 1);
+    return t * t * (3 - 2 * t);
+  };
+  const fade = (value: number, from: number, to: number) =>
+    1 - Math.min(Math.max((progress(value) - from) / (to - from), 0), 1);
+  // The camera pushes into the name: it grows, its lines part slightly, and it
+  // dissolves before reaching the copy; the copy clears first.
+  const upper = useTransform(scrollY, value => -progress(value) * window.innerHeight * 0.06);
+  const lower = useTransform(scrollY, value => progress(value) * window.innerHeight * 0.06);
+  const scale = useTransform(scrollY, value => 1 + progress(value) * 0.55);
+  const nameOpacity = useTransform(scrollY, value => fade(value, 0.18, 0.62));
+  const copyOpacity = useTransform(scrollY, value => fade(value, 0, 0.22));
+  // Hold the name near the viewport centre while the camera pushes through it.
+  const hold = useTransform(scrollY, value => (active.current ? Math.min(value, window.innerHeight * 0.72) * 0.82 : 0));
+  return { opening: opening && sceneActive, upper, lower, scale, nameOpacity, copyOpacity, hold };
+}
 
 function HeroSection() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 0.28], [0, -55]);
   const op = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
+  const { opening, upper, lower, scale, nameOpacity, copyOpacity, hold } = useNameOpening();
   const tagline = useTypingEffect(TAGLINES);
 
   const first = 'PARTH'.split('');
@@ -336,6 +368,7 @@ function HeroSection() {
   return (
     <section
       id="hero"
+      ref={sceneAnchor('hero')}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden circuit-grid"
       style={{ background: 'var(--bg-0)' }}
     >
@@ -356,7 +389,7 @@ function HeroSection() {
 
       {/* Ambient radial */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="hero-ambient absolute inset-0 pointer-events-none"
         style={{
           background:
             'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(245,158,11,0.05) 0%, transparent 70%)',
@@ -405,15 +438,15 @@ function HeroSection() {
         </motion.div>
 
         {/* Name, staggered letter reveal */}
-        <div className="mb-6 overflow-hidden">
+        <div className={opening ? 'mb-6' : 'mb-6 overflow-hidden'}>
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="font-display font-bold leading-[0.9] select-none"
-            style={{ fontSize: 'clamp(3.8rem, 11.5vw, 9.5rem)' }}
+            style={{ fontSize: 'clamp(3.8rem, 11.5vw, 9.5rem)', scale, opacity: nameOpacity, y: hold }}
           >
-            <div className="flex justify-center gap-[0.025em] mb-[0.04em]">
+            <motion.div className="flex justify-center gap-[0.025em] mb-[0.04em]" style={{ y: upper }}>
               {first.map((ch, i) => (
                 <motion.span
                   key={i}
@@ -423,8 +456,8 @@ function HeroSection() {
                   {ch}
                 </motion.span>
               ))}
-            </div>
-            <div className="flex justify-center gap-[0.025em]">
+            </motion.div>
+            <motion.div className="flex justify-center gap-[0.025em]" style={{ y: lower }}>
               {last.map((ch, i) => (
                 <motion.span
                   key={i}
@@ -437,10 +470,11 @@ function HeroSection() {
                   {ch}
                 </motion.span>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         </div>
 
+        <motion.div style={{ opacity: copyOpacity }}>
         {/* Typing tagline */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -465,6 +499,7 @@ function HeroSection() {
         >
           Building dependable data platforms and ambitious software, from production pipelines to interactive products.
         </motion.p>
+        </motion.div>
 
       </motion.div>
 
@@ -531,7 +566,7 @@ function AboutSection() {
   ];
 
   return (
-    <section id="about" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
+    <section id="about" ref={sceneAnchor('about')} className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
       <div className="max-w-6xl mx-auto">
         <FadeInSection>
           <SectionLabel label="About" />
@@ -715,7 +750,7 @@ function ProjectsSection() {
         </FadeInSection>
 
         <FadeInSection>
-          <article className="renaissance-flagship" aria-labelledby="formula-vision-title">
+          <article className="renaissance-flagship" ref={sceneAnchor('project:fv')} aria-labelledby="formula-vision-title">
             <div className="renaissance-project-topline">
               <span>01 / FEATURED SYSTEM</span>
               <span>DATA PLATFORM + INTERACTIVE PRODUCT</span>
@@ -761,7 +796,7 @@ function ProjectsSection() {
                     { label: 'Publish', tech: 'Immutable R2 artifacts', detail: 'Verify objects, promote catalog', code: '04' },
                     { label: 'Replay', tech: 'React + client-owned clock', detail: 'Load only needed data chunks', code: '05' },
                   ].map((step, i) => (
-                    <div key={step.code} className="renaissance-architecture-step">
+                    <div key={step.code} ref={sceneAnchor('fv-step:' + step.code)} className="renaissance-architecture-step">
                       <span className="renaissance-architecture-index">{step.code}</span>
                       <div className="renaissance-architecture-step-body">
                         <strong>{step.label}</strong>
@@ -789,7 +824,7 @@ function ProjectsSection() {
               : ['Upload expense files', 'Categorize in batches', 'Compute deterministic statistics', 'Explore analysis'];
             return (
               <FadeInSection key={project.id} delay={index * .07}>
-                <article className={`renaissance-supporting-project ${isReviewBot ? 'is-review-bot' : 'is-aetherflow'}`}>
+                <article ref={sceneAnchor(isReviewBot ? 'project:bot' : 'project:aether')} className={`renaissance-supporting-project ${isReviewBot ? 'is-review-bot' : 'is-aetherflow'}`}>
                   <div className="renaissance-project-topline">
                     <span>{project.number} / ENGINEERING PROJECT</span>
                     <span>{isReviewBot ? 'GITHUB INTEGRATION + DEVELOPER TOOLING' : 'FILE INGESTION + ANALYTICS'}</span>
@@ -945,7 +980,7 @@ function ExperienceSection() {
                           ? 'Contract'
                           : null;
                     return (
-                      <div className={`renaissance-role ${role.current ? 'is-current' : ''}`} key={`${exp.company}-${role.role}`}>
+                      <div ref={sceneAnchor(`role:${exp.company}:${role.role}`, { current: role.current })} className={`renaissance-role ${role.current ? 'is-current' : ''}`} key={`${exp.company}-${role.role}`}>
                         <div className="renaissance-role-title-row">
                           <h4 className="renaissance-role-title">{role.role}</h4>
                           {role.current && (
@@ -999,7 +1034,7 @@ function ExperienceSection() {
 
 function SkillsSection() {
   return (
-    <section id="skills" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-1)' }}>
+    <section id="skills" ref={sceneAnchor('skills')} className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-1)' }}>
       <div className="max-w-6xl mx-auto">
         <FadeInSection>
           <SectionLabel label="Skills" />
@@ -1017,6 +1052,7 @@ function SkillsSection() {
             return (
               <FadeInSection key={group.sector} delay={i * 0.07}>
                 <div
+                  ref={sceneAnchor('skill:' + group.sector)}
                   className="rounded-sm border p-5 h-full transition-all duration-300 cursor-default"
                   style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
                   onMouseEnter={(e) => {
@@ -1073,6 +1109,7 @@ function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => vo
   return (
     <section
       id="contact"
+      ref={sceneAnchor('contact')}
       className="py-20 md:py-28 px-6 relative overflow-hidden"
       style={{ background: 'var(--bg-0)' }}
     >

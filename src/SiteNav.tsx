@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { AnimatePresence, motion, useReducedMotion, useScroll } from 'framer-motion';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
+import MotionToggle from './spatial/dom/MotionToggle';
 
 export type SitePage = 'portfolio' | 'solutions' | 'software';
 
@@ -446,6 +447,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
                 navigate('software');
               }}>Software Solutions</a>
           )}
+          <MotionToggle />
           {page !== 'portfolio' ? (
             <a href="#contact" onClick={event => goto(page, 'contact', event)}
               className="btn-primary font-mono text-xs tracking-widest px-4 py-2 rounded-sm font-semibold"

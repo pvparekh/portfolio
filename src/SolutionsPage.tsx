@@ -4,6 +4,7 @@ import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2, Chev
 import { caseStudies, type PublicCaseStudy } from './solutionsData';
 import { deliveryExamples } from './deliveryExamples';
 import { useSolutionsScrollReveal } from './solutionsEffects';
+import { sceneAnchor } from './spatial/dom/sceneAnchor';
 import './solutions.css';
 import './solutionsEffects.css';
 import './deliveryProof.css';
@@ -145,7 +146,7 @@ function EngagementProcess() {
   return (
     <div className="sol-process">
       {process.map(([number, name, summary], index) => (
-        <div className="sol-process-step" key={number}>
+        <div className="sol-process-step" key={number} ref={sceneAnchor('sol-step:' + number)}>
           <span className="sol-process-number">{number}</span>
           {index < process.length - 1 && <ChevronRight className="sol-process-next" size={19} strokeWidth={1.5} aria-hidden="true" />}
           <h3>{name}</h3>
@@ -180,7 +181,7 @@ function DeliveryProof() {
 
 function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) {
   return (
-    <article className="sol-case" id={study.id}>
+    <article className="sol-case" id={study.id} ref={sceneAnchor('sol-case:' + study.id)}>
       <div className="sol-case-heading">
         <div className="sol-case-count">{String(index + 1).padStart(2, '0')} <span>/ SELECTED WORK</span></div>
         <div className="sol-case-tag">Independent project</div>
@@ -240,7 +241,7 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
       <div ref={pageRef} className="solutions data-solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <main id="sol-main">
-        <section className="sol-hero" aria-labelledby="sol-hero-title">
+        <section className="sol-hero" ref={sceneAnchor('sol:hero')} aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
             <div className="sol-hero-copy">
               <div className="sol-topline"><span className="sol-status-dot" /> DATA SOLUTIONS / PARTH PAREKH</div>
@@ -259,7 +260,7 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
           </div>
         </section>
 
-        <section className="sol-problem-section sol-section" id="problems">
+        <section className="sol-problem-section sol-section" id="problems" ref={sceneAnchor('sol:problems')}>
           <div className="sol-container">
             <SectionIntro index="01" label="THE PROBLEM" title="Does any of this sound familiar?" accent="familiar?" description="You don't need to know what a DAG or an ETL framework is to recognize work that should run by itself." />
             <div className="sol-problems">
@@ -268,7 +269,7 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
                 ['Systems that do not talk', 'Useful information is spread across apps, databases and exports with no dependable connection.'],
                 ['Reporting nobody wants to touch', 'One change breaks a query, a hidden formula or a process nobody fully understands.']
               ].map(([title, description], i) => (
-                <div className="sol-problem" key={title}>
+                <div className="sol-problem" key={title} ref={sceneAnchor('sol-problem:' + i)}>
                   <span className="sol-problem-num">0{i + 1}</span>
                   <h3>{title}</h3>
                   <p>{description}</p>
@@ -279,12 +280,12 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
           </div>
         </section>
 
-        <section className="sol-section sol-services-section" id="services">
+        <section className="sol-section sol-services-section" id="services" ref={sceneAnchor('sol:services')}>
           <div className="sol-container">
             <SectionIntro index="02" label="HOW I CAN HELP" title="Focused solutions. Clear deliverables." accent="Clear deliverables." description="The goal is not to sell your team more tooling. It is to finish a defined job, prove the output works and make the result maintainable." />
             <div className="sol-service-list">
               {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools }) => (
-                <article className="sol-service" key={number}>
+                <article className="sol-service" key={number} ref={sceneAnchor('sol-service:' + number)}>
                   <div className="sol-service-identity"><span>{number} / SERVICE</span><Icon size={27} strokeWidth={1.35} /></div>
                   <div className="sol-service-main"><h3>{title}</h3><p className="sol-service-promise">{promise}</p><p>{problem}</p></div>
                   <div className="sol-service-detail">
@@ -305,14 +306,14 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
           </div>
         </section>
 
-        <section className="sol-section sol-work-section" id="work">
+        <section className="sol-section sol-work-section" id="work" ref={sceneAnchor('sol:work')}>
           <div className="sol-container">
             <SectionIntro index="03" label="SELECTED DELIVERY" title="Engineering work built for real operations" accent="real operations" description="Completed engineering projects in a corporate setting that began with recurring operational problems and ended with working, validated systems." />
             <DeliveryProof />
           </div>
         </section>
 
-        <section className="sol-section sol-approach-section" id="approach">
+        <section className="sol-section sol-approach-section" id="approach" ref={sceneAnchor('sol:approach')}>
           <div className="sol-container">
             <SectionIntro index="04" label="WORKING TOGETHER" title="A straightforward path from problem to handoff." accent="from problem to handoff." description="Every project begins with a clear outcome, agreed milestones, practical validation and a handoff your team can use." />
             <EngagementProcess />
@@ -320,14 +321,14 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
           </div>
         </section>
 
-        <section className="sol-section sol-independent-section" id="independent">
+        <section className="sol-section sol-independent-section" id="independent" ref={sceneAnchor('sol:independent')}>
           <div className="sol-container">
             <SectionIntro index="05" label="INDEPENDENT PRODUCTS" title="Products you can explore firsthand" accent="explore firsthand" description="Beyond professional data engineering, I build software products of my own. Explore the live experiences and their public repositories or documentation." />
             <div className="sol-case-list">{caseStudies.filter(study => study.publicationApproved).map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
           </div>
         </section>
 
-        <section className="sol-section sol-contact-section" id="contact">
+        <section className="sol-section sol-contact-section" id="contact" ref={sceneAnchor('sol:contact')}>
           <div className="sol-container sol-contact-layout">
             <div>
               <p className="sol-eyebrow">06 / LET'S TALK</p>
