@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "check:experience": "node scripts/check-experience-baseline.mjs",
     "test:unit": "vitest run",
-    "check:spatial": "node scripts/check-spatial.mjs"
+    "check:journey": "node scripts/check-journey.mjs"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",

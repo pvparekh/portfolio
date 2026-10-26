@@ -12,6 +12,11 @@ import {
  * shared copy in App.tsx, so both layouts present identical information.
  */
 
+/** On narrow screens the exhibit screens sit off-frame, so the real capture appears inside the panel. */
+export function MobilePreview({ src, alt }: { src: string; alt: string }) {
+  return <img className="jp-mobile-preview" src={src} alt={alt} loading="lazy" decoding="async" width={1600} height={1000} />;
+}
+
 function Kicker({ children }: { children: ReactNode }) {
   return <p className="jp-kicker"><span aria-hidden="true" />{children}<span aria-hidden="true" /></p>;
 }
@@ -47,6 +52,7 @@ export function OriginPanel() {
       </div>
       <p className="jp-origin-tagline"><span>{tagline}</span><span className="cursor-blink" aria-hidden="true">|</span></p>
       <p className="jp-origin-sub">{HERO_SUBTAGLINE}</p>
+      <div className="jp-origin-marker"><div>P1</div><div>GRID REF.</div></div>
     </div>
   );
 }
@@ -171,6 +177,7 @@ export function FlagshipPanel() {
   return (
     <article className="jp-exhibit jp-exhibit--fv" aria-labelledby="jp-fv-title">
       <p className="jp-topline"><span>01 / FEATURED SYSTEM</span><span>DATA PLATFORM + INTERACTIVE PRODUCT</span></p>
+      <MobilePreview src="/projects/formula-vision-replay-map.webp" alt="Formula Vision race replay: the race order, circuit map and driver telemetry" />
       <p className="jp-overline">{flagship.tagline}</p>
       <h3 id="jp-fv-title">{flagship.name}</h3>
       <p className="jp-lead">{FV_LEAD}</p>
@@ -210,6 +217,7 @@ export function SupportingPanel({ id }: { id: 'github-review-bot' | 'aetherflow'
   return (
     <article className={`jp-exhibit ${id === 'aetherflow' ? 'jp-exhibit--aether' : 'jp-exhibit--bot'}`}>
       <p className="jp-topline"><span>{project.number} / ENGINEERING PROJECT</span><span>{SUPPORTING_TYPES[project.id]}</span></p>
+      <MobilePreview src={id === 'aetherflow' ? '/projects/aetherflow-home.webp' : '/projects/review-bot-pipeline.webp'} alt={id === 'aetherflow' ? 'AetherFlow home page' : 'GitHub Review Bot pipeline, from its repository README'} />
       <p className="jp-overline">{project.tagline}</p>
       <h3>{project.name}</h3>
       <p className="jp-desc">{project.description}</p>

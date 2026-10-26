@@ -5,6 +5,8 @@ import SolutionsPage from './SolutionsPage.tsx';
 import SoftwarePage from './SoftwarePage.tsx';
 import SiteNav, { type SitePage } from './SiteNav.tsx';
 import PortfolioJourney from './journey/pages/PortfolioJourney.tsx';
+import SolutionsJourney from './journey/pages/SolutionsJourney.tsx';
+import SoftwareJourney from './journey/pages/SoftwareJourney.tsx';
 import { journeyEligible } from './journey/core/mode.ts';
 import './style.css';
 import './mobile.css';
@@ -112,6 +114,8 @@ function PortfolioSite() {
         window.history.replaceState(window.history.state, '', destination);
       }
       window.scrollTo({ top: 0, behavior: 'instant' });
+      // A smooth section scroll still in flight can override one instant jump; repeat next frame.
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }));
       return;
     }
     window.history.pushState(null, '', destination);
@@ -131,9 +135,13 @@ function PortfolioSite() {
     <>
       <SiteNav page={page} navigate={navigate} goToSection={goToSection} />
       {page === 'software' ? (
-        <SoftwarePage onBackToPortfolio={() => navigate('portfolio')} />
+        JOURNEY
+          ? <SoftwareJourney onBackToPortfolio={() => navigate('portfolio')} />
+          : <SoftwarePage onBackToPortfolio={() => navigate('portfolio')} />
       ) : page === 'solutions' ? (
-        <SolutionsPage onBackToPortfolio={() => navigate('portfolio')} />
+        JOURNEY
+          ? <SolutionsJourney onBackToPortfolio={() => navigate('portfolio')} />
+          : <SolutionsPage onBackToPortfolio={() => navigate('portfolio')} />
       ) : (
         JOURNEY
           ? <PortfolioJourney onNavigateSolutions={() => navigate('solutions')} />

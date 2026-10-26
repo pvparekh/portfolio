@@ -12,7 +12,7 @@ const email = 'pvparekh14@gmail.com';
 const projectEmail = 'mailto:' + email + '?subject=' + encodeURIComponent('Project inquiry | Data engineering') +
   '&body=' + encodeURIComponent('Hi Parth,\n\nI am reaching out about a potential data engineering project.\n\nOur current workflow / problem:\n\nSystems involved:\n\nIdeal timeline:\n\nThanks,\n');
 
-const offerings = [
+export const offerings = [
   {
     number: '01',
     icon: Workflow,
@@ -75,7 +75,7 @@ const process = [
   ['05', 'Hand off', 'Deliver source, documentation and operating instructions based on the agreed scope.']
 ];
 
-function SectionIntro({ index, label, title, accent, description }: { index: string; label: string; title: string; accent?: string; description?: string }) {
+export function SectionIntro({ index, label, title, accent, description }: { index: string; label: string; title: string; accent?: string; description?: string }) {
   const splitAt = accent ? title.indexOf(accent) : -1;
   return (
     <div className="sol-section-intro">
@@ -103,7 +103,7 @@ function FlowConnector({ index, active, reducedMotion }: { index: number; active
   );
 }
 
-function ArchitectureGraphic() {
+export function ArchitectureGraphic() {
   const graphicRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(graphicRef, { once: true, amount: 0.25 });
   const reducedMotion = !!useReducedMotion();
@@ -141,7 +141,7 @@ function ArchitectureGraphic() {
   );
 }
 
-function EngagementProcess() {
+export function EngagementProcess() {
   return (
     <div className="sol-process">
       {process.map(([number, name, summary], index) => (
@@ -156,10 +156,8 @@ function EngagementProcess() {
   );
 }
 
-function DeliveryProof() {
-  return <div className="sol-proof">
-    <div className="sol-proof-grid">
-      {deliveryExamples.map(item => <article key={item.id} className={`sol-proof-card ${item.featured ? 'sol-proof-featured' : ''}`}>
+export function DeliveryProofCard({ item }: { item: (typeof deliveryExamples)[number] }) {
+  return <article className={`sol-proof-card ${item.featured ? 'sol-proof-featured' : ''}`}>
         <div className="sol-proof-meta"><span>{item.number} / {item.category}</span><span className="sol-proof-delivered"><CheckCircle2 size={14} /> DELIVERED</span></div>
         <div className="sol-proof-card-content">
           <div className="sol-proof-head"><h3>{item.title}</h3><p>{item.lead}</p>
@@ -172,13 +170,23 @@ function DeliveryProof() {
         </div>
         <div className="sol-proof-result"><CheckCircle2 size={18} aria-hidden="true" /><div><span>THE RESULT</span><p>{item.result}</p></div></div>
         <div className="sol-proof-tools" aria-label="Technologies involved">{item.tools.map(tool=><span key={tool}>{tool}</span>)}</div>
-      </article>)}
+      </article>;
+}
+
+export function DeliveryProofClose() {
+  return <div className="sol-proof-close"><p>Have a version of one of these problems? We can scope the smallest reliable fix around your existing systems.</p><a href="#contact">Discuss a similar project <ArrowUpRight size={16} /></a></div>;
+}
+
+function DeliveryProof() {
+  return <div className="sol-proof">
+    <div className="sol-proof-grid">
+      {deliveryExamples.map(item => <DeliveryProofCard key={item.id} item={item} />)}
     </div>
-    <div className="sol-proof-close"><p>Have a version of one of these problems? We can scope the smallest reliable fix around your existing systems.</p><a href="#contact">Discuss a similar project <ArrowUpRight size={16} /></a></div>
+    <DeliveryProofClose />
   </div>;
 }
 
-function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) {
+export function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) {
   return (
     <article className="sol-case" id={study.id}>
       <div className="sol-case-heading">
@@ -221,8 +229,79 @@ function CaseStudy({ study, index }: { study: PublicCaseStudy; index: number }) 
   );
 }
 
-function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
-  const pageRef = useSolutionsScrollReveal();
+export const SOLUTIONS_INTROS = {
+  i01: {"index":"01","label":"THE PROBLEM","title":"Does any of this sound familiar?","accent":"familiar?","description":"You don't need to know what a DAG or an ETL framework is to recognize work that should run by itself."},
+  i02: {"index":"02","label":"HOW I CAN HELP","title":"Focused solutions. Clear deliverables.","accent":"Clear deliverables.","description":"The goal is not to sell your team more tooling. It is to finish a defined job, prove the output works and make the result maintainable."},
+  i03: {"index":"03","label":"SELECTED DELIVERY","title":"Engineering work built for real operations","accent":"real operations","description":"Completed engineering projects in a corporate setting that began with recurring operational problems and ended with working, validated systems."},
+  i04: {"index":"04","label":"WORKING TOGETHER","title":"A straightforward path from problem to handoff.","accent":"from problem to handoff.","description":"Every project begins with a clear outcome, agreed milestones, practical validation and a handoff your team can use."},
+  i05: {"index":"05","label":"INDEPENDENT PRODUCTS","title":"Products you can explore firsthand","accent":"explore firsthand","description":"Beyond professional data engineering, I build software products of my own. Explore the live experiences and their public repositories or documentation."},
+};
+
+export function SolutionsHeroCopy() {
+  return (
+        <div className="sol-hero-copy">
+          <div className="sol-topline"><span className="sol-status-dot" /> DATA SOLUTIONS / PARTH PAREKH</div>
+          <h1 id="sol-hero-title">From manual data work to <em>reliable systems.</em></h1>
+          <p className="sol-hero-sub">As a Data Engineer with a background in Computer Science and Data Science from Rutgers University, I build data pipelines, integrations, and reporting automations that help teams spend less time moving data and more time using it.</p>
+          <div className="sol-actions">
+            <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
+            <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
+          </div>
+        </div>
+  );
+}
+
+export function SolutionsProblems() {
+  return (
+        <div className="sol-problems">
+          {[
+            ['The weekly spreadsheet ritual', 'Someone downloads files, copies columns, fixes formatting and sends the same report again.'],
+            ['Systems that do not talk', 'Useful information is spread across apps, databases and exports with no dependable connection.'],
+            ['Reporting nobody wants to touch', 'One change breaks a query, a hidden formula or a process nobody fully understands.']
+          ].map(([title, description], i) => (
+            <div className="sol-problem" key={title}>
+              <span className="sol-problem-num">0{i + 1}</span>
+              <h3>{title}</h3>
+              <p>{description}</p>
+              <ArrowUpRight aria-hidden="true" size={19} />
+            </div>
+          ))}
+        </div>
+  );
+}
+
+export function ServiceArticle({ offering }: { offering: (typeof offerings)[number] }) {
+  const { number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools } = offering;
+  return (
+    <article className="sol-service">
+      <div className="sol-service-identity"><span>{number} / SERVICE</span><Icon size={27} strokeWidth={1.35} /></div>
+      <div className="sol-service-main"><h3>{title}</h3><p className="sol-service-promise">{promise}</p><p>{problem}</p></div>
+      <div className="sol-service-detail">
+        <div><b>THE DELIVERABLE</b><p>{deliverable}</p></div>
+        <div><b>EXAMPLE</b><p>{example}</p></div>
+        <details><summary>Scope and requirements <ChevronRight size={15} /></summary><p><strong>Included:</strong> {included}</p><p><strong>Not included:</strong> {boundary}</p><p><strong>What you provide:</strong> {inputs}</p></details>
+        <div className="sol-service-tech">{tools.map(tool => <span key={tool}>{tool}</span>)}</div>
+        <a className="sol-text-link" href="#contact">Discuss this service <ArrowUpRight size={15} /></a>
+      </div>
+    </article>
+  );
+}
+
+export function ToolingNote() {
+  return (
+        <div className="sol-tooling-note">
+          <span className="sol-tooling-symbol"><Layers3 size={21} strokeWidth={1.6} /></span>
+          <div><strong>Make the most of the tools you already have.</strong><p>Whether you use spreadsheets, business apps, SQL databases or cloud storage, I start with your existing systems and choose a practical approach. Any new subscriptions, API charges or infrastructure needs are identified when we scope the work.</p></div>
+          <a href="#contact" aria-label="Discuss a cost-conscious data project"><ArrowUpRight size={19}/></a>
+        </div>
+  );
+}
+
+export function ProcessChecks() {
+  return <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Defined scope before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>;
+}
+
+export function ContactCopy() {
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   async function copyEmail() {
@@ -236,129 +315,115 @@ function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void })
   }
 
   return (
+        <div>
+          <p className="sol-eyebrow">06 / LET'S TALK</p>
+          <h2>Have a data problem worth <em>solving?</em></h2>
+          <p>Send me a short description of what's taking time, what systems are involved and what a successful result would look like. I'll let you know whether it's a fit for a scoped project.</p>
+          <div className="sol-contact-email-block">
+            <div className="sol-contact-email-topline">DIRECT EMAIL</div>
+            <div className="sol-contact-email-row">
+              <span className="sol-contact-email-address">{email}</span>
+              <button type="button" className="sol-contact-copy" onClick={copyEmail} aria-label="Copy email address to clipboard">
+                {copyStatus === 'copied' ? <CheckCircle2 size={17} /> : <Copy size={17} />}
+                {copyStatus === 'copied' ? 'Copied' : 'Copy email'}
+              </button>
+            </div>
+            <span className="sol-contact-copy-status" role="status" aria-live="polite">
+              {copyStatus === 'copied' ? 'Email address copied. Paste it into Gmail or any email service.' : copyStatus === 'failed' ? 'Copy unavailable. Select the address above to copy it.' : 'Copy the address to use with Gmail, Outlook or any email service.'}
+            </span>
+            <a className="sol-contact-compose" href={projectEmail}>Prefer your email app? Open a draft <Mail size={14} /></a>
+          </div>
+        </div>
+  );
+}
+
+export function ContactAside() {
+  return (
+        <aside className="sol-contact-panel">
+          <p className="sol-contact-panel-title">A GOOD FIRST MESSAGE</p>
+          <div><span>01</span><p>What your team does manually today</p></div>
+          <div><span>02</span><p>The applications, files or databases involved</p></div>
+          <div><span>03</span><p>What success looks like and any timing constraints</p></div>
+          <p className="sol-contact-small">Copy the address and send a short note from whichever email service you use. Project pricing is quoted based on agreed scope.</p>
+        </aside>
+  );
+}
+
+export function SolutionsFooter({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
+  return <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/" onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onBackToPortfolio(); }}><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>;
+}
+
+export function SolutionsHeroBottom() {
+  return (
+        <div className="sol-hero-bottom sol-container">
+          <span>PYTHON / SQL / AIRFLOW / POSTGRESQL / APIs</span>
+          <a href="#problems">SCROLL TO EXPLORE <ArrowDownRight size={13} /></a>
+        </div>
+  );
+}
+
+function SolutionsPage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
+  const pageRef = useSolutionsScrollReveal();
+  return (
     <MotionConfig reducedMotion="user">
       <div ref={pageRef} className="solutions data-solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <main id="sol-main">
         <section className="sol-hero" aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
-            <div className="sol-hero-copy">
-              <div className="sol-topline"><span className="sol-status-dot" /> DATA SOLUTIONS / PARTH PAREKH</div>
-              <h1 id="sol-hero-title">From manual data work to <em>reliable systems.</em></h1>
-              <p className="sol-hero-sub">As a Data Engineer with a background in Computer Science and Data Science from Rutgers University, I build data pipelines, integrations, and reporting automations that help teams spend less time moving data and more time using it.</p>
-              <div className="sol-actions">
-                <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
-                <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
-              </div>
-            </div>
+            <SolutionsHeroCopy />
             <div className="sol-hero-art"><ArchitectureGraphic /></div>
           </div>
-          <div className="sol-hero-bottom sol-container">
-            <span>PYTHON / SQL / AIRFLOW / POSTGRESQL / APIs</span>
-            <a href="#problems">SCROLL TO EXPLORE <ArrowDownRight size={13} /></a>
-          </div>
+          <SolutionsHeroBottom />
         </section>
 
         <section className="sol-problem-section sol-section" id="problems">
           <div className="sol-container">
-            <SectionIntro index="01" label="THE PROBLEM" title="Does any of this sound familiar?" accent="familiar?" description="You don't need to know what a DAG or an ETL framework is to recognize work that should run by itself." />
-            <div className="sol-problems">
-              {[
-                ['The weekly spreadsheet ritual', 'Someone downloads files, copies columns, fixes formatting and sends the same report again.'],
-                ['Systems that do not talk', 'Useful information is spread across apps, databases and exports with no dependable connection.'],
-                ['Reporting nobody wants to touch', 'One change breaks a query, a hidden formula or a process nobody fully understands.']
-              ].map(([title, description], i) => (
-                <div className="sol-problem" key={title}>
-                  <span className="sol-problem-num">0{i + 1}</span>
-                  <h3>{title}</h3>
-                  <p>{description}</p>
-                  <ArrowUpRight aria-hidden="true" size={19} />
-                </div>
-              ))}
-            </div>
+            <SectionIntro {...SOLUTIONS_INTROS.i01} />
+            <SolutionsProblems />
           </div>
         </section>
 
         <section className="sol-section sol-services-section" id="services">
           <div className="sol-container">
-            <SectionIntro index="02" label="HOW I CAN HELP" title="Focused solutions. Clear deliverables." accent="Clear deliverables." description="The goal is not to sell your team more tooling. It is to finish a defined job, prove the output works and make the result maintainable." />
+            <SectionIntro {...SOLUTIONS_INTROS.i02} />
             <div className="sol-service-list">
-              {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools }) => (
-                <article className="sol-service" key={number}>
-                  <div className="sol-service-identity"><span>{number} / SERVICE</span><Icon size={27} strokeWidth={1.35} /></div>
-                  <div className="sol-service-main"><h3>{title}</h3><p className="sol-service-promise">{promise}</p><p>{problem}</p></div>
-                  <div className="sol-service-detail">
-                    <div><b>THE DELIVERABLE</b><p>{deliverable}</p></div>
-                    <div><b>EXAMPLE</b><p>{example}</p></div>
-                    <details><summary>Scope and requirements <ChevronRight size={15} /></summary><p><strong>Included:</strong> {included}</p><p><strong>Not included:</strong> {boundary}</p><p><strong>What you provide:</strong> {inputs}</p></details>
-                    <div className="sol-service-tech">{tools.map(tool => <span key={tool}>{tool}</span>)}</div>
-                    <a className="sol-text-link" href="#contact">Discuss this service <ArrowUpRight size={15} /></a>
-                  </div>
-                </article>
-              ))}
+              {offerings.map(offering => <ServiceArticle key={offering.number} offering={offering} />)}
             </div>
-            <div className="sol-tooling-note">
-              <span className="sol-tooling-symbol"><Layers3 size={21} strokeWidth={1.6} /></span>
-              <div><strong>Make the most of the tools you already have.</strong><p>Whether you use spreadsheets, business apps, SQL databases or cloud storage, I start with your existing systems and choose a practical approach. Any new subscriptions, API charges or infrastructure needs are identified when we scope the work.</p></div>
-              <a href="#contact" aria-label="Discuss a cost-conscious data project"><ArrowUpRight size={19}/></a>
-            </div>
+            <ToolingNote />
           </div>
         </section>
 
         <section className="sol-section sol-work-section" id="work">
           <div className="sol-container">
-            <SectionIntro index="03" label="SELECTED DELIVERY" title="Engineering work built for real operations" accent="real operations" description="Completed engineering projects in a corporate setting that began with recurring operational problems and ended with working, validated systems." />
+            <SectionIntro {...SOLUTIONS_INTROS.i03} />
             <DeliveryProof />
           </div>
         </section>
 
         <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
-            <SectionIntro index="04" label="WORKING TOGETHER" title="A straightforward path from problem to handoff." accent="from problem to handoff." description="Every project begins with a clear outcome, agreed milestones, practical validation and a handoff your team can use." />
+            <SectionIntro {...SOLUTIONS_INTROS.i04} />
             <EngagementProcess />
-            <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Defined scope before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>
+            <ProcessChecks />
           </div>
         </section>
 
         <section className="sol-section sol-independent-section" id="independent">
           <div className="sol-container">
-            <SectionIntro index="05" label="INDEPENDENT PRODUCTS" title="Products you can explore firsthand" accent="explore firsthand" description="Beyond professional data engineering, I build software products of my own. Explore the live experiences and their public repositories or documentation." />
+            <SectionIntro {...SOLUTIONS_INTROS.i05} />
             <div className="sol-case-list">{caseStudies.filter(study => study.publicationApproved).map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
           </div>
         </section>
 
         <section className="sol-section sol-contact-section" id="contact">
           <div className="sol-container sol-contact-layout">
-            <div>
-              <p className="sol-eyebrow">06 / LET'S TALK</p>
-              <h2>Have a data problem worth <em>solving?</em></h2>
-              <p>Send me a short description of what's taking time, what systems are involved and what a successful result would look like. I'll let you know whether it's a fit for a scoped project.</p>
-              <div className="sol-contact-email-block">
-                <div className="sol-contact-email-topline">DIRECT EMAIL</div>
-                <div className="sol-contact-email-row">
-                  <span className="sol-contact-email-address">{email}</span>
-                  <button type="button" className="sol-contact-copy" onClick={copyEmail} aria-label="Copy email address to clipboard">
-                    {copyStatus === 'copied' ? <CheckCircle2 size={17} /> : <Copy size={17} />}
-                    {copyStatus === 'copied' ? 'Copied' : 'Copy email'}
-                  </button>
-                </div>
-                <span className="sol-contact-copy-status" role="status" aria-live="polite">
-                  {copyStatus === 'copied' ? 'Email address copied. Paste it into Gmail or any email service.' : copyStatus === 'failed' ? 'Copy unavailable. Select the address above to copy it.' : 'Copy the address to use with Gmail, Outlook or any email service.'}
-                </span>
-                <a className="sol-contact-compose" href={projectEmail}>Prefer your email app? Open a draft <Mail size={14} /></a>
-              </div>
-            </div>
-            <aside className="sol-contact-panel">
-              <p className="sol-contact-panel-title">A GOOD FIRST MESSAGE</p>
-              <div><span>01</span><p>What your team does manually today</p></div>
-              <div><span>02</span><p>The applications, files or databases involved</p></div>
-              <div><span>03</span><p>What success looks like and any timing constraints</p></div>
-              <p className="sol-contact-small">Copy the address and send a short note from whichever email service you use. Project pricing is quoted based on agreed scope.</p>
-            </aside>
+            <ContactCopy />
+            <ContactAside />
           </div>
         </section>
       </main>
-      <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/" onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onBackToPortfolio(); }}><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>
+      <SolutionsFooter onBackToPortfolio={onBackToPortfolio} />
       </div>
     </MotionConfig>
   );

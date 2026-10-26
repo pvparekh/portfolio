@@ -31,6 +31,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
   const hudRef = useRef<HTMLDivElement>(null);
   const [total, setTotal] = useState(0);
   const [markers, setMarkers] = useState<number[]>([]);
+  const [panelMarkers, setPanelMarkers] = useState<{ id: string; top: number }[]>([]);
   const [active, setActive] = useState(0);
   const Scene = useMemo(() => lazy(loadScene), [loadScene]);
   const motion = useSpatial(state => state.motion);
@@ -49,6 +50,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
       if (!timeline) return;
       setTotal(timeline.total);
       setMarkers(timeline.destinationStarts);
+      setPanelMarkers(definition.panels.filter(p => p.anchor).map(p => ({ id: p.anchor!, top: engine.panelOffset(p.id) ?? 0 })));
     });
     const offFrame = engine.subscribe(() => {
       const index = Math.min(definition.destinations.length - 1, Math.max(0, Math.round(engine.place)));
@@ -94,7 +96,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
           <Scene engine={engine} />
         </Suspense>
       </SceneBoundary>
-      <div className="journey-stage" ref={stageRef} onFocus={onFocus}>
+      <div className="journey-stage" ref={stageRef} onFocus={onFocus} onScroll={event => { event.currentTarget.scrollTop = 0; event.currentTarget.scrollLeft = 0; }}>
         <main id="journey-main" className="journey-camera" ref={cameraRef}>
           {definition.panels.map(panel => (
             <section key={panel.id} ref={refs.get(panel.id)} className="journey-panel" data-panel={panel.id} data-destination={panel.destination}>
@@ -121,6 +123,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
         {definition.destinations.map((dest, i) => (
           <div key={dest.id} id={dest.anchor === 'hero' ? undefined : dest.anchor} className="journey-marker" style={{ top: Math.ceil(markers[i] ?? 0) + 1 }} />
         ))}
+        {panelMarkers.map(m => <div key={m.id} id={m.id} className="journey-marker" style={{ top: Math.ceil(m.top) + 1 }} />)}
       </div>
       {footer}
     </div>

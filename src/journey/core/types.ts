@@ -10,6 +10,8 @@ export interface PanelSpec {
   pitch?: number;
   /** Authored CSS width in px on wide screens; narrow screens use min(width, viewport - gutter). */
   width: number;
+  /** Optional id for a scroll marker at this panel's reading position (deep links such as #work). */
+  anchor?: string;
 }
 
 /** A readable camera composition. The focus panel is shown at exactly 1:1 scale. */

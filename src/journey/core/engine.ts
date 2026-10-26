@@ -170,7 +170,7 @@ export class JourneyEngine {
     for (const [id, el] of this.elements) {
       const spec = this.panels.get(id);
       if (!spec) continue;
-      const panelWidth = narrow ? Math.min(spec.width, width - 32) : spec.width;
+      const panelWidth = Math.min(spec.width, narrow ? width - 32 : width - 140);
       el.style.width = `${panelWidth}px`;
       const { right, up, normal } = basis(spec.yaw, spec.pitch ?? 0);
       el.style.transform = objectCss(composeMatrix(spec.position, right, up, normal));
@@ -263,8 +263,9 @@ export class JourneyEngine {
       const rounded = Math.round(opacity * 50) / 50;
       if (this.opacities.get(id) === rounded) continue;
       this.opacities.set(id, rounded);
+      // Distant panels stay focusable (keyboard users can Tab to them, which travels there) but ignore the pointer.
       el.style.opacity = String(rounded);
-      el.style.visibility = rounded <= 0 ? 'hidden' : 'visible';
+      el.style.pointerEvents = rounded > 0.5 ? 'auto' : 'none';
       el.classList.toggle('is-near', rounded > 0.6);
     }
   }

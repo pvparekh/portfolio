@@ -7,6 +7,7 @@ import { demoteForSession } from '../../spatial/core/capability';
 import { frameRef } from './shared/frame';
 import SkyDome from './shared/SkyDome';
 import TravelStreaks from './shared/TravelStreaks';
+import Warmup from './shared/Warmup';
 
 /** Keeps the three.js camera identical to the engine's (same pose, fov, aspect). */
 function CameraSync({ palettes }: { palettes: Palette[] }) {
@@ -60,7 +61,10 @@ export default function JourneyCanvas({ engine, palettes, children }: Props) {
       frameRef.current = frame;
       advance(performance.now());
     });
-    return () => engine.setRenderer(null);
+    return () => {
+      engine.setRenderer(null);
+      document.documentElement.classList.remove('journey-gl-ready', 'journey-gl-lost');
+    };
   }, [engine]);
 
   return (
@@ -99,6 +103,7 @@ export default function JourneyCanvas({ engine, palettes, children }: Props) {
       <SkyDome palettes={palettes} />
       <TravelStreaks />
       {children}
+      <Warmup />
     </Canvas>
   );
 }

@@ -11,7 +11,7 @@ const email = 'pvparekh14@gmail.com';
 const projectEmail = 'mailto:' + email + '?subject=' + encodeURIComponent('Software project inquiry | Parth Parekh') +
   '&body=' + encodeURIComponent('Hi Parth,\n\nI would like to build or improve:\n\nWho will use it:\n\nThe most important features or outcome:\n\nExisting website or systems (if any):\n\nApproximate timeline (if known):\n\nThanks,\n');
 
-const offerings = [
+export const offerings = [
   {number:'01',icon:PanelsTopLeft,title:'Custom web applications & internal tools',
    promise:'Purpose-built software for people who need to get something done.',
    problem:'A customer portal, admin screen, lightweight dashboard or staff tool can be more useful than trying to force another product to fit.',
@@ -66,7 +66,7 @@ const process = [
  ['05','Hand off','We agree on launch or source delivery, access, operating notes and any separately scoped support.']
 ];
 
-function SectionIntro({ index, label, title, accent, description }: { index: string; label: string; title: string; accent?: string; description?: string }) {
+export function SectionIntro({ index, label, title, accent, description }: { index: string; label: string; title: string; accent?: string; description?: string }) {
   const splitAt = accent ? title.indexOf(accent) : -1;
   return (
     <div className="sol-section-intro">
@@ -79,7 +79,7 @@ function SectionIntro({ index, label, title, accent, description }: { index: str
   );
 }
 
-function SoftwarePreview() {
+export function SoftwarePreview() {
   return (
     <div className="software-workspace" role="img" aria-label="Illustrative custom application interface with a navigation rail, a project workspace, and software features designed around the user's workflow. This is a design concept, not a client application screenshot.">
       <div className="software-workspace-top">
@@ -163,7 +163,7 @@ function SoftwarePreview() {
   );
 }
 
-function EngagementProcess() {
+export function EngagementProcess() {
   return (
     <div className="sol-process">
       {process.map(([number, name, summary], index) => (
@@ -180,7 +180,7 @@ function EngagementProcess() {
 
 
 
-function CaseStudy({ study, index }: { study: SoftwareProject; index: number }) {
+export function CaseStudy({ study, index }: { study: SoftwareProject; index: number }) {
   return (
     <article className="sol-case" id={study.id}>
       <div className="sol-case-heading">
@@ -223,8 +223,76 @@ function CaseStudy({ study, index }: { study: SoftwareProject; index: number }) 
   );
 }
 
-function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
-  const pageRef = useSolutionsScrollReveal();
+export const SOFTWARE_INTROS = {
+  i01: {"index":"01","label":"THE OPPORTUNITY","title":"When off-the-shelf isn't quite right.","accent":"isn't quite right.","description":"Sometimes you need to launch something new. Sometimes the missing piece is one useful feature or a clearer customer experience."},
+  i02: {"index":"02","label":"HOW I CAN HELP","title":"What I can build for you","accent":"build for you","description":"A useful project starts with what people need to do, not a list of programming languages. Each engagement is sized around a defined outcome."},
+  i03: {"index":"03","label":"SELECTED SOFTWARE","title":"Software I have designed and built","accent":"designed and built","description":"Client delivery, independent products and academic work are identified separately. Explore what each application does, what I built and the engineering behind it."},
+  i04: {"index":"04","label":"WORKING TOGETHER","title":"How we would work together","accent":"work together","description":"A proportionate process, with defined requirements, meaningful checkpoints and clear ownership at launch."},
+};
+
+export function SoftwareHeroCopy() {
+  return (
+        <div className="sol-hero-copy">
+          <div className="sol-topline"><span className="sol-status-dot" /> SOFTWARE SOLUTIONS / PARTH PAREKH</div>
+          <h1 id="sol-hero-title">Custom software <em>for your business.</em></h1>
+          <p className="sol-hero-sub">I design and develop business websites, web applications and focused software tools, from the first requirements to a working handoff. Explore real projects, then tell me what you need to build or improve.</p>
+          <div className="sol-actions">
+            <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
+            <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
+          </div>
+        </div>
+  );
+}
+
+export function SoftwareProblems() {
+  return (
+        <div className="sol-problems">
+          {[
+            ['An idea needs a working product', 'You have a specific concept for customers or employees, but need someone to turn it into usable software.'],
+            ['Your business needs a better front door', 'Customers should be able to explore services, book or take the next step without extra friction.'],
+            ['Your current tools have a gap', 'The application you use almost works, but an integration, interface or focused feature would make it fit.']
+          ].map(([title, description], i) => (
+            <div className="sol-problem" key={title}>
+              <span className="sol-problem-num">0{i + 1}</span><h3>{title}</h3><p>{description}</p>
+              <ArrowUpRight aria-hidden="true" size={19} />
+            </div>
+          ))}
+        </div>
+  );
+}
+
+export function ServiceArticle({ offering }: { offering: (typeof offerings)[number] }) {
+  const { number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools, proof } = offering;
+  return (
+    <article className="sol-service">
+      <div className="sol-service-identity"><span>{number} / SERVICE</span><Icon size={27} strokeWidth={1.35} /></div>
+      <div className="sol-service-main"><h3>{title}</h3><p className="sol-service-promise">{promise}</p><p>{problem}</p></div>
+      <div className="sol-service-detail">
+        <div><b>THE DELIVERABLE</b><p>{deliverable}</p></div>
+        <div><b>EXAMPLE</b><p>{example}</p></div>
+        <details><summary>Scope and requirements <ChevronRight size={15} /></summary><p><strong>Included:</strong> {included}</p><p><strong>Not included:</strong> {boundary}</p><p><strong>What you provide:</strong> {inputs}</p></details>
+        <div className="sol-service-tech">{tools.map(tool => <span key={tool}>{tool}</span>)}</div>
+        <div className="software-service-links"><a className="sol-text-link" href="#contact">Discuss this service <ArrowUpRight size={15} /></a><a className="software-service-proof" href={"#" + proof.id}>Related work: {proof.label} <ArrowUpRight size={14} /></a></div>
+      </div>
+    </article>
+  );
+}
+
+export function ToolingNote() {
+  return (
+        <div className="sol-tooling-note">
+          <span className="sol-tooling-symbol"><Layers3 size={21} strokeWidth={1.6} /></span>
+          <div><strong>Designed for the scope you actually need.</strong><p>Start with the essential features and the systems you already use. Hosting, third-party subscriptions and any API charges are discussed before the build, not buried in the handoff.</p></div>
+          <a href="#contact" aria-label="Discuss a scoped software project"><ArrowUpRight size={19}/></a>
+        </div>
+  );
+}
+
+export function ProcessChecks() {
+  return <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Agreed features before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>;
+}
+
+export function ContactCopy() {
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   async function copyEmail() {
@@ -238,77 +306,89 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
   }
 
   return (
+        <div>
+          <p className="sol-eyebrow">05 / LET'S TALK</p>
+          <h2>Have software in mind? <em>Let's talk.</em></h2>
+          <p>Tell me what you want to build, who it's for and the one or two things it most needs to do. An early idea is enough to start a conversation about a practical scope.</p>
+          <div className="sol-contact-email-block">
+            <div className="sol-contact-email-topline">DIRECT EMAIL</div>
+            <div className="sol-contact-email-row">
+              <span className="sol-contact-email-address">{email}</span>
+              <button type="button" className="sol-contact-copy" onClick={copyEmail} aria-label="Copy email address to clipboard">
+                {copyStatus === 'copied' ? <CheckCircle2 size={17} /> : <Copy size={17} />}
+                {copyStatus === 'copied' ? 'Copied' : 'Copy email'}
+              </button>
+            </div>
+            <span className="sol-contact-copy-status" role="status" aria-live="polite">
+              {copyStatus === 'copied' ? 'Email address copied. Paste it into Gmail or any email service.' : copyStatus === 'failed' ? 'Copy unavailable. Select the address above to copy it.' : 'Copy the address to use with Gmail, Outlook or any email service.'}
+            </span>
+            <a className="sol-contact-compose" href={projectEmail}>Prefer your email app? Open a draft <Mail size={14} /></a>
+          </div>
+        </div>
+  );
+}
+
+export function ContactAside() {
+  return (
+        <aside className="sol-contact-panel">
+          <p className="sol-contact-panel-title">A GOOD FIRST MESSAGE</p>
+          <div><span>01</span><p>What you'd like to build or improve</p></div>
+          <div><span>02</span><p>Who will use it and what matters most</p></div>
+          <div><span>03</span><p>Existing tools and approximate timing, if known</p></div>
+          <p className="sol-contact-small">Copy the address and send a short note from whichever email service you use. Project pricing and optional ongoing support are scoped separately.</p>
+        </aside>
+  );
+}
+
+export function SolutionsFooter({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
+  return <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/" onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onBackToPortfolio(); }}><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>;
+}
+
+export function SoftwareHeroBottom() {
+  return (
+        <div className="sol-hero-bottom sol-container">
+          <span>WEB APPS / BUSINESS WEBSITES / BACKENDS / INTEGRATIONS</span>
+          <a href="#opportunities">SCROLL TO EXPLORE <ArrowDownRight size={13} /></a>
+        </div>
+  );
+}
+
+function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) {
+  const pageRef = useSolutionsScrollReveal();
+  return (
     <MotionConfig reducedMotion="user">
       <div ref={pageRef} className="solutions software-solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <main id="sol-main">
         <section className="sol-hero" aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
-            <div className="sol-hero-copy">
-              <div className="sol-topline"><span className="sol-status-dot" /> SOFTWARE SOLUTIONS / PARTH PAREKH</div>
-              <h1 id="sol-hero-title">Custom software <em>for your business.</em></h1>
-              <p className="sol-hero-sub">I design and develop business websites, web applications and focused software tools, from the first requirements to a working handoff. Explore real projects, then tell me what you need to build or improve.</p>
-              <div className="sol-actions">
-                <a className="sol-button sol-button-primary" href="#contact">Discuss a Project <ArrowUpRight size={17} /></a>
-                <a className="sol-button sol-button-secondary" href="#work">Explore My Work <ArrowDownRight size={17} /></a>
-              </div>
-            </div>
+            <SoftwareHeroCopy />
             <div className="sol-hero-art"><SoftwarePreview /></div>
           </div>
-          <div className="sol-hero-bottom sol-container">
-            <span>WEB APPS / BUSINESS WEBSITES / BACKENDS / INTEGRATIONS</span>
-            <a href="#opportunities">SCROLL TO EXPLORE <ArrowDownRight size={13} /></a>
-          </div>
+          <SoftwareHeroBottom />
         </section>
 
         <section className="sol-problem-section sol-section" id="opportunities">
           <div className="sol-container">
-            <SectionIntro index="01" label="THE OPPORTUNITY" title="When off-the-shelf isn't quite right." accent="isn't quite right." description="Sometimes you need to launch something new. Sometimes the missing piece is one useful feature or a clearer customer experience." />
-            <div className="sol-problems">
-              {[
-                ['An idea needs a working product', 'You have a specific concept for customers or employees, but need someone to turn it into usable software.'],
-                ['Your business needs a better front door', 'Customers should be able to explore services, book or take the next step without extra friction.'],
-                ['Your current tools have a gap', 'The application you use almost works, but an integration, interface or focused feature would make it fit.']
-              ].map(([title, description], i) => (
-                <div className="sol-problem" key={title}>
-                  <span className="sol-problem-num">0{i + 1}</span><h3>{title}</h3><p>{description}</p>
-                  <ArrowUpRight aria-hidden="true" size={19} />
-                </div>
-              ))}
-            </div>
+            <SectionIntro {...SOFTWARE_INTROS.i01} />
+            <SoftwareProblems />
           </div>
         </section>
 
 
         <section className="sol-section sol-services-section" id="services">
           <div className="sol-container">
-            <SectionIntro index="02" label="HOW I CAN HELP" title="What I can build for you" accent="build for you" description="A useful project starts with what people need to do, not a list of programming languages. Each engagement is sized around a defined outcome." />
+            <SectionIntro {...SOFTWARE_INTROS.i02} />
             <div className="sol-service-list">
-              {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools, proof }) => (
-                <article className="sol-service" key={number}>
-                  <div className="sol-service-identity"><span>{number} / SERVICE</span><Icon size={27} strokeWidth={1.35} /></div>
-                  <div className="sol-service-main"><h3>{title}</h3><p className="sol-service-promise">{promise}</p><p>{problem}</p></div>
-                  <div className="sol-service-detail">
-                    <div><b>THE DELIVERABLE</b><p>{deliverable}</p></div>
-                    <div><b>EXAMPLE</b><p>{example}</p></div>
-                    <details><summary>Scope and requirements <ChevronRight size={15} /></summary><p><strong>Included:</strong> {included}</p><p><strong>Not included:</strong> {boundary}</p><p><strong>What you provide:</strong> {inputs}</p></details>
-                    <div className="sol-service-tech">{tools.map(tool => <span key={tool}>{tool}</span>)}</div>
-                    <div className="software-service-links"><a className="sol-text-link" href="#contact">Discuss this service <ArrowUpRight size={15} /></a><a className="software-service-proof" href={"#" + proof.id}>Related work: {proof.label} <ArrowUpRight size={14} /></a></div>
-                  </div>
-                </article>
-              ))}
+              {offerings.map(offering => <ServiceArticle key={offering.number} offering={offering} />)}
             </div>
-            <div className="sol-tooling-note">
-              <span className="sol-tooling-symbol"><Layers3 size={21} strokeWidth={1.6} /></span>
-              <div><strong>Designed for the scope you actually need.</strong><p>Start with the essential features and the systems you already use. Hosting, third-party subscriptions and any API charges are discussed before the build, not buried in the handoff.</p></div>
-              <a href="#contact" aria-label="Discuss a scoped software project"><ArrowUpRight size={19}/></a>
-            </div>
+            <ToolingNote />
           </div>
         </section>
 
         <section className="sol-section sol-independent-section software-work-section" id="work">
           <div className="sol-container">
-            <SectionIntro index="03" label="SELECTED SOFTWARE" title="Software I have designed and built" accent="designed and built" description="Client delivery, independent products and academic work are identified separately. Explore what each application does, what I built and the engineering behind it." />
+            <SectionIntro {...SOFTWARE_INTROS.i03} />
             <div className="sol-case-list">{softwareProjects.map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
           </div>
         </section>
@@ -316,45 +396,21 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
 
         <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
-            <SectionIntro index="04" label="WORKING TOGETHER" title="How we would work together" accent="work together" description="A proportionate process, with defined requirements, meaningful checkpoints and clear ownership at launch." />
+            <SectionIntro {...SOFTWARE_INTROS.i04} />
             <EngagementProcess />
-            <div className="sol-process-bottom"><span><CheckCircle2 size={17} /> Agreed features before build</span><span><CheckCircle2 size={17} /> Validation before delivery</span><span><CheckCircle2 size={17} /> Documentation at handoff</span></div>
+            <ProcessChecks />
           </div>
         </section>
 
 
         <section className="sol-section sol-contact-section" id="contact">
           <div className="sol-container sol-contact-layout">
-            <div>
-              <p className="sol-eyebrow">05 / LET'S TALK</p>
-              <h2>Have software in mind? <em>Let's talk.</em></h2>
-              <p>Tell me what you want to build, who it's for and the one or two things it most needs to do. An early idea is enough to start a conversation about a practical scope.</p>
-              <div className="sol-contact-email-block">
-                <div className="sol-contact-email-topline">DIRECT EMAIL</div>
-                <div className="sol-contact-email-row">
-                  <span className="sol-contact-email-address">{email}</span>
-                  <button type="button" className="sol-contact-copy" onClick={copyEmail} aria-label="Copy email address to clipboard">
-                    {copyStatus === 'copied' ? <CheckCircle2 size={17} /> : <Copy size={17} />}
-                    {copyStatus === 'copied' ? 'Copied' : 'Copy email'}
-                  </button>
-                </div>
-                <span className="sol-contact-copy-status" role="status" aria-live="polite">
-                  {copyStatus === 'copied' ? 'Email address copied. Paste it into Gmail or any email service.' : copyStatus === 'failed' ? 'Copy unavailable. Select the address above to copy it.' : 'Copy the address to use with Gmail, Outlook or any email service.'}
-                </span>
-                <a className="sol-contact-compose" href={projectEmail}>Prefer your email app? Open a draft <Mail size={14} /></a>
-              </div>
-            </div>
-            <aside className="sol-contact-panel">
-              <p className="sol-contact-panel-title">A GOOD FIRST MESSAGE</p>
-              <div><span>01</span><p>What you'd like to build or improve</p></div>
-              <div><span>02</span><p>Who will use it and what matters most</p></div>
-              <div><span>03</span><p>Existing tools and approximate timing, if known</p></div>
-              <p className="sol-contact-small">Copy the address and send a short note from whichever email service you use. Project pricing and optional ongoing support are scoped separately.</p>
-            </aside>
+            <ContactCopy />
+            <ContactAside />
           </div>
         </section>
       </main>
-      <footer className="sol-footer"><div className="sol-container sol-footer-inner"><a href="/" onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onBackToPortfolio(); }}><ArrowLeft size={15} /> Back to portfolio</a><span>Parth Parekh © 2026</span><div className="sol-footer-links"><a href="https://linkedin.com/in/parekh422" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on LinkedIn">LinkedIn <ArrowUpRight size={13}/></a><a href="https://github.com/pvparekh" target="_blank" rel="noopener noreferrer" aria-label="View Parth Parekh on GitHub">GitHub <ArrowUpRight size={13}/></a></div></div></footer>
+      <SolutionsFooter onBackToPortfolio={onBackToPortfolio} />
       </div>
     </MotionConfig>
   );

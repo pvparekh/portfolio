@@ -8,6 +8,7 @@ on:
       - feat/distinct-solutions-motion
       - feat/spatial-universe
       - 'feat/spatial-**'
+      - feat/spatial-universe-v2
   workflow_dispatch:
 concurrency:
   group: software-solutions-qa-${{ github.ref }}
@@ -44,8 +45,8 @@ jobs:
         run: node scripts/check-software-page.mjs
       - name: Verify differentiated motion and reduced-motion support
         run: node scripts/check-solutions-motion.mjs
-      - name: Verify the spatial layer (software WebGL)
-        run: node scripts/check-spatial.mjs
+      - name: Verify the spatial journey (software WebGL)
+        run: node scripts/check-journey.mjs
         env:
           SPATIAL_GPU: swiftshader
       - name: Build production main in a separate worktree (no deployment)

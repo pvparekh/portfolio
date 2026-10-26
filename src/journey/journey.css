@@ -49,7 +49,6 @@ html.journey-active body {
   pointer-events: auto;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  visibility: hidden;
   opacity: 0;
   transition: opacity 0.35s ease;
 }
@@ -153,6 +152,11 @@ html.journey-active body {
 }
 .jp-origin-tagline .cursor-blink { color: var(--jp-warm); }
 .jp-origin-sub { margin: 10px auto 0 !important; max-width: 640px; font-size: 18px; line-height: 1.6; color: var(--jp-ink-3); }
+.jp-origin { position: relative; }
+.jp-origin-marker { position: absolute; right: -120px; top: -40px; text-align: right; font-family: 'Space Grotesk', sans-serif; pointer-events: none; }
+.jp-origin-marker > div:first-child { font-size: 120px; font-weight: 700; line-height: 1; color: rgba(245, 158, 11, 0.05); }
+.jp-origin-marker > div:last-child { font: 400 12px 'JetBrains Mono', monospace; letter-spacing: 0.2em; color: var(--jp-ink-3); }
+.journey-solutions .jp-sol .sol-hero-bottom { margin-top: 34px; padding: 18px 0 0 !important; border-top: 1px solid var(--jp-line); }
 @keyframes jp-rise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
 
 /* ── About (teal atmosphere) ───────────────────────────────── */
@@ -284,6 +288,7 @@ html.journey-active body {
 .journey-rail button:focus-visible,
 .journey-rail button.is-active { color: rgba(169, 182, 201, 0.9); }
 .journey-rail button.is-active { color: var(--jp-ink); }
+.jp-mobile-preview { display: none; }
 .journey-rail-dot { order: 2; width: 6px; height: 6px; border-radius: 50%; background: rgba(169, 182, 201, 0.35); transition: transform 0.25s, background 0.25s; }
 .journey-rail button.is-active .journey-rail-dot { background: var(--jp-warm); transform: scale(1.5); }
 .journey-rail button:focus-visible { outline: 1px solid var(--jp-accent); outline-offset: 4px; }
@@ -307,6 +312,7 @@ html.journey-active body {
 @media (max-width: 819px) {
   .jp-intro, .jp-about-bio, .jp-about-profile, .jp-role, .jp-exhibit, .jp-architecture, .jp-skills, .jp-contact { padding: 24px 20px; }
   .jp-origin-name { font-size: clamp(64px, 19vw, 96px); }
+  .jp-origin-marker { display: none; }
   .jp-origin-sub, .jp-origin-tagline { font-size: 15px; }
   .jp-intro h2, .jp-about-bio h2, .jp-skills h2 { font-size: 32px; }
   .jp-contact h2 { font-size: 36px; }
@@ -317,14 +323,50 @@ html.journey-active body {
   .jp-skill-grid { grid-template-columns: 1fr; }
   .jp-company h3 { font-size: 24px; }
   .jp-topline { flex-direction: column; gap: 4px; }
-  .journey-rail { top: auto; bottom: max(14px, env(safe-area-inset-bottom, 0px)); right: 50%; transform: translateX(50%); justify-items: center; }
-  .journey-rail ol { grid-auto-flow: column; gap: 14px; }
+  .journey-rail { right: 4px; }
+  .journey-rail ol { gap: 0; }
+  .journey-rail button { min-height: 22px; }
   .journey-rail-label, .journey-layout-switch { display: none; }
-  .journey-telemetry { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; padding-bottom: 56px; }
+  .journey-telemetry { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; padding: 12px 18px 16px; }
+  .journey-telemetry > div { display: grid; gap: 2px; white-space: normal; }
   .journey-telemetry > div > span:nth-child(2) { display: none; }
+  .journey-telemetry > div:last-child { grid-column: 1 / -1; }
+  .jp-mobile-preview { display: block; width: 100%; height: auto; margin-bottom: 18px; border-radius: 4px; border: 1px solid var(--jp-line); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .jp-origin-name > div, .jp-live-dot { animation: none; }
   .journey-panel { transition: none; }
+}
+
+/* ── Data / Software Solutions journeys reuse the pages' own components ── */
+.journey-solutions.solutions { background: transparent; min-height: 0; }
+.journey-solutions .jp-sol {
+  background: var(--jp-glass);
+  border: 1px solid var(--jp-line);
+  border-radius: 6px;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 38px 40px;
+}
+.journey-solutions .jp-sol--bare { background: none; border: 0; box-shadow: none; padding: 0; }
+.journey-solutions .jp-sol--bare > * { box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5); }
+.journey-solutions .jp-sol--hero { padding: 44px; }
+.journey-solutions .jp-sol .sol-section-intro { margin-bottom: 0; }
+.journey-solutions .jp-sol .sol-section-intro + * { margin-top: 34px; }
+.journey-solutions .jp-sol .sol-service { padding: 0; border-bottom: 0; }
+.journey-solutions .jp-sol .sol-case { padding: 0; border-bottom: 0; }
+.journey-solutions .jp-sol .sol-process { margin-top: 30px; }
+.journey-solutions .jp-sol .sol-proof-close { margin: 0; }
+.journey-solutions .sol-proof { margin: 0; }
+.journey-solutions .sol-proof .sol-proof-card { margin: 0; background: linear-gradient(160deg, rgba(14, 22, 28, 0.94), rgba(8, 12, 18, 0.96)); }
+.journey-solutions .sol-contact-panel,
+.journey-solutions .sol-tooling-note { background: rgba(9, 13, 20, 0.92); }
+.journey-solutions .sol-flow-graphic { background: linear-gradient(160deg, rgba(10, 30, 36, 0.9), rgba(8, 12, 18, 0.95)); }
+.journey-solutions .jp-sol h1 { margin-top: 26px; font-size: 62px; line-height: 1.02; }
+.journey-solutions .jp-sol.sol-contact-section h2 { font-size: 52px; }
+.journey-solutions .jp-sol.sol-hero, .journey-solutions .jp-sol.sol-contact-section { border: 1px solid var(--jp-line); }
+@media (max-width: 819px) {
+  .journey-solutions .jp-sol { padding: 24px 20px; }
+  .journey-solutions .jp-sol h1 { font-size: 40px; }
+  .journey-solutions .jp-sol.sol-contact-section h2 { font-size: 36px; }
 }

@@ -1,0 +1,214 @@
+{
+  "measuredAt": "2026-10-26T07:06:50.790Z",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Laptop GPU (0x0000249C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "note": "Headless Chromium with ANGLE D3D11 on this machine. Phone profile is CPU-throttled emulation on a desktop GPU, not a real phone.",
+  "runs": [
+    {
+      "profile": "desktop-1440x900-dpr1",
+      "path": "/",
+      "frames": 1082,
+      "p50": 16.7,
+      "p95": 16.8,
+      "p99": 50,
+      "max": 599.9,
+      "over20ms": 19,
+      "longAnimationFrames": 14,
+      "gl": {
+        "frame": 1513,
+        "calls": 5,
+        "triangles": 10218,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 68,
+          "textures": 11
+        },
+        "dpr": 1
+      }
+    },
+    {
+      "profile": "desktop-1440x900-dpr1",
+      "path": "/solutions",
+      "frames": 1167,
+      "p50": 16.7,
+      "p95": 16.8,
+      "p99": 33.3,
+      "max": 83.4,
+      "over20ms": 12,
+      "longAnimationFrames": 6,
+      "gl": {
+        "frame": 1309,
+        "calls": 3,
+        "triangles": 5048,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 30,
+          "textures": 6
+        },
+        "dpr": 1
+      }
+    },
+    {
+      "profile": "desktop-1440x900-dpr1",
+      "path": "/software",
+      "frames": 1151,
+      "p50": 16.7,
+      "p95": 16.7,
+      "p99": 16.8,
+      "max": 116.7,
+      "over20ms": 11,
+      "longAnimationFrames": 9,
+      "gl": {
+        "frame": 1255,
+        "calls": 8,
+        "triangles": 3074,
+        "points": 0,
+        "lines": 36,
+        "memory": {
+          "geometries": 153,
+          "textures": 12
+        },
+        "dpr": 1
+      }
+    },
+    {
+      "profile": "desktop-2560x1440-dpr2",
+      "path": "/",
+      "frames": 1152,
+      "p50": 16.7,
+      "p95": 16.8,
+      "p99": 33.4,
+      "max": 99.9,
+      "over20ms": 19,
+      "longAnimationFrames": 11,
+      "gl": {
+        "frame": 1643,
+        "calls": 5,
+        "triangles": 10218,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 69,
+          "textures": 11
+        },
+        "dpr": 2
+      }
+    },
+    {
+      "profile": "desktop-2560x1440-dpr2",
+      "path": "/solutions",
+      "frames": 1143,
+      "p50": 16.7,
+      "p95": 16.8,
+      "p99": 33.4,
+      "max": 150,
+      "over20ms": 15,
+      "longAnimationFrames": 8,
+      "gl": {
+        "frame": 1271,
+        "calls": 3,
+        "triangles": 5048,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 30,
+          "textures": 6
+        },
+        "dpr": 2
+      }
+    },
+    {
+      "profile": "desktop-2560x1440-dpr2",
+      "path": "/software",
+      "frames": 1105,
+      "p50": 16.7,
+      "p95": 16.8,
+      "p99": 66.6,
+      "max": 216.7,
+      "over20ms": 27,
+      "longAnimationFrames": 13,
+      "gl": {
+        "frame": 1211,
+        "calls": 8,
+        "triangles": 3074,
+        "points": 0,
+        "lines": 36,
+        "memory": {
+          "geometries": 153,
+          "textures": 12
+        },
+        "dpr": 2
+      }
+    },
+    {
+      "profile": "phone-emulated-390x844-dpr3-cpu4x",
+      "path": "/",
+      "frames": 229,
+      "p50": 33.4,
+      "p95": 249.9,
+      "p99": 1066.7,
+      "max": 1749.9,
+      "over20ms": 143,
+      "longAnimationFrames": 82,
+      "gl": {
+        "frame": 358,
+        "calls": 5,
+        "triangles": 10218,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 59,
+          "textures": 11
+        },
+        "dpr": 1.5
+      }
+    },
+    {
+      "profile": "phone-emulated-390x844-dpr3-cpu4x",
+      "path": "/solutions",
+      "frames": 498,
+      "p50": 16.7,
+      "p95": 66.7,
+      "p99": 1133.3,
+      "max": 1300,
+      "over20ms": 139,
+      "longAnimationFrames": 24,
+      "gl": {
+        "frame": 613,
+        "calls": 3,
+        "triangles": 5048,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 25,
+          "textures": 6
+        },
+        "dpr": 1.5
+      }
+    },
+    {
+      "profile": "phone-emulated-390x844-dpr3-cpu4x",
+      "path": "/software",
+      "frames": 373,
+      "p50": 16.7,
+      "p95": 100,
+      "p99": 1133.3,
+      "max": 1633.3,
+      "over20ms": 117,
+      "longAnimationFrames": 32,
+      "gl": {
+        "frame": 449,
+        "calls": 3,
+        "triangles": 3050,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 66,
+          "textures": 12
+        },
+        "dpr": 1.5
+      }
+    }
+  ]
+}
