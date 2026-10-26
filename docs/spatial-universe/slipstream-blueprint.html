@@ -1,0 +1,379 @@
+<title>Slipstream Blueprint</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single dark editorial column on the portfolio's own tokens; a live filament sketch opens, storyboard frames run as a strip */
+:root {
+  color-scheme: dark;
+  --void: #08080D;
+  --void-lift: #0D0D15;
+  --card: #13131C;
+  --amber: #F59E0B;
+  --amber-core: #FFE2A8;
+  --text-1: #F1F5F9;
+  --text-2: #A3AEBF;
+  --text-3: #8793A3;
+  --rule: rgba(255,255,255,.07);
+  --green: #22C55E;
+  --display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body { background: var(--void); color: var(--text-1); font-family: var(--body); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--amber); }
+.muted { color: var(--text-3); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.12; letter-spacing: -.02em; }
+h3 { font-size: 1.05rem; letter-spacing: -.01em; }
+p { margin: 0; max-width: 66ch; color: var(--text-2); }
+section { padding-block: 56px 8px; border-top: 1px solid var(--rule); display: grid; gap: 20px; }
+a { color: var(--amber); }
+
+/* hero */
+.hero { position: relative; height: min(78vh, 640px); min-height: 420px; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); overflow: hidden; border-bottom: 1px solid var(--rule); }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero-copy { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 14px; padding-inline: 16px; pointer-events: none; }
+.name { font-family: var(--display); font-weight: 700; font-size: clamp(3rem, 11vw, 7.6rem); line-height: .9; letter-spacing: -.01em; text-shadow: 0 0 40px rgba(8,8,13,.9); }
+.name span { color: var(--amber); }
+.hero-meta { font-family: var(--mono); font-size: 12px; color: var(--text-2); letter-spacing: .08em; }
+.hero-hud { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; align-items: center; padding: 10px max(16px, env(safe-area-inset-left, 0px)); border-top: 1px solid var(--rule); background: rgba(8,8,13,.72); font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+.hero-hud b { color: var(--text-2); font-weight: 500; }
+button.toggle { pointer-events: auto; font: 500 11px var(--mono); letter-spacing: .08em; color: var(--text-1); background: transparent; border: 1px solid rgba(245,158,11,.4); padding: 7px 12px; border-radius: 2px; cursor: pointer; min-height: 32px; }
+button.toggle:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+.intro { padding-block: 48px 8px; display: grid; gap: 16px; }
+.intro h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: 1.05; letter-spacing: -.025em; }
+.intro p { font-size: 1.05rem; }
+
+/* directions */
+.dirs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.dir { background: var(--card); border: 1px solid var(--rule); padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.dir.pick { border-color: rgba(245,158,11,.55); }
+.score { font-family: var(--mono); font-size: 12px; color: var(--text-3); display: flex; justify-content: space-between; }
+.score b { font-family: var(--display); font-size: 1.6rem; color: var(--text-1); }
+.dir.pick .score b { color: var(--amber); }
+.bar { height: 3px; background: var(--rule); }
+.bar i { display: block; height: 100%; background: var(--amber); }
+
+/* storyboard */
+.frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+figure canvas { width: 100%; aspect-ratio: 16 / 10; display: block; background: var(--void); border: 1px solid var(--rule); }
+figcaption { display: grid; gap: 2px; }
+figcaption .label { font-size: 10px; }
+figcaption strong { font-family: var(--display); font-weight: 500; font-size: 1rem; }
+figcaption span { color: var(--text-3); font-size: 13px; line-height: 1.45; }
+
+/* tables */
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 13.5px; }
+th, td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--text-2); }
+th { font-family: var(--mono); font-weight: 500; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+td:first-child { color: var(--text-1); font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+.tier { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 2px 7px; border: 1px solid var(--rule); color: var(--text-1); }
+
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; border-top: 1px solid var(--rule); }
+.fact { padding: 14px 16px 14px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 4px; min-width: 0; }
+.fact b { font-family: var(--display); font-weight: 500; color: var(--text-1); }
+.fact span { color: var(--text-3); font-size: 13px; }
+ol.ms { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; counter-reset: m; }
+ol.ms li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+ol.ms li code { font-family: var(--mono); color: var(--amber); font-size: 12px; padding-top: 2px; }
+ol.ms li span { color: var(--text-2); }
+code.path { font-family: var(--mono); font-size: 12.5px; color: var(--text-1); }
+footer { padding-top: 40px; color: var(--text-3); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header class="hero" aria-label="Live sketch of the Slipstream filament field">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="hero-copy">
+      <div class="label">Actively building · concept sketch</div>
+      <div class="name" role="img" aria-label="Parth Parekh">PARTH<br><span>PAR</span>EKH</div>
+      <div class="hero-meta">Scroll this page and the filaments stretch with your speed</div>
+    </div>
+    <div class="hero-hud">
+      <span>ROLE <b>DATA ENGINEER</b></span>
+      <span>WORLD <b>SLIPSTREAM</b></span>
+      <span>RENDER <b>2D SKETCH (prod: WebGL2)</b></span>
+      <button class="toggle" id="motion" type="button" aria-pressed="true">Motion: On</button>
+    </div>
+  </header>
+
+  <div class="intro">
+    <div class="label">Blueprint · parthparekh.dev · 26 Oct 2026</div>
+    <h1>The six speed lines become a world you travel through.</h1>
+    <p>This is the creative and engineering plan for evolving the portfolio into a scroll-driven spatial experience. The amber streaks that cross today's hero become thousands of filaments at different depths. Scrolling moves a camera forward through them, and each section is a place where the stream slows and organizes around real content. All text stays in the page as normal HTML; the 3D layer is decoration that loads after the content and steps down gracefully on weaker devices.</p>
+    <p class="muted">The sketch above is a 2D canvas approximation of the look. The production version uses one WebGL instanced shader. Full documents live in the repository at <code class="path">docs/spatial-universe/</code> on branch <code class="path">docs/spatial-universe-blueprint</code>.</p>
+  </div>
+
+  <section aria-labelledby="h-dirs">
+    <div class="label">Creative directions</div>
+    <h2 id="h-dirs">Three directions, one recommendation</h2>
+    <p>Weighted on continuity with the current identity, readability, solo maintainability and mobile viability.</p>
+    <div class="dirs">
+      <article class="dir pick">
+        <div class="score"><span>RECOMMENDED</span><b>77</b></div>
+        <div class="bar"><i style="width:96%"></i></div>
+        <h3>Slipstream</h3>
+        <p>The streaks become a luminous slipstream in depth. Sections are sectors on a lap: grid, halo, straight, three systems, overview, horizon. One bespoke shader, no 3D assets.</p>
+      </article>
+      <article class="dir">
+        <div class="score"><span>ARCHITECTURAL</span><b>40</b></div>
+        <div class="bar"><i style="width:50%"></i></div>
+        <h3>Monolith Atlas</h3>
+        <p>Dark monumental rooms cut by amber light. Premium stills, but heavy baked assets, weak long-text integration, and the streaks become secondary.</p>
+      </article>
+      <article class="dir">
+        <div class="score"><span>DATA LANDSCAPE</span><b>63</b></div>
+        <div class="bar"><i style="width:79%"></i></div>
+        <h3>Signal Terrain</h3>
+        <p>A terrain of light samples with signals flowing along contours. Original, but close to the synthwave trope, and the name loses its centre. Its flow vocabulary is reused for Data Solutions.</p>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-story">
+    <div class="label">Homepage storyboard</div>
+    <h2 id="h-story">Six sectors, one continuous take</h2>
+    <p>The camera holds still while text is readable and moves between sections. Its position depends only on scroll position, so scrolling back up replays the journey exactly in reverse.</p>
+    <div class="frames">
+      <figure><canvas data-frame="hero" aria-hidden="true"></canvas><figcaption><span class="label">S0 · #hero</span><strong>The Grid</strong><span>Filaments race past on five depth bands; the name is a lit plate. On scroll, the two lines part and the camera passes through.</span></figcaption></figure>
+      <figure><canvas data-frame="about" aria-hidden="true"></canvas><figcaption><span class="label">S1 · #about</span><strong>The Halo</strong><span>The stream slows into a quiet ring behind the bio and portrait. The warmest scene.</span></figcaption></figure>
+      <figure><canvas data-frame="experience" aria-hidden="true"></canvas><figcaption><span class="label">S2 · #experience</span><strong>The Straight</strong><span>One gate per role, derived from the DOM: DOWC ×2, Perfect Threading, Marketeq. The current role pulses green. Forward is back in time.</span></figcaption></figure>
+      <figure><canvas data-frame="projects" aria-hidden="true"></canvas><figcaption><span class="label">S3 · #projects</span><strong>Three Systems</strong><span>Formula Vision: a ribbon loop with five beads for its five pipeline steps. Review Bot: two passes. AetherFlow: four sorting lanes. Each uses its existing accent.</span></figcaption></figure>
+      <figure><canvas data-frame="skills" aria-hidden="true"></canvas><figcaption><span class="label">S4 · #skills</span><strong>The Lap from Above</strong><span>The only crane shot: six lanes for S01–S06, with the whole path travelled visible behind.</span></figcaption></figure>
+      <figure><canvas data-frame="contact" aria-hidden="true"></canvas><figcaption><span class="label">S5 · #contact</span><strong>The Horizon</strong><span>Streams converge and slow to near stillness; a warm horizon band behind the call to action.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-sol">
+    <div class="label">Solutions pages</div>
+    <h2 id="h-sol">Same universe, different physics</h2>
+    <p>Each page keeps the shared material but behaves according to what it says. Neither reuses the homepage lap.</p>
+    <div class="frames">
+      <figure><canvas data-frame="confluence" aria-hidden="true"></canvas><figcaption><span class="label">/solutions</span><strong>Confluence</strong><span>Disordered filaments pass a validation gate and leave as calm, evenly spaced lanes, mirroring "from manual data work to reliable systems". The camera drifts downstream.</span></figcaption></figure>
+      <figure><canvas data-frame="assembly" aria-hidden="true"></canvas><figcaption><span class="label">/software</span><strong>Assembly</strong><span>Filaments act as edges that snap into modules and layered planes: five service bays, five case plinths. The camera trucks sideways along a workbench.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-arch">
+    <div class="label">Engineering</div>
+    <h2 id="h-arch">Real-time where it matters, the current site as the fallback</h2>
+    <div class="facts">
+      <div class="fact"><b>Native scroll, no hijacking</b><span>The camera reads scrollY each frame and maps it through plateaus. No snapping, Lenis or GSAP.</span></div>
+      <div class="fact"><b>One persistent canvas</b><span>Mounted once beside the routed pages, lazy-loaded after first paint, aria-hidden.</span></div>
+      <div class="fact"><b>One draw call for filaments</b><span>Instanced quads animated in the vertex shader; formations computed in-shader.</span></div>
+      <div class="fact"><b>Pinned stack</b><span>three 0.186.x · R3F 9.8 · drei 10.7 · postprocessing 6.39 (desktop bloom only).</span></div>
+      <div class="fact"><b>DOM stays the truth</b><span>Content, links and the protected experience block are untouched; anchors only add data attributes.</span></div>
+      <div class="fact"><b>Pause control</b><span>A Motion toggle (WCAG 2.2.2) plus prefers-reduced-motion switch to composed still frames.</span></div>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Tier</th><th>Who</th><th>What renders</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tier">3 Full</span></td><td>Desktop, WebGL2, healthy frame time</td><td>4–6k filaments, half-res bloom, WebGL name twin, pointer wake, DPR ≤ 2</td></tr>
+          <tr><td><span class="tier">2 Lite</span></td><td>Phones, or desktops that regress</td><td>0.6–1.6k filaments, glow baked into the shader, DOM name, DPR ≤ 1.5</td></tr>
+          <tr><td><span class="tier">1 CSS</span></td><td>No WebGL2, Save-Data, crashes, context loss twice</td><td>Today's site: six CSS speed lines</td></tr>
+          <tr><td><span class="tier">0 Static</span></td><td><code class="path">?spatial=off</code></td><td>No animation; poster still</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-ms">
+    <div class="label">Delivery</div>
+    <h2 id="h-ms">Eleven milestones, none of them on main</h2>
+    <p>Each milestone is its own branch with a PR into <code class="path">feat/spatial-universe</code>, behind a <code class="path">VITE_SPATIAL</code> flag that defaults to off. The prompt bank has one ready-to-run Claude Code prompt per milestone.</p>
+    <ol class="ms">
+      <li><code>M0</code><span>Baseline: DOM-text snapshots, visual baselines, measured LCP, flag plumbing</span></li>
+      <li><code>M1</code><span>Spatial core, lazy canvas, context-loss recovery, Motion toggle, debug overlay</span></li>
+      <li><code>M2</code><span>Filament shader and hero transformation, with the name-opens transit</span></li>
+      <li><code>M3</code><span>Homepage sectors S1–S5, reading scrim, contrast tests</span></li>
+      <li><code>M4</code><span>Route transitions on the shared canvas</span></li>
+      <li><code>M5</code><span>Data Solutions: Confluence</span></li>
+      <li><code>M6</code><span>Software Solutions: Assembly</span></li>
+      <li><code>M7</code><span>Mobile tier tuning on real devices</span></li>
+      <li><code>M8</code><span>Accessibility hardening</span></li>
+      <li><code>M9</code><span>Performance proof against measured budgets</span></li>
+      <li><code>M10</code><span>Visual refinement loop, release candidate, then stop for authorization</span></li>
+    </ol>
+  </section>
+
+  <footer>No performance figure on this page has been measured yet; budgets are targets to be proven in M0–M9. The storyboard frames are illustrative 2D drawings, not renders.</footer>
+</div>
+
+<script>
+(() => {
+  const AMBER = [245, 158, 11], CORE = [255, 226, 168];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  let motion = !reduce.matches;
+  const btn = document.getElementById('motion');
+  const setBtn = () => { btn.textContent = 'Motion: ' + (motion ? 'On' : 'Off'); btn.setAttribute('aria-pressed', String(motion)); };
+  setBtn();
+
+  function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+  function rgba(c, a) { return `rgba(${c[0]},${c[1]},${c[2]},${a})`; }
+
+  // ---- shared drawing helpers (world: x right, y up, z forward into screen) ----
+  function project(w, h, vp, x, y, z, f) { const s = f / z; return [vp[0] + x * s * h, vp[1] - y * s * h, s]; }
+  function grid(ctx, w, h, vp, f, alpha) {
+    ctx.lineWidth = 1;
+    for (let i = -14; i <= 14; i++) {
+      const a = project(w, h, vp, i * 1.2, -1.7, 1.2, f), b = project(w, h, vp, i * 1.2, -1.7, 90, f);
+      ctx.strokeStyle = rgba(AMBER, alpha * 0.9); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    }
+    for (let z = 1.2; z < 90; z *= 1.18) {
+      const a = project(w, h, vp, -20, -1.7, z, f), b = project(w, h, vp, 20, -1.7, z, f);
+      ctx.strokeStyle = rgba(AMBER, alpha * Math.max(0, 1 - z / 70)); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    }
+  }
+  function haze(ctx, w, h, vp, strength) {
+    const g = ctx.createRadialGradient(vp[0], vp[1], 0, vp[0], vp[1], Math.max(w, h) * 0.55);
+    g.addColorStop(0, `rgba(245,158,11,${0.10 * strength})`); g.addColorStop(0.4, `rgba(120,70,10,${0.05 * strength})`); g.addColorStop(1, 'rgba(8,8,13,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  }
+  function streak(ctx, ax, ay, bx, by, width, alpha, tint) {
+    const g = ctx.createLinearGradient(ax, ay, bx, by);
+    const c = tint || AMBER;
+    g.addColorStop(0, rgba(c, 0)); g.addColorStop(0.55, rgba(c, alpha)); g.addColorStop(0.8, rgba(CORE, alpha)); g.addColorStop(1, rgba(c, 0));
+    ctx.strokeStyle = g; ctx.lineWidth = width; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+  }
+
+  // ---- live hero field ----
+  const cv = document.getElementById('field'), cx = cv.getContext('2d');
+  let W = 0, H = 0, DPR = 1, parts = [], lastY = scrollY, vel = 0, t0 = performance.now(), raf = 0;
+  function sizeHero() {
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+    cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const n = W < 640 ? 260 : 620, rand = rng(7);
+    parts = Array.from({ length: n }, () => ({
+      x: (rand() * 2 - 1) * 9 + 1.5, y: (rand() * 2 - 1) * 3.2 + 0.4,
+      z: 1 + rand() * 80, sp: 6 + rand() * 10, len: 1.2 + rand() * 3.5,
+      tint: rand() < 0.05 ? [148, 163, 184] : null
+    }));
+  }
+  function drawHero(dt) {
+    cx.fillStyle = '#08080D'; cx.fillRect(0, 0, W, H);
+    const vp = [W * 0.5, H * (W < 640 ? 0.4 : 0.44)], f = 0.9;
+    haze(cx, W, H, vp, 1); grid(cx, W, H, vp, f, 0.09);
+    cx.globalCompositeOperation = 'lighter';
+    const boost = 1 + Math.min(1.5, Math.abs(vel) * 0.004);
+    for (const p of parts) {
+      if (dt) { p.z -= p.sp * dt * boost; p.x += 0.6 * dt; if (p.z < 0.6) { p.z += 80; p.x = (Math.random() * 2 - 1) * 9 + 1.5; } }
+      const zTail = p.z + p.len * boost * 1.6;
+      // rightward bias: tail sits further left than head
+      const a = project(W, H, vp, p.x - 0.9 * boost, p.y, zTail, f), b = project(W, H, vp, p.x, p.y, p.z, f);
+      if (b[0] < -60 || b[0] > W + 60 || b[1] < -60 || b[1] > H + 60) continue;
+      const near = Math.min(1, 6 / p.z), fog = Math.max(0, 1 - p.z / 80);
+      streak(cx, a[0], a[1], b[0], b[1], 0.6 + near * 2.6, 0.12 + fog * 0.55, p.tint);
+    }
+    cx.globalCompositeOperation = 'source-over';
+    // reading scrim behind the name
+    const g = cx.createRadialGradient(W / 2, H * 0.47, 0, W / 2, H * 0.47, Math.min(W, H) * 0.5);
+    g.addColorStop(0, 'rgba(8,8,13,.55)'); g.addColorStop(1, 'rgba(8,8,13,0)');
+    cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+  }
+  function loop(now) {
+    const dt = Math.min(0.05, (now - t0) / 1000); t0 = now;
+    const y = scrollY; vel = vel * 0.85 + ((y - lastY) / Math.max(dt, 0.001)) * 0.15; lastY = y;
+    drawHero(dt);
+    raf = motion ? requestAnimationFrame(loop) : 0;
+  }
+  function start() { cancelAnimationFrame(raf); if (motion) { t0 = performance.now(); raf = requestAnimationFrame(loop); } else { vel = 0; drawHero(0); } }
+  btn.addEventListener('click', () => { motion = !motion; setBtn(); start(); });
+  reduce.addEventListener('change', e => { motion = !e.matches; setBtn(); start(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) cancelAnimationFrame(raf); else start(); });
+
+  // ---- storyboard frames (static) ----
+  function frame(canvas) {
+    const kind = canvas.dataset.frame, r = canvas.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+    const w = r.width, h = r.height; canvas.width = Math.round(w * d); canvas.height = Math.round(h * d);
+    const c = canvas.getContext('2d'); c.setTransform(d, 0, 0, d, 0, 0);
+    c.fillStyle = '#08080D'; c.fillRect(0, 0, w, h);
+    const rand = rng(kind.length * 97 + 3), f = 0.9;
+    let vp = [w * 0.5, h * 0.44];
+    const top = kind === 'skills';
+    if (!top) { haze(c, w, h, vp, kind === 'contact' ? 1.8 : kind === 'about' ? 1.3 : 0.9); grid(c, w, h, vp, f, kind === 'contact' ? 0.06 : 0.1); }
+    c.globalCompositeOperation = 'lighter';
+    const field = (n, density, tint) => {
+      for (let i = 0; i < n; i++) {
+        if (rand() > density) continue;
+        const x = (rand() * 2 - 1) * 9, y = (rand() * 2 - 1) * 3 + 0.4, z = 1.5 + rand() * 60, L = 1 + rand() * 3;
+        const a = project(w, h, vp, x - 0.8, y, z + L, f), b = project(w, h, vp, x, y, z, f);
+        streak(c, a[0], a[1], b[0], b[1], 0.5 + Math.min(1, 5 / z) * 1.6, 0.1 + Math.max(0, 1 - z / 60) * 0.45, tint);
+      }
+    };
+    const rect = (x, y, z, sw, sh, col, a, lw) => {
+      const p1 = project(w, h, vp, x - sw / 2, y + sh / 2, z, f), p2 = project(w, h, vp, x + sw / 2, y - sh / 2, z, f);
+      c.strokeStyle = rgba(col, a); c.lineWidth = lw || 1.4; c.strokeRect(p1[0], p1[1], p2[0] - p1[0], p2[1] - p1[1]);
+    };
+    if (kind === 'hero') {
+      field(220, 1);
+      c.globalCompositeOperation = 'source-over';
+      c.textAlign = 'center'; c.font = `700 ${Math.round(h * 0.2)}px 'Space Grotesk', sans-serif`;
+      c.fillStyle = '#F1F5F9'; c.fillText('PARTH', w / 2, h * 0.43);
+      const lw2 = c.measureText('PAREKH').width, x0 = w / 2 - lw2 / 2; c.textAlign = 'left';
+      c.fillStyle = '#F59E0B'; c.fillText('PAR', x0, h * 0.63);
+      c.fillStyle = '#F1F5F9'; c.fillText('EKH', x0 + c.measureText('PAR').width, h * 0.63);
+    } else if (kind === 'about') {
+      field(90, 0.5);
+      c.lineWidth = 1.6;
+      for (let k = 0; k < 3; k++) { c.strokeStyle = rgba(k ? AMBER : CORE, 0.5 - k * 0.12); c.beginPath(); c.ellipse(w / 2, h * 0.46, h * (0.34 + k * 0.03), h * (0.34 + k * 0.03), 0, 0.15 * Math.PI + k * 0.1, 1.85 * Math.PI); c.stroke(); }
+    } else if (kind === 'experience') {
+      field(90, 0.6);
+      for (const sx of [-2.4, 2.4]) { const a = project(w, h, vp, sx, -1.6, 1.4, f), b = project(w, h, vp, sx, -1.6, 60, f); streak(c, b[0], b[1], a[0], a[1], 1.4, 0.55); }
+      rect(0, 0.2, 4, 4.4, 3.4, [34, 197, 94], 0.85, 2);
+      rect(0, 0.2, 5.2, 4.4, 3.4, AMBER, 0.6);
+      rect(0, 0.2, 10, 4.4, 3.4, AMBER, 0.5);
+      rect(0, 0.2, 17, 4.4, 3.4, AMBER, 0.4);
+    } else if (kind === 'projects') {
+      field(70, 0.5, [232, 0, 45]);
+      c.strokeStyle = 'rgba(232,0,45,.75)'; c.lineWidth = 2;
+      c.beginPath(); c.ellipse(w * 0.3, h * 0.55, w * 0.17, h * 0.13, -0.15, 0, Math.PI * 2); c.stroke();
+      for (let i = 0; i < 5; i++) { const t = i / 5 * Math.PI * 2; c.fillStyle = i < 3 ? 'rgba(255,226,168,.95)' : 'rgba(245,158,11,.45)'; c.beginPath(); c.arc(w * 0.3 + Math.cos(t) * w * 0.17, h * 0.55 + Math.sin(t) * h * 0.13, 3, 0, 7); c.fill(); }
+      c.strokeStyle = 'rgba(74,222,128,.7)'; c.lineWidth = 1.5;
+      c.strokeRect(w * 0.6, h * 0.22, w * 0.05, h * 0.28); c.strokeRect(w * 0.7, h * 0.22, w * 0.05, h * 0.28);
+      for (let i = 0; i < 4; i++) streak(c, w * 0.55, h * (0.27 + i * 0.06), w * 0.82, h * (0.27 + i * 0.06), 1.4, 0.6, i % 2 ? [74, 222, 128] : AMBER);
+      for (let i = 0; i < 4; i++) streak(c, w * 0.56, h * (0.66 + i * 0.065), w * 0.95, h * (0.66 + i * 0.065), 1.6, 0.6, [139, 92, 246]);
+    } else if (kind === 'skills') {
+      c.globalCompositeOperation = 'source-over';
+      c.strokeStyle = 'rgba(245,158,11,.07)'; c.lineWidth = 1;
+      for (let x = 0; x < w; x += 16) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, h); c.stroke(); }
+      for (let y = 0; y < h; y += 16) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); }
+      c.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 6; i++) { const y = h * (0.22 + i * 0.1); for (let k = 0; k < 4; k++) { const x = rand() * w * 0.7; streak(c, x, y, x + w * (0.15 + rand() * 0.2), y, 1.6, 0.55 + (i === 1 ? 0.3 : 0), i === 5 ? [148, 163, 184] : AMBER); } }
+      c.strokeStyle = 'rgba(232,0,45,.35)'; c.beginPath(); c.ellipse(w * 0.12, h * 0.86, 18, 8, 0, 0, 7); c.stroke();
+      c.strokeStyle = 'rgba(245,158,11,.35)'; c.beginPath(); c.arc(w * 0.04, h * 0.86, 8, 0, 7); c.stroke();
+    } else if (kind === 'contact') {
+      for (let i = 0; i < 26; i++) { const x = (rand() * 2 - 1) * 10, y = (rand() * 2 - 1) * 2.5; const a = project(w, h, vp, x, y, 1.6, f), b = project(w, h, vp, x * 0.05, y * 0.05, 40, f); streak(c, a[0], a[1], b[0], b[1], 0.8, 0.22); }
+      const g = c.createLinearGradient(0, vp[1] - 18, 0, vp[1] + 18); g.addColorStop(0, 'rgba(245,158,11,0)'); g.addColorStop(0.5, 'rgba(255,190,90,.22)'); g.addColorStop(1, 'rgba(245,158,11,0)');
+      c.fillStyle = g; c.fillRect(0, vp[1] - 18, w, 36);
+    } else if (kind === 'confluence') {
+      vp = [w * 0.6, h * 0.46];
+      for (let i = 0; i < 40; i++) { const sx = rand() * w * 0.42, sy = rand() * h; const a = rand() * Math.PI * 2; streak(c, sx, sy, sx + Math.cos(a) * 26, sy + Math.sin(a) * 26, 1, 0.35); }
+      c.strokeStyle = 'rgba(245,158,11,.8)'; c.lineWidth = 2; c.strokeRect(w * 0.46, h * 0.22, w * 0.06, h * 0.5);
+      for (let i = 0; i < 6; i++) { const y = h * (0.28 + i * 0.075); streak(c, w * 0.52, y, w * 0.98, y, 1.6, 0.6, i === 2 ? [56, 189, 248] : AMBER); }
+    } else if (kind === 'assembly') {
+      field(50, 0.5);
+      for (let k = 0; k < 3; k++) { c.strokeStyle = rgba(k === 0 ? [226, 232, 240] : AMBER, 0.65 - k * 0.15); c.lineWidth = 1.4; c.strokeRect(w * (0.12 + k * 0.05), h * (0.2 + k * 0.06), w * 0.34, h * 0.42); }
+      for (let i = 0; i < 5; i++) { const x = w * (0.62 + (i % 3) * 0.11), y = h * (0.28 + Math.floor(i / 3) * 0.26); c.strokeStyle = i < 3 ? 'rgba(226,232,240,.7)' : 'rgba(245,158,11,.5)'; c.setLineDash(i === 3 ? [4, 3] : i === 4 ? [1.5, 3] : []); c.strokeRect(x, y, w * 0.08, h * 0.17); }
+      c.setLineDash([]);
+    }
+    c.globalCompositeOperation = 'source-over';
+  }
+  function drawFrames() { document.querySelectorAll('canvas[data-frame]').forEach(frame); }
+
+  const ready = () => { sizeHero(); start(); drawFrames(); };
+  let rz = 0; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { sizeHero(); if (!motion) drawHero(0); drawFrames(); }, 150); });
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(ready);
+})();
+</script>
