@@ -526,6 +526,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
                   href="#contact" onClick={event => goto(page, 'contact', event)}
                   style={{ color: 'var(--accent)' }}>Connect <ArrowUpRight size={14} aria-hidden="true" /></a>
               )}
+              <MotionToggle withLabel className="font-mono text-xs tracking-widest uppercase" />
             </div>
           </motion.div>
         )}

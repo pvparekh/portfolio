@@ -13,24 +13,33 @@ const Effects = lazy(() => import('./Effects'));
  */
 const MAX_QUALITY_LEVEL = 3;
 
+/** Rolling frame times for the ?spatial-debug readout and measurements. */
+const recent: number[] = [];
+
 export default function SpatialCanvas() {
   const page = useSpatial(state => state.page);
   const tier = useSpatial(state => state.tier);
   const motion = useSpatial(state => state.motion);
   const test = isTestMode();
   const still = motion === 'still' || test;
-  const [quality, setQuality] = useState(tier === 3 ? 0 : 2);
+  const [quality, setQuality] = useState(0);
+  const live = useRef({ quality, count: 0 });
   const losses = useRef<number[]>([]);
   const frames = useRef<number[]>([]);
   const windowStart = useRef(performance.now());
 
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
   const maxDpr = quality >= 2 ? 1 : Math.min(window.devicePixelRatio || 1, tier === 3 ? 2 : 1.5);
-  const count = tier === 3 ? 5200 : 2600;
+  // Phones get a smaller pool; their screens are small and fill rate is the bottleneck.
+  const count = tier === 3 ? 5200 : coarse ? 1400 : 2600;
+  live.current = { quality, count };
 
   const onFrameStats = useCallback((ms: number) => {
     if (still || document.hidden) return;
     const now = performance.now();
     frames.current.push(ms);
+    recent.push(ms);
+    if (recent.length > 240) recent.shift();
     if (now - windowStart.current < 2500) return;
     const samples = frames.current.slice(5).sort((a, b) => a - b);
     frames.current = [];
@@ -48,7 +57,7 @@ export default function SpatialCanvas() {
     <Canvas
       className="spatial-canvas"
       aria-hidden="true"
-      style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', zIndex: -1, pointerEvents: 'none' }}
+      style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: -1, pointerEvents: 'none' }}
       dpr={[1, maxDpr]}
       frameloop={still ? 'demand' : 'always'}
       gl={{ antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'high-performance' }}
@@ -74,7 +83,12 @@ export default function SpatialCanvas() {
         const debug = (window as Window & { __spatial?: Record<string, unknown> }).__spatial ??= {};
         debug.loseContext = () => gl.forceContextLoss();
         debug.restoreContext = () => gl.forceContextRestore();
-        debug.info = () => ({ ...gl.info.render, memory: { ...gl.info.memory }, quality });
+        debug.info = () => ({ ...gl.info.render, memory: { ...gl.info.memory }, ...live.current, dpr: gl.getPixelRatio() });
+        debug.frameStats = () => {
+          const sorted = [...recent].sort((a, b) => a - b);
+          const at = (q: number) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * q))] ?? 0;
+          return { samples: sorted.length, p50: at(0.5), p95: at(0.95), p99: at(0.99) };
+        };
       }}
     >
       <SceneDirector

@@ -16,7 +16,8 @@ const tierNames: Record<string, Tier> = { off: 0, css: 1, lite: 2, full: 3 };
 
 /**
  * Pure tier decision so it can be unit-tested with any environment.
- * Desktop-first: touch devices keep today's CSS streaks until the mobile pass.
+ * Phones and tablets get the lite tier; low-memory or low-core touch devices
+ * keep today's CSS streaks.
  */
 export function decideTier(env: CapabilityEnv): Tier {
   if (env.spatialEnv === 'off') return 1;
@@ -27,7 +28,9 @@ export function decideTier(env: CapabilityEnv): Tier {
     return forced >= 2 && !env.webgl2 ? 1 : forced;
   }
   if (env.demoted || !env.webgl2 || env.saveData) return 1;
-  if (env.coarsePointer) return 1;
+  if (env.coarsePointer) {
+    return (env.deviceMemory ?? 4) < 3 || (env.hardwareConcurrency ?? 6) < 4 ? 1 : 2;
+  }
   if ((env.deviceMemory ?? 8) < 4 || (env.hardwareConcurrency ?? 8) <= 4) return 2;
   return 3;
 }

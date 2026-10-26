@@ -89,3 +89,45 @@ html.spatial-ready .sol-contact-panel,
 html.spatial-ready .sol-tooling-note {
   background: rgba(11, 11, 17, .88);
 }
+
+/* Sized to the large viewport so mobile address-bar changes never resize
+   (and re-render) the canvas. */
+.spatial-canvas {
+  height: 100vh !important;
+  height: 100lvh !important;
+}
+
+/* Mobile menu row for the pause control. */
+.spatial-motion-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  padding: 0;
+  background: transparent;
+  color: var(--text-2);
+  text-align: left;
+}
+.spatial-motion-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ?spatial-debug readout. */
+.spatial-debug-hud {
+  position: fixed;
+  left: max(8px, env(safe-area-inset-left, 0px));
+  bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  z-index: 100;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(245, 158, 11, .35);
+  background: rgba(8, 8, 13, .88);
+  color: #F1F5F9;
+  font: 11px/1.45 'JetBrains Mono', monospace;
+  white-space: pre;
+  pointer-events: none;
+}

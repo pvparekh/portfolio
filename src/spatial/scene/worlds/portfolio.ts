@@ -24,6 +24,8 @@ export const buildPortfolio: WorldBuilder = anchors => {
   if (has('hero')) {
     stations.push(station('hero', [0, 1.7, 9], [0, 2.0, -60], free, {
       fov: 30, density: 0.32, speed: 1, scrim: 0.5, haze: 1, intensity: 0.6,
+      // Portrait: pitch down slightly so the horizon sits higher, behind the name.
+      portrait: { target: [0, 1.25, -60], density: 0.55, intensity: 0.7 },
     }));
   }
 
@@ -68,7 +70,8 @@ export const buildPortfolio: WorldBuilder = anchors => {
     stations.push(station('skills', [0, 46, -840], [0, 0, -884],
       formation(Form.lanes, 'skill-lanes', [0, 0.35, -884], [Math.max(skills.length, 6), 4.2, 120, 0.04], [0, 0, -1, 0], [0, 0.06, 0, 0],
         { share: 0.39, highlight: skills }),
-      { fov: 38, density: 0.2, speed: 0.8, scrim: 0.82, haze: 0.4, tint: STEEL, tintMix: 0.08, intensity: 0.35, formAlpha: 0.6 }));
+      { fov: 38, density: 0.2, speed: 0.8, scrim: 0.82, haze: 0.4, tint: STEEL, tintMix: 0.08, intensity: 0.35, formAlpha: 0.6,
+        portrait: { position: [0, 34, -846], target: [0, 0, -884] } }));
   }
 
   if (has('contact')) {

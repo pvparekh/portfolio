@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { sceneAnchor } from './spatial/dom/sceneAnchor';
 import { isSceneActive, useSpatial } from './spatial/core/store';
+import { getStableViewportHeight } from './spatial/core/viewport';
 
 /* ── Brand icon SVGs (lucide-react v1 dropped these) ── */
 function GithubIcon({ size = 16 }: { size?: number }) {
@@ -338,20 +339,20 @@ function useNameOpening() {
   useMotionValueEvent(scrollY, 'change', value => setOpening(active.current && value > 2));
   const progress = (value: number) => {
     if (!active.current) return 0;
-    const t = Math.min(Math.max(value / (window.innerHeight * 0.72), 0), 1);
+    const t = Math.min(Math.max(value / (getStableViewportHeight() * 0.72), 0), 1);
     return t * t * (3 - 2 * t);
   };
   const fade = (value: number, from: number, to: number) =>
     1 - Math.min(Math.max((progress(value) - from) / (to - from), 0), 1);
   // The camera pushes into the name: it grows, its lines part slightly, and it
   // dissolves before reaching the copy; the copy clears first.
-  const upper = useTransform(scrollY, value => -progress(value) * window.innerHeight * 0.06);
-  const lower = useTransform(scrollY, value => progress(value) * window.innerHeight * 0.06);
+  const upper = useTransform(scrollY, value => -progress(value) * getStableViewportHeight() * 0.06);
+  const lower = useTransform(scrollY, value => progress(value) * getStableViewportHeight() * 0.06);
   const scale = useTransform(scrollY, value => 1 + progress(value) * 0.55);
   const nameOpacity = useTransform(scrollY, value => fade(value, 0.18, 0.62));
   const copyOpacity = useTransform(scrollY, value => fade(value, 0, 0.22));
   // Hold the name near the viewport centre while the camera pushes through it.
-  const hold = useTransform(scrollY, value => (active.current ? Math.min(value, window.innerHeight * 0.72) * 0.82 : 0));
+  const hold = useTransform(scrollY, value => (active.current ? Math.min(value, getStableViewportHeight() * 0.72) * 0.82 : 0));
   return { opening: opening && sceneActive, upper, lower, scale, nameOpacity, copyOpacity, hold };
 }
 

@@ -20,7 +20,10 @@ const routes = [
 
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: gpu });
-const page = await browser.newPage({ viewport: { width, height } });
+const mobile = process.env.SPATIAL_MOBILE === '1';
+const page = await browser.newPage(mobile
+  ? { viewport: { width, height }, deviceScaleFactor: 3, isMobile: true, hasTouch: true }
+  : { viewport: { width, height } });
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });

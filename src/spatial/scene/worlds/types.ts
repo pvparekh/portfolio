@@ -54,6 +54,8 @@ export interface Station {
   formAlpha: number;
   tint: string;
   tintMix: number;
+  /** Overrides applied on portrait screens (aspect < 0.8). */
+  portrait?: Partial<Omit<Station, 'portrait' | 'anchor' | 'formation'>> & { formation?: Formation };
 }
 
 export type WorldBuilder = (anchors: Anchor[]) => Station[];

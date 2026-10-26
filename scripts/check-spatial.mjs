@@ -23,11 +23,12 @@ const gpuArgs = process.env.SPATIAL_GPU === 'swiftshader'
 // SwiftShader is a software renderer, so the tier probe would refuse it; force full tier there.
 const tierParam = process.env.SPATIAL_GPU === 'swiftshader' ? 'spatial=full' : '';
 const url = (path, params = '') => {
-  const query = [tierParam, params].filter(Boolean).join('&');
+  const query = [/(^|&)spatial=/.test(params) ? '' : tierParam, params].filter(Boolean).join('&');
   return base + path + (query ? '?' + query : '');
 };
 const ready = page => page.waitForFunction(() => document.documentElement.classList.contains('spatial-ready'), null, { timeout: 20000 });
 const director = page => page.evaluate(() => window.__spatial.director());
+const stationIs = (page, prefix) => page.waitForFunction(p => window.__spatial?.director?.().station.startsWith(p), prefix, { timeout: 15000 });
 const mainText = page => page.evaluate(() => {
   const clone = document.querySelector('main').cloneNode(true);
   // The typed tagline changes over time.
@@ -103,15 +104,13 @@ try {
   // 4. Route changes keep one canvas and swap worlds.
   await page.locator('.portfolio-desktop-nav a[href="/solutions"]').click();
   await page.locator('h1').waitFor();
-  await page.waitForTimeout(600);
+  await stationIs(page, 'sol:');
   assert.equal(await page.locator('canvas').count(), 1, 'single persistent canvas');
-  assert.match((await director(page)).station, /^sol:/, 'Data Solutions world active');
   await page.locator('.portfolio-desktop-nav a[href="/software"]').click();
-  await page.waitForTimeout(600);
-  assert.match((await director(page)).station, /^sw:/, 'Software Solutions world active');
+  await stationIs(page, 'sw:');
   await page.goBack();
-  await page.waitForTimeout(600);
-  assert.match((await director(page)).station, /^sol:/, 'back navigation restores world');
+  await stationIs(page, 'sol:');
+  assert.equal(await page.locator('canvas').count(), 1, 'still a single canvas after back navigation');
   console.log('SPATIAL_PASS routes');
 
   // 5. Context loss falls back to the CSS site and recovers.
@@ -138,15 +137,45 @@ try {
   console.log('SPATIAL_PASS reduced motion');
   await reduced.close();
 
-  // 7. Touch devices keep the standard site until the mobile pass.
-  const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  // 7. Phones get the lite tier: no bloom chunk, capped DPR, and a stable
+  //    camera when the address bar changes the viewport height.
+  const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const phone = await touch.newPage();
-  await phone.goto(base + '/', { waitUntil: 'networkidle' });
-  await phone.waitForTimeout(2500);
-  assert.equal(await phone.locator('canvas').count(), 0, 'touch: no canvas');
-  assert.ok(await phone.locator('.speed-line').first().isVisible(), 'touch: CSS speed lines remain');
-  console.log('SPATIAL_PASS touch fallback');
+  const bloomRequests = [];
+  phone.on('request', request => { if (/Effects-/.test(request.url())) bloomRequests.push(request.url()); });
+  await phone.goto(url('/', process.env.SPATIAL_GPU === 'swiftshader' ? 'spatial=lite' : ''), { waitUntil: 'networkidle' });
+  await ready(phone);
+  const info = await phone.evaluate(() => window.__spatial.info());
+  assert.equal(await phone.evaluate(() => (window.__spatial && document.querySelectorAll('canvas').length)), 1, 'touch: canvas present');
+  assert.ok(info.dpr <= 1.5, 'touch: DPR capped at 1.5 (got ' + info.dpr + ')');
+  assert.equal(info.count, 1400, 'touch: phone filament pool');
+  assert.equal(bloomRequests.length, 0, 'touch: bloom chunk never requested');
+  await phone.evaluate(() => window.scrollTo({ top: document.getElementById('experience').offsetTop + 300, behavior: 'instant' }));
+  await phone.waitForTimeout(1500);
+  const beforeBar = await director(phone);
+  const canvasBefore = await phone.locator('.spatial-canvas').evaluate(el => el.getBoundingClientRect().height);
+  await phone.setViewportSize({ width: 390, height: 760 });
+  await phone.waitForTimeout(1200);
+  const afterBar = await director(phone);
+  assert.ok(Math.abs(afterBar.s - beforeBar.s) < 0.02, 'address bar: station parameter stable (' + beforeBar.s + ' -> ' + afterBar.s + ')');
+  console.log('SPATIAL_PASS phone lite tier', JSON.stringify({ dpr: info.dpr, count: info.count, canvasBefore }));
+  await phone.locator('.portfolio-menu-toggle').click();
+  const row = phone.locator('.spatial-motion-row');
+  assert.equal(await row.textContent(), 'Pause background motion', 'mobile menu offers the pause control');
+  await row.click();
+  assert.ok(await phone.evaluate(() => document.documentElement.classList.contains('spatial-still')));
+  console.log('SPATIAL_PASS mobile pause control');
   await touch.close();
+
+  // 8. Low-end phones (forced CSS tier) keep the standard site.
+  const lowEnd = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const css = await lowEnd.newPage();
+  await css.goto(base + '/?spatial=css', { waitUntil: 'networkidle' });
+  await css.waitForTimeout(2000);
+  assert.equal(await css.locator('canvas').count(), 0, 'css tier: no canvas');
+  assert.ok(await css.locator('.speed-line').first().isVisible(), 'css tier: CSS speed lines remain');
+  console.log('SPATIAL_PASS css tier fallback');
+  await lowEnd.close();
 
   console.log('PASS: Spatial layer checks');
 } finally {

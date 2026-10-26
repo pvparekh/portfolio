@@ -3,6 +3,8 @@ import { demoteForSession, detectTier, isTestMode, onReducedMotionChange, readMo
 import { isSceneActive, spatialStore, useSpatial, type SpatialPage } from '../core/store';
 
 const SpatialCanvas = lazy(() => import('../scene/SpatialCanvas'));
+const SpatialDebugHud = lazy(() => import('./SpatialDebugHud'));
+const debugRequested = () => new URLSearchParams(window.location.search).has('spatial-debug');
 
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -84,12 +86,20 @@ export default function SpatialMount({ page }: { page: SpatialPage }) {
     };
   }, []);
 
-  if (!load || tier < 2) return null;
+  const hud = debugRequested() && (
+    <Suspense fallback={null}>
+      <SpatialDebugHud />
+    </Suspense>
+  );
+  if (!load || tier < 2) return hud || null;
   return (
-    <SceneBoundary>
-      <Suspense fallback={null}>
-        <SpatialCanvas />
-      </Suspense>
-    </SceneBoundary>
+    <>
+      <SceneBoundary>
+        <Suspense fallback={null}>
+          <SpatialCanvas />
+        </Suspense>
+      </SceneBoundary>
+      {hud}
+    </>
   );
 }

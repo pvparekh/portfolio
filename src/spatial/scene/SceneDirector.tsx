@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { getAnchors, getAnchorVersion } from '../core/anchors';
 import { buildScrollMap, mapScroll, type Keyframe } from '../core/scrollMap';
 import { spatialStore, type SpatialPage } from '../core/store';
+import { getStableViewportHeight } from '../core/viewport';
 import { createFilamentGeometry, createFilamentMaterial, createFloorMaterial, createHazeMaterial } from './field/filaments';
 import { buildPortfolio } from './worlds/portfolio';
 import { buildSolutions } from './worlds/solutions';
@@ -71,6 +72,7 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     target: null as THREE.CatmullRomCurve3 | null,
     version: -1,
     viewport: 0,
+    portrait: false,
     page: '' as string,
   });
   const motion = useRef({
@@ -132,10 +134,11 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     };
   }, [quality, perspective]);
 
-  function rebuild(viewport: number) {
+  function rebuild(viewport: number, portrait: boolean) {
     const w = world.current;
     const anchors = getAnchors();
-    w.stations = worlds[page](anchors);
+    w.stations = worlds[page](anchors).map(st => (portrait && st.portrait ? { ...st, ...st.portrait } : st));
+    w.portrait = portrait;
     const spans = w.stations.map(st => {
       const anchor = anchors.find(a => a.id === st.anchor);
       return { top: anchor?.top ?? 0, height: anchor?.height ?? 0 };
@@ -163,6 +166,7 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     if (w.page !== page) {
       // Route change: cut to the new world instead of travelling, with a short streak burst.
       motion.current.s = mapScroll(w.keys, window.scrollY + viewport / 2);
+      motion.current.lastScroll = window.scrollY;
       motion.current.burst = w.page ? 1 : 0;
       w.page = page;
     }
@@ -192,8 +196,9 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     const dt = Math.min(rawDt, 0.05);
     const m = motion.current;
     const w = world.current;
-    const viewport = window.innerHeight;
-    if (w.version !== getAnchorVersion() || w.viewport !== viewport || w.page !== page) rebuild(viewport);
+    const viewport = getStableViewportHeight();
+    const aspect = state.size.width / state.size.height;
+    if (w.version !== getAnchorVersion() || w.viewport !== viewport || w.page !== page || w.portrait !== aspect < 0.8) rebuild(viewport, aspect < 0.8);
     const { stations } = w;
     if (!stations.length) return;
 
@@ -234,7 +239,12 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     tmpB.x += m.parallax.x * 0.35;
     tmpB.y -= m.parallax.y * 0.22;
     perspective.lookAt(tmpB);
-    const fov = lerp(a.fov, b.fov, f) + Math.min(10, (m.velocity + m.burst) * 7);
+    // Portrait screens keep a usable horizontal field of view by widening the vertical one.
+    const baseFov = lerp(a.fov, b.fov, f);
+    const fitted = aspect < 1.2
+      ? THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(baseFov) / 2) * Math.min(1.6 / aspect, 2.6) * 0.62))
+      : baseFov;
+    const fov = Math.min(Math.max(baseFov, fitted), 62) + Math.min(10, (m.velocity + m.burst) * 7);
     if (Math.abs(perspective.fov - fov) > 0.01) {
       perspective.fov = fov;
       perspective.updateProjectionMatrix();
@@ -262,8 +272,11 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     u.uPixelRatio.value = dpr;
     u.uVelocity.value = m.velocity + m.burst;
     u.uDensity.value = lerp(a.density, b.density, f) * (quality >= 1 ? 0.7 : 1);
-    u.uIntensity.value = lerp(a.intensity, b.intensity, f);
-    u.uFormAlpha.value = lerp(a.formAlpha, b.formAlpha, f);
+    // Narrow screens carry full-width copy: keep the light quieter there.
+    const compact = size.width < 768;
+    u.uIntensity.value = lerp(a.intensity, b.intensity, f) * (compact ? 0.9 : 1);
+    u.uFormAlpha.value = lerp(a.formAlpha, b.formAlpha, f) * (compact ? 0.6 : 1);
+    floor.uniforms.uAlpha.value = compact ? 0.06 : 0.085;
 
     // Formation: locked through transits between stations that share it,
     // otherwise dissolve to free flow at the midpoint and re-form.
@@ -280,9 +293,11 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     u.uCoreBoost.value = quality >= 3 ? 1 : 1.6;
 
     const scrim = lerp(a.scrim, b.scrim, f);
-    // The scrim covers the shared content container (max-w-6xl / sol-container).
-    const halfW = Math.min(590 * dpr, bufferW * 0.44);
-    u.uScrim.value = scrim;
+    // The scrim covers the shared content container (max-w-6xl / sol-container);
+    // on narrow screens the copy spans the full width, so it does too, a little softer.
+    const narrow = size.width < 768;
+    const halfW = narrow ? bufferW * 0.5 : Math.min(590 * dpr, bufferW * 0.44);
+    u.uScrim.value = narrow ? scrim * 0.82 : scrim;
     u.uScrimRect.value.set(bufferW / 2, bufferH * 0.46, halfW, bufferH * 0.36);
     floor.uniforms.uScrim.value = scrim * 0.9;
     floor.uniforms.uScrimRect.value.copy(u.uScrimRect.value);
@@ -302,7 +317,7 @@ export default function SceneDirector({ page, count, still, test, quality, onFra
     tmpB.project(perspective);
     haze.uniforms.uCenter.value.set(tmpB.x, THREE.MathUtils.clamp(tmpB.y, -2, 2));
     haze.uniforms.uAspect.value = size.width / size.height;
-    haze.uniforms.uStrength.value = lerp(a.haze, b.haze, f);
+    haze.uniforms.uStrength.value = lerp(a.haze, b.haze, f) * (compact ? 0.4 : 1);
 
     onFrameStats(rawDt * 1000);
     if (++m.frames === (still || test ? 1 : 3)) onReady();
