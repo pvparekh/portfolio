@@ -3,7 +3,6 @@ import { MotionConfig } from 'framer-motion';
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, CheckCircle2, ChevronRight, Code2, Copy, Globe2, Layers3, Mail, PlugZap, PanelsTopLeft, Sparkles, Wrench } from 'lucide-react';
 import { softwareProjects, type SoftwareProject } from './softwareProjects';
 import { useSolutionsScrollReveal } from './solutionsEffects';
-import { sceneAnchor } from './spatial/dom/sceneAnchor';
 import './solutions.css';
 import './solutionsEffects.css';
 import './software.css';
@@ -168,7 +167,7 @@ function EngagementProcess() {
   return (
     <div className="sol-process">
       {process.map(([number, name, summary], index) => (
-        <div className="sol-process-step" key={number} ref={sceneAnchor('sw-step:' + number)}>
+        <div className="sol-process-step" key={number}>
           <span className="sol-process-number">{number}</span>
           {index < process.length - 1 && <ChevronRight className="sol-process-next" size={19} strokeWidth={1.5} aria-hidden="true" />}
           <h3>{name}</h3>
@@ -183,7 +182,7 @@ function EngagementProcess() {
 
 function CaseStudy({ study, index }: { study: SoftwareProject; index: number }) {
   return (
-    <article className="sol-case" id={study.id} ref={sceneAnchor('sw-case:' + study.id, { classification: study.classification })}>
+    <article className="sol-case" id={study.id}>
       <div className="sol-case-heading">
         <div className="sol-case-count">{String(index + 1).padStart(2, '0')} <span>/ SELECTED WORK</span></div>
         <div className="sol-case-tag">{study.classification}</div>
@@ -243,7 +242,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
       <div ref={pageRef} className="solutions software-solutions">
       <a className="sol-skip" href="#sol-main">Skip to content</a>
       <main id="sol-main">
-        <section className="sol-hero" ref={sceneAnchor('sw:hero')} aria-labelledby="sol-hero-title">
+        <section className="sol-hero" aria-labelledby="sol-hero-title">
           <div className="sol-container sol-hero-layout">
             <div className="sol-hero-copy">
               <div className="sol-topline"><span className="sol-status-dot" /> SOFTWARE SOLUTIONS / PARTH PAREKH</div>
@@ -262,7 +261,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
           </div>
         </section>
 
-        <section className="sol-problem-section sol-section" id="opportunities" ref={sceneAnchor('sw:opportunities')}>
+        <section className="sol-problem-section sol-section" id="opportunities">
           <div className="sol-container">
             <SectionIntro index="01" label="THE OPPORTUNITY" title="When off-the-shelf isn't quite right." accent="isn't quite right." description="Sometimes you need to launch something new. Sometimes the missing piece is one useful feature or a clearer customer experience." />
             <div className="sol-problems">
@@ -271,7 +270,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
                 ['Your business needs a better front door', 'Customers should be able to explore services, book or take the next step without extra friction.'],
                 ['Your current tools have a gap', 'The application you use almost works, but an integration, interface or focused feature would make it fit.']
               ].map(([title, description], i) => (
-                <div className="sol-problem" key={title} ref={sceneAnchor('sw-opp:' + i)}>
+                <div className="sol-problem" key={title}>
                   <span className="sol-problem-num">0{i + 1}</span><h3>{title}</h3><p>{description}</p>
                   <ArrowUpRight aria-hidden="true" size={19} />
                 </div>
@@ -281,12 +280,12 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
         </section>
 
 
-        <section className="sol-section sol-services-section" id="services" ref={sceneAnchor('sw:services')}>
+        <section className="sol-section sol-services-section" id="services">
           <div className="sol-container">
             <SectionIntro index="02" label="HOW I CAN HELP" title="What I can build for you" accent="build for you" description="A useful project starts with what people need to do, not a list of programming languages. Each engagement is sized around a defined outcome." />
             <div className="sol-service-list">
               {offerings.map(({ number, icon: Icon, title, promise, problem, deliverable, example, included, boundary, inputs, tools, proof }) => (
-                <article className="sol-service" key={number} ref={sceneAnchor('sw-service:' + number)}>
+                <article className="sol-service" key={number}>
                   <div className="sol-service-identity"><span>{number} / SERVICE</span><Icon size={27} strokeWidth={1.35} /></div>
                   <div className="sol-service-main"><h3>{title}</h3><p className="sol-service-promise">{promise}</p><p>{problem}</p></div>
                   <div className="sol-service-detail">
@@ -307,7 +306,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
           </div>
         </section>
 
-        <section className="sol-section sol-independent-section software-work-section" id="work" ref={sceneAnchor('sw:work')}>
+        <section className="sol-section sol-independent-section software-work-section" id="work">
           <div className="sol-container">
             <SectionIntro index="03" label="SELECTED SOFTWARE" title="Software I have designed and built" accent="designed and built" description="Client delivery, independent products and academic work are identified separately. Explore what each application does, what I built and the engineering behind it." />
             <div className="sol-case-list">{softwareProjects.map((study, index) => <CaseStudy key={study.id} study={study} index={index} />)}</div>
@@ -315,7 +314,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
         </section>
 
 
-        <section className="sol-section sol-approach-section" id="approach" ref={sceneAnchor('sw:approach')}>
+        <section className="sol-section sol-approach-section" id="approach">
           <div className="sol-container">
             <SectionIntro index="04" label="WORKING TOGETHER" title="How we would work together" accent="work together" description="A proportionate process, with defined requirements, meaningful checkpoints and clear ownership at launch." />
             <EngagementProcess />
@@ -324,7 +323,7 @@ function SoftwarePage({ onBackToPortfolio }: { onBackToPortfolio: () => void }) 
         </section>
 
 
-        <section className="sol-section sol-contact-section" id="contact" ref={sceneAnchor('sw:contact')}>
+        <section className="sol-section sol-contact-section" id="contact">
           <div className="sol-container sol-contact-layout">
             <div>
               <p className="sol-eyebrow">05 / LET'S TALK</p>

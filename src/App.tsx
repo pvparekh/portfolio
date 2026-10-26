@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import {
   motion,
-  useMotionValueEvent,
   useScroll,
   useTransform,
   useInView,
@@ -20,9 +19,6 @@ import {
   Database,
   FileText,
 } from 'lucide-react';
-import { sceneAnchor } from './spatial/dom/sceneAnchor';
-import { isSceneActive, useSpatial } from './spatial/core/store';
-import { getStableViewportHeight } from './spatial/core/viewport';
 
 /* ── Brand icon SVGs (lucide-react v1 dropped these) ── */
 function GithubIcon({ size = 16 }: { size?: number }) {
@@ -214,6 +210,156 @@ const TAGLINES = [
   'Rutgers CS Grad',
 ];
 
+/* Shared copy: rendered by the standard layout and by the spatial journey. */
+const HERO_SUBTAGLINE = 'Building dependable data platforms and ambitious software, from production pipelines to interactive products.';
+
+const TELEMETRY = [
+  { label: 'ROLE', value: 'DATA ENGINEER' },
+  { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB" },
+  { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
+  { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
+  { label: 'STATUS', value: 'AVAILABLE' },
+];
+
+const ABOUT_STATS = [
+  { value: '3', label: 'Production Apps',  sub: 'shipped end to end' },
+  { value: '4', label: 'Experiences',      sub: 'engineering to analytics' },
+  { value: '150+', label: 'Clients Reached', sub: 'via data pipelines' },
+];
+
+const ABOUT_ACADEMICS = [
+  { label: 'College', sub: 'Class of 2026', value: 'Rutgers University - New Brunswick' },
+  { label: 'Major',   sub: 'B.S.',          value: 'Computer Science' },
+  { label: 'Minor',   sub: 'concentration', value: 'Data Science' },
+];
+
+const SOCIAL_LINKS = [
+  { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon, download: undefined },
+  { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon, download: undefined },
+  { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail, download: undefined },
+  { href: '/Resume_Oct_10.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
+];
+
+const EXPERIENCE_INTRO = 'I build production data pipelines, automate reporting and integrations, and develop end-to-end software. These roles trace my progression across data engineering, analytics, and application development.';
+
+const PROJECTS_INTRO = 'Projects spanning data engineering, developer automation, and full-stack software, with the code and architecture available to explore.';
+
+const FV_LEAD = 'An actual racing product. An engineering system underneath.';
+
+const FV_PROOF_POINTS = [
+  'Official timing determines race order, while telemetry positions the cars on the circuit.',
+  'Canonical data and browser delivery are separate contracts.',
+  'Valid releases publish atomically; broken races are quarantined.',
+];
+
+const FV_ARCHITECTURE_URL = 'https://github.com/pvparekh/formula-vision-documentation/blob/main/Documentation%20%28FULL%29/ENGINEERING_OVERVIEW.md';
+
+const FV_ARCHITECTURE = [
+  { label: 'Acquire', tech: 'FastF1 + source timing', detail: 'Ingest authoritative race data', code: '01' },
+  { label: 'Canonical truth', tech: 'Typed Parquet + lineage', detail: 'Normalize and version race products', code: '02' },
+  { label: 'Validate', tech: 'Quality gates + quarantine', detail: 'Reject inconsistent sessions', code: '03' },
+  { label: 'Publish', tech: 'Immutable R2 artifacts', detail: 'Verify objects, promote catalog', code: '04' },
+  { label: 'Replay', tech: 'React + client-owned clock', detail: 'Load only needed data chunks', code: '05' },
+];
+
+const SUPPORTING_FLOWS: Record<string, string[]> = {
+  'github-review-bot': ['Verify webhook', 'Parse pull-request diff', 'Two-pass AI review', 'Post inline feedback'],
+  aetherflow: ['Upload expense files', 'Categorize in batches', 'Compute deterministic statistics', 'Explore analysis'],
+};
+
+const SUPPORTING_TYPES: Record<string, string> = {
+  'github-review-bot': 'GITHUB INTEGRATION + DEVELOPER TOOLING',
+  aetherflow: 'FILE INGESTION + ANALYTICS',
+};
+
+const CONTACT_INTRO = 'Open to full-time roles, interesting contracts, or a conversation about building something new.';
+
+const CONTACT_LINKS = [
+  { href: 'mailto:pvparekh14@gmail.com', Icon: Mail, label: 'pvparekh14@gmail.com', sub: 'Primary inbox' },
+  { href: 'https://linkedin.com/in/parekh422', Icon: LinkedinIcon, label: 'linkedin.com/in/parekh422', sub: 'LinkedIn' },
+  { href: 'https://github.com/pvparekh', Icon: GithubIcon, label: 'github.com/pvparekh', sub: 'GitHub' },
+];
+
+/** Biography paragraphs, shared by both layouts. */
+function AboutBio() {
+  return (
+    <>
+      <p>
+        I'm a Data Engineer with a B.S. in Computer Science and a
+        minor in Data Science from Rutgers University, currently working at{' '}
+        <a
+          href="https://dowc.com"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-2"
+          style={{ color: 'var(--accent)' }}
+        >
+          DOWC
+        </a>
+        .
+      </p>
+      <p>
+        I like solving problems that call for reliable, scalable, and useful systems. At work, that means building production data pipelines and automating how information moves between systems. As a Formula 1 fan, I built Formula Vision, an interactive race replay and telemetry platform spanning 170+ historical races, powered by Python data pipelines, automated validation, and a custom React/TypeScript playback engine. I also developed an autonomous code reviewer with a two-pass LLM pipeline.
+      </p>
+      <p>
+        Outside of work I'm probably playing sports, working out, or hanging out with
+        friends and family.
+      </p>
+    </>
+  );
+}
+
+type ExperienceEntry = (typeof EXPERIENCE)[number];
+type ExperienceRole = ExperienceEntry['roles'][number];
+
+function employmentTypeFor(exp: ExperienceEntry, role: ExperienceRole) {
+  return role.role === 'Data Engineer I'
+    ? 'Full-time'
+    : role.role.includes('Intern')
+      ? 'Internship'
+      : exp.location === 'Contract'
+        ? 'Contract'
+        : null;
+}
+
+function companyLocationFor(exp: ExperienceEntry) {
+  return exp.company === 'DOWC'
+    ? <>Parsippany, NJ <span aria-hidden="true">·</span> On-site</>
+    : exp.company === 'Perfect Threading Salon'
+      ? 'Parsippany, NJ'
+      : exp.location;
+}
+
+/** Role bullets; the salon URL inside its bullet stays a working link. */
+function RoleBullets({ exp, role }: { exp: ExperienceEntry; role: ExperienceRole }) {
+  return (
+    <ul className="renaissance-role-bullets">
+      {role.bullets.map((bullet) => {
+        const salonUrl = 'https://perfect-threading.vercel.app';
+        const linkAt = exp.company === 'Perfect Threading Salon' ? bullet.indexOf(salonUrl) : -1;
+        return (
+          <li key={bullet}>
+            {linkAt === -1 ? bullet : (
+              <>
+                {bullet.slice(0, linkAt)}
+                <a
+                  href={salonUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-2"
+                  style={{ color: 'var(--accent)', overflowWrap: 'anywhere' }}
+                >
+                  {salonUrl}
+                </a>
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 /* ─────────────────────────────────────────────────────────────
    UTILITY
 ───────────────────────────────────────────────────────────── */
@@ -316,7 +462,7 @@ const SPEED_LINES = [
 
 const containerVariants: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.045 } },
+  visible: { transition: { staggerChildren: 0.07 } },
 };
 
 const letterVariants: Variants = {
@@ -324,43 +470,14 @@ const letterVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: 'easeOut' },
+    transition: { duration: 0.65, ease: 'easeOut' },
   },
 };
-
-/* With the spatial scene active, the two name lines part as the camera
-   dollies through them (docs/spatial-universe/04-storyboard.md, S0). */
-function useNameOpening() {
-  const sceneActive = useSpatial(state => isSceneActive(state) && state.motion === 'full');
-  const active = useRef(sceneActive);
-  active.current = sceneActive;
-  const { scrollY } = useScroll();
-  const [opening, setOpening] = useState(false);
-  useMotionValueEvent(scrollY, 'change', value => setOpening(active.current && value > 2));
-  const progress = (value: number) => {
-    if (!active.current) return 0;
-    const t = Math.min(Math.max(value / (getStableViewportHeight() * 0.72), 0), 1);
-    return t * t * (3 - 2 * t);
-  };
-  const fade = (value: number, from: number, to: number) =>
-    1 - Math.min(Math.max((progress(value) - from) / (to - from), 0), 1);
-  // The camera pushes into the name: it grows, its lines part slightly, and it
-  // dissolves before reaching the copy; the copy clears first.
-  const upper = useTransform(scrollY, value => -progress(value) * getStableViewportHeight() * 0.06);
-  const lower = useTransform(scrollY, value => progress(value) * getStableViewportHeight() * 0.06);
-  const scale = useTransform(scrollY, value => 1 + progress(value) * 0.55);
-  const nameOpacity = useTransform(scrollY, value => fade(value, 0.18, 0.62));
-  const copyOpacity = useTransform(scrollY, value => fade(value, 0, 0.22));
-  // Hold the name near the viewport centre while the camera pushes through it.
-  const hold = useTransform(scrollY, value => (active.current ? Math.min(value, getStableViewportHeight() * 0.72) * 0.82 : 0));
-  return { opening: opening && sceneActive, upper, lower, scale, nameOpacity, copyOpacity, hold };
-}
 
 function HeroSection() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 0.28], [0, -55]);
   const op = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
-  const { opening, upper, lower, scale, nameOpacity, copyOpacity, hold } = useNameOpening();
   const tagline = useTypingEffect(TAGLINES);
 
   const first = 'PARTH'.split('');
@@ -369,7 +486,6 @@ function HeroSection() {
   return (
     <section
       id="hero"
-      ref={sceneAnchor('hero')}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden circuit-grid"
       style={{ background: 'var(--bg-0)' }}
     >
@@ -390,7 +506,7 @@ function HeroSection() {
 
       {/* Ambient radial */}
       <div
-        className="hero-ambient absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
             'radial-gradient(ellipse 70% 50% at 50% 60%, rgba(245,158,11,0.05) 0%, transparent 70%)',
@@ -439,15 +555,15 @@ function HeroSection() {
         </motion.div>
 
         {/* Name, staggered letter reveal */}
-        <div className={opening ? 'mb-6' : 'mb-6 overflow-hidden'}>
+        <div className="mb-6 overflow-hidden">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="font-display font-bold leading-[0.9] select-none"
-            style={{ fontSize: 'clamp(3.8rem, 11.5vw, 9.5rem)', scale, opacity: nameOpacity, y: hold }}
+            style={{ fontSize: 'clamp(3.8rem, 11.5vw, 9.5rem)' }}
           >
-            <motion.div className="flex justify-center gap-[0.025em] mb-[0.04em]" style={{ y: upper }}>
+            <div className="flex justify-center gap-[0.025em] mb-[0.04em]">
               {first.map((ch, i) => (
                 <motion.span
                   key={i}
@@ -457,8 +573,8 @@ function HeroSection() {
                   {ch}
                 </motion.span>
               ))}
-            </motion.div>
-            <motion.div className="flex justify-center gap-[0.025em]" style={{ y: lower }}>
+            </div>
+            <div className="flex justify-center gap-[0.025em]">
               {last.map((ch, i) => (
                 <motion.span
                   key={i}
@@ -471,11 +587,10 @@ function HeroSection() {
                   {ch}
                 </motion.span>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
         </div>
 
-        <motion.div style={{ opacity: copyOpacity }}>
         {/* Typing tagline */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -498,9 +613,8 @@ function HeroSection() {
           className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-6 px-4"
           style={{ color: 'var(--text-3)' }}
         >
-          Building dependable data platforms and ambitious software, from production pipelines to interactive products.
+          {HERO_SUBTAGLINE}
         </motion.p>
-        </motion.div>
 
       </motion.div>
 
@@ -513,13 +627,7 @@ function HeroSection() {
         style={{ borderColor: 'var(--border)' }}
       >
         <div className="hero-telemetry-grid max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex flex-nowrap gap-x-3 lg:gap-x-4 items-center justify-between min-w-max">
-          {[
-            { label: 'ROLE', value: 'DATA ENGINEER' },
-            { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB" },
-            { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
-            { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
-            { label: 'STATUS', value: 'AVAILABLE' },
-          ].map((item) => (
+          {TELEMETRY.map((item) => (
             <div key={item.label} className="hero-telemetry-item flex shrink-0 items-center gap-1.5 lg:gap-2 whitespace-nowrap">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
               <span className="h-px w-2 lg:w-3 shrink-0" style={{ background: 'var(--border)' }} />
@@ -554,20 +662,11 @@ function HeroSection() {
 ───────────────────────────────────────────────────────────── */
 
 function AboutSection() {
-  const stats = [
-    { value: '3', label: 'Production Apps',  sub: 'shipped end to end' },
-    { value: '4', label: 'Experiences',      sub: 'engineering to analytics' },
-    { value: '150+', label: 'Clients Reached', sub: 'via data pipelines' },
-  ];
-
-  const academics = [
-    { label: 'College', sub: 'Class of 2026', value: 'Rutgers University - New Brunswick' },
-    { label: 'Major',   sub: 'B.S.',          value: 'Computer Science' },
-    { label: 'Minor',   sub: 'concentration', value: 'Data Science' },
-  ];
+  const stats = ABOUT_STATS;
+  const academics = ABOUT_ACADEMICS;
 
   return (
-    <section id="about" ref={sceneAnchor('about')} className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
+    <section id="about" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-0)' }}>
       <div className="max-w-6xl mx-auto">
         <FadeInSection>
           <SectionLabel label="About" />
@@ -595,27 +694,7 @@ function AboutSection() {
               </div>
             </figure>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
-              <p>
-                I'm a Data Engineer with a B.S. in Computer Science and a
-                minor in Data Science from Rutgers University, currently working at{' '}
-                <a
-                  href="https://dowc.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-2"
-                  style={{ color: 'var(--accent)' }}
-                >
-                  DOWC
-                </a>
-                .
-              </p>
-              <p>
-                I like solving problems that call for reliable, scalable, and useful systems. At work, that means building production data pipelines and automating how information moves between systems. As a Formula 1 fan, I built Formula Vision, an interactive race replay and telemetry platform spanning 170+ historical races, powered by Python data pipelines, automated validation, and a custom React/TypeScript playback engine. I also developed an autonomous code reviewer with a two-pass LLM pipeline.
-              </p>
-              <p>
-                Outside of work I'm probably playing sports, working out, or hanging out with
-                friends and family.
-              </p>
+              <AboutBio />
             </div>
           </FadeInSection>
 
@@ -692,12 +771,7 @@ function AboutSection() {
           {/* Social links */}
           <FadeInSection delay={0.3} className="md:col-span-1">
             <div className="flex flex-wrap justify-center gap-3">
-              {[
-                { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon, download: undefined },
-                { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon, download: undefined },
-                { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail, download: undefined },
-                { href: '/Resume_Oct_10.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
-              ].map(({ href, label, Icon, download }) => (
+              {SOCIAL_LINKS.map(({ href, label, Icon, download }) => (
                 <a
                   key={label}
                   href={href}
@@ -746,12 +820,12 @@ function ProjectsSection() {
           <div className="renaissance-project-intro">
             <SectionLabel label="Projects" />
             <h2 className="font-display">Things I've <span>built</span></h2>
-            <p>Projects spanning data engineering, developer automation, and full-stack software, with the code and architecture available to explore.</p>
+            <p>{PROJECTS_INTRO}</p>
           </div>
         </FadeInSection>
 
         <FadeInSection>
-          <article className="renaissance-flagship" ref={sceneAnchor('project:fv')} aria-labelledby="formula-vision-title">
+          <article className="renaissance-flagship" aria-labelledby="formula-vision-title">
             <div className="renaissance-project-topline">
               <span>01 / FEATURED SYSTEM</span>
               <span>DATA PLATFORM + INTERACTIVE PRODUCT</span>
@@ -760,12 +834,10 @@ function ProjectsSection() {
               <div className="renaissance-flagship-story">
                 <p className="renaissance-project-overline">{flagship.tagline}</p>
                 <h3 id="formula-vision-title">{flagship.name}</h3>
-                <p className="renaissance-flagship-lead">An actual racing product. An engineering system underneath.</p>
+                <p className="renaissance-flagship-lead">{FV_LEAD}</p>
                 <p className="renaissance-project-description">{flagship.description}</p>
                 <div className="renaissance-proof-points" aria-label="Engineering highlights">
-                  <div><span>01</span><p>Official timing determines race order, while telemetry positions the cars on the circuit.</p></div>
-                  <div><span>02</span><p>Canonical data and browser delivery are separate contracts.</p></div>
-                  <div><span>03</span><p>Valid releases publish atomically; broken races are quarantined.</p></div>
+                  {FV_PROOF_POINTS.map((point, i) => <div key={point}><span>0{i + 1}</span><p>{point}</p></div>)}
                 </div>
                 <div className="renaissance-project-actions">
                   {flagship.live && (
@@ -778,7 +850,7 @@ function ProjectsSection() {
                       Documentation <GithubIcon size={16} />
                     </a>
                   )}
-                  <a href="https://github.com/pvparekh/formula-vision-documentation/blob/main/Documentation%20%28FULL%29/ENGINEERING_OVERVIEW.md"
+                  <a href={FV_ARCHITECTURE_URL}
                     target="_blank" rel="noreferrer" className="renaissance-text-project-link">
                     Architecture <ArrowUpRight size={15} aria-hidden="true" />
                   </a>
@@ -790,14 +862,8 @@ function ProjectsSection() {
                   <span>BUILD / VALIDATE / DEPLOY</span>
                 </div>
                 <div className="renaissance-architecture-flow">
-                  {[
-                    { label: 'Acquire', tech: 'FastF1 + source timing', detail: 'Ingest authoritative race data', code: '01' },
-                    { label: 'Canonical truth', tech: 'Typed Parquet + lineage', detail: 'Normalize and version race products', code: '02' },
-                    { label: 'Validate', tech: 'Quality gates + quarantine', detail: 'Reject inconsistent sessions', code: '03' },
-                    { label: 'Publish', tech: 'Immutable R2 artifacts', detail: 'Verify objects, promote catalog', code: '04' },
-                    { label: 'Replay', tech: 'React + client-owned clock', detail: 'Load only needed data chunks', code: '05' },
-                  ].map((step, i) => (
-                    <div key={step.code} ref={sceneAnchor('fv-step:' + step.code)} className="renaissance-architecture-step">
+                  {FV_ARCHITECTURE.map((step, i) => (
+                    <div key={step.code} className="renaissance-architecture-step">
                       <span className="renaissance-architecture-index">{step.code}</span>
                       <div className="renaissance-architecture-step-body">
                         <strong>{step.label}</strong>
@@ -820,15 +886,13 @@ function ProjectsSection() {
         <div className="renaissance-supporting-projects">
           {supporting.map((project, index) => {
             const isReviewBot = project.id === 'github-review-bot';
-            const flow = isReviewBot
-              ? ['Verify webhook', 'Parse pull-request diff', 'Two-pass AI review', 'Post inline feedback']
-              : ['Upload expense files', 'Categorize in batches', 'Compute deterministic statistics', 'Explore analysis'];
+            const flow = SUPPORTING_FLOWS[project.id];
             return (
               <FadeInSection key={project.id} delay={index * .07}>
-                <article ref={sceneAnchor(isReviewBot ? 'project:bot' : 'project:aether')} className={`renaissance-supporting-project ${isReviewBot ? 'is-review-bot' : 'is-aetherflow'}`}>
+                <article className={`renaissance-supporting-project ${isReviewBot ? 'is-review-bot' : 'is-aetherflow'}`}>
                   <div className="renaissance-project-topline">
                     <span>{project.number} / ENGINEERING PROJECT</span>
-                    <span>{isReviewBot ? 'GITHUB INTEGRATION + DEVELOPER TOOLING' : 'FILE INGESTION + ANALYTICS'}</span>
+                    <span>{SUPPORTING_TYPES[project.id]}</span>
                   </div>
                   <div className="renaissance-secondary-body">
                     <div>
@@ -924,7 +988,7 @@ function ExperienceSection() {
               Engineering across <span>data and software</span>
             </h2>
             <p>
-              I build production data pipelines, automate reporting and integrations, and develop end-to-end software. These roles trace my progression across data engineering, analytics, and application development.
+              {EXPERIENCE_INTRO}
             </p>
           </div>
         </FadeInSection>
@@ -959,11 +1023,7 @@ function ExperienceSection() {
                     </h3>
                     <p className="renaissance-company-meta">{formatExperienceTenure(exp.companyPeriod, asOf)}</p>
                     <p className="renaissance-company-meta">
-                      {exp.company === 'DOWC'
-                        ? <>Parsippany, NJ <span aria-hidden="true">·</span> On-site</>
-                        : exp.company === 'Perfect Threading Salon'
-                          ? 'Parsippany, NJ'
-                          : exp.location}
+                      {companyLocationFor(exp)}
                     </p>
                   </div>
                 </header>
@@ -973,15 +1033,9 @@ function ExperienceSection() {
                   aria-label={`${exp.company} roles`}
                 >
                   {exp.roles.map((role) => {
-                    const employmentType = role.role === 'Data Engineer I'
-                      ? 'Full-time'
-                      : role.role.includes('Intern')
-                        ? 'Internship'
-                        : exp.location === 'Contract'
-                          ? 'Contract'
-                          : null;
+                    const employmentType = employmentTypeFor(exp, role);
                     return (
-                      <div ref={sceneAnchor(`role:${exp.company}:${role.role}`, { current: role.current })} className={`renaissance-role ${role.current ? 'is-current' : ''}`} key={`${exp.company}-${role.role}`}>
+                      <div className={`renaissance-role ${role.current ? 'is-current' : ''}`} key={`${exp.company}-${role.role}`}>
                         <div className="renaissance-role-title-row">
                           <h4 className="renaissance-role-title">{role.role}</h4>
                           {role.current && (
@@ -991,30 +1045,7 @@ function ExperienceSection() {
                         {employmentType && <p className="renaissance-role-type">{employmentType}</p>}
                         <p className="renaissance-role-period">{formatExperienceTenure(role.period, asOf, exp.roles.length > 1)}</p>
                         {role.bullets && (
-                          <ul className="renaissance-role-bullets">
-                            {role.bullets.map((bullet) => {
-                              const salonUrl = 'https://perfect-threading.vercel.app';
-                              const linkAt = exp.company === 'Perfect Threading Salon' ? bullet.indexOf(salonUrl) : -1;
-                              return (
-                                <li key={bullet}>
-                                  {linkAt === -1 ? bullet : (
-                                    <>
-                                      {bullet.slice(0, linkAt)}
-                                      <a
-                                        href={salonUrl}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="underline underline-offset-2"
-                                        style={{ color: 'var(--accent)', overflowWrap: 'anywhere' }}
-                                      >
-                                        {salonUrl}
-                                      </a>
-                                    </>
-                                  )}
-                                </li>
-                              );
-                            })}
-                          </ul>
+                          <RoleBullets exp={exp} role={role} />
                         )}
                       </div>
                     );
@@ -1035,7 +1066,7 @@ function ExperienceSection() {
 
 function SkillsSection() {
   return (
-    <section id="skills" ref={sceneAnchor('skills')} className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-1)' }}>
+    <section id="skills" className="py-20 md:py-28 px-6" style={{ background: 'var(--bg-1)' }}>
       <div className="max-w-6xl mx-auto">
         <FadeInSection>
           <SectionLabel label="Skills" />
@@ -1053,7 +1084,6 @@ function SkillsSection() {
             return (
               <FadeInSection key={group.sector} delay={i * 0.07}>
                 <div
-                  ref={sceneAnchor('skill:' + group.sector)}
                   className="rounded-sm border p-5 h-full transition-all duration-300 cursor-default"
                   style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
                   onMouseEnter={(e) => {
@@ -1110,7 +1140,6 @@ function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => vo
   return (
     <section
       id="contact"
-      ref={sceneAnchor('contact')}
       className="py-20 md:py-28 px-6 relative overflow-hidden"
       style={{ background: 'var(--bg-0)' }}
     >
@@ -1144,8 +1173,7 @@ function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => vo
               className="text-sm leading-relaxed mb-12 max-w-md mx-auto text-center"
               style={{ color: 'var(--text-2)' }}
             >
-              Open to full-time roles, interesting contracts, or a conversation about
-              building something new.
+              {CONTACT_INTRO}
             </p>
             <div className="flex justify-center -mt-8 mb-11">
               <button type="button" onClick={onNavigateSolutions} className="renaissance-solutions-text-link">
@@ -1156,26 +1184,7 @@ function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => vo
 
           <FadeInSection delay={0.3}>
             <div className="flex flex-col gap-3">
-              {[
-                {
-                  href: 'mailto:pvparekh14@gmail.com',
-                  Icon: Mail,
-                  label: 'pvparekh14@gmail.com',
-                  sub: 'Primary inbox',
-                },
-                {
-                  href: 'https://linkedin.com/in/parekh422',
-                  Icon: LinkedinIcon,
-                  label: 'linkedin.com/in/parekh422',
-                  sub: 'LinkedIn',
-                },
-                {
-                  href: 'https://github.com/pvparekh',
-                  Icon: GithubIcon,
-                  label: 'github.com/pvparekh',
-                  sub: 'GitHub',
-                },
-              ].map(({ href, Icon, label, sub }) => (
+              {CONTACT_LINKS.map(({ href, Icon, label, sub }) => (
                 <a
                   key={href}
                   href={href}
@@ -1261,3 +1270,11 @@ export default function App({ onNavigateSolutions }: { onNavigateSolutions: () =
     </>
   );
 }
+
+export {
+  EXPERIENCE, SKILLS, PROJECTS, TAGLINES, HERO_SUBTAGLINE, TELEMETRY, ABOUT_STATS, ABOUT_ACADEMICS,
+  SOCIAL_LINKS, EXPERIENCE_INTRO, PROJECTS_INTRO, FV_LEAD, FV_PROOF_POINTS, FV_ARCHITECTURE,
+  FV_ARCHITECTURE_URL, SUPPORTING_FLOWS, SUPPORTING_TYPES, CONTACT_INTRO, CONTACT_LINKS,
+  AboutBio, RoleBullets, employmentTypeFor, companyLocationFor, formatExperienceTenure,
+  useTypingEffect, SectionLabel, GithubIcon, LinkedinIcon, Footer,
+};

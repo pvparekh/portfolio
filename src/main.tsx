@@ -4,10 +4,14 @@ import App from './App.tsx';
 import SolutionsPage from './SolutionsPage.tsx';
 import SoftwarePage from './SoftwarePage.tsx';
 import SiteNav, { type SitePage } from './SiteNav.tsx';
-import SpatialMount from './spatial/dom/SpatialMount.tsx';
+import PortfolioJourney from './journey/pages/PortfolioJourney.tsx';
+import { journeyEligible } from './journey/core/mode.ts';
 import './style.css';
 import './mobile.css';
-import './spatial.css';
+import './journey/journey.css';
+
+// Decided once per load: the spatial journey on capable devices with motion allowed, else the standard page.
+const JOURNEY = journeyEligible();
 
 const currentPage = (): SitePage =>
   /^\/software(?:\/|$)/.test(window.location.pathname) ? 'software' : /^\/solutions(?:\/|$)/.test(window.location.pathname) ? 'solutions' : 'portfolio';
@@ -125,14 +129,15 @@ function PortfolioSite() {
 
   return (
     <>
-      <SpatialMount page={page} />
       <SiteNav page={page} navigate={navigate} goToSection={goToSection} />
       {page === 'software' ? (
         <SoftwarePage onBackToPortfolio={() => navigate('portfolio')} />
       ) : page === 'solutions' ? (
         <SolutionsPage onBackToPortfolio={() => navigate('portfolio')} />
       ) : (
-        <App onNavigateSolutions={() => navigate('solutions')} />
+        JOURNEY
+          ? <PortfolioJourney onNavigateSolutions={() => navigate('solutions')} />
+          : <App onNavigateSolutions={() => navigate('solutions')} />
       )}
     </>
   );
