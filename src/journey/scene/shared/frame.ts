@@ -1,10 +1,13 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { Light, Object3D } from 'three';
 import type { JourneyFrame } from '../../core/engine';
 
 /** The current journey frame, written by the engine right before each render. */
 export const frameRef: { current: JourneyFrame | null } = { current: null };
+
+/** Every world's root group with its destination index (used to warm worlds ahead of arrival). */
+export const worlds = new Map<Object3D, number>();
 
 /**
  * Show an environment only near its destination (by continuous place index),
@@ -14,12 +17,20 @@ export const frameRef: { current: JourneyFrame | null } = { current: null };
 export function usePresence(index: number, onPresence?: (presence: number, frame: JourneyFrame) => void, range = 1.15) {
   const ref = useRef<Object3D>(null);
   const shown = useRef<boolean | null>(null);
+  useEffect(() => {
+    const group = ref.current;
+    if (!group) return;
+    worlds.set(group, index);
+    return () => { worlds.delete(group); };
+  }, [index]);
+  const tick = useRef(0);
   useFrame(() => {
     const frame = frameRef.current;
     if (!frame || !ref.current) return;
     const distance = Math.abs(frame.place - index);
     const visible = distance < range;
-    if (visible !== shown.current) {
+    // Re-apply periodically while hidden: content that mounts later (lazy textures) must hide too.
+    if (visible !== shown.current || (!visible && ++tick.current % 30 === 0)) {
       shown.current = visible;
       setPresent(ref.current, visible);
     }

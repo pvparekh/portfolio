@@ -1,7 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { frameRef, usePresence } from '../shared/frame';
 import { EXHIBITS, PROJECTS, local, portfolioJourney } from '../../worlds/portfolio';
 import Exhibit, { type DisplaySpec } from './Exhibit';
@@ -20,24 +19,45 @@ const BOT_DISPLAYS: DisplaySpec[] = [
 ];
 const AETHER_DISPLAYS: DisplaySpec[] = [
   { src: '/projects/aetherflow-home.webp', position: [820, 40, -700], width: 780, yaw: -22, aspect: 1.6, emphasis: 1 },
-  { src: '/projects/aetherflow-features.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
+  { src: '/projects/aetherflow-signup.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
 ];
 
 /** A real planar reflection (half resolution), tinted dark so it reads as polished stone. */
 function ReflectiveFloor() {
-  const { size, viewport } = useThree();
-  const reflector = useMemo(() => {
-    const narrow = size.width < 820;
-    const r = new Reflector(new THREE.PlaneGeometry(40000, 30000), {
-      textureWidth: Math.round(size.width * viewport.dpr * (narrow ? 0.35 : 0.5)),
-      textureHeight: Math.round(size.height * viewport.dpr * (narrow ? 0.35 : 0.5)),
-      color: new THREE.Color('#4A4560'),
-      clipBias: 0.003,
+  // A glossy floor without a second scene render: dark lacquer with soft pools of each
+  // exhibit's accent light, faked in one shader (a planar Reflector re-rendered the whole
+  // scene every frame and rebuilt on every resize, the main cost of this section).
+  const floor = useMemo(() => {
+    const pools = [EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether];
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        uBase: { value: new THREE.Color('#0A0814') },
+        uPos: { value: pools.map(e => new THREE.Vector2(e.info[0] + 900, e.info[2] - 900)) },
+        uCol: { value: pools.map(e => new THREE.Color(e.accent)) },
+      },
+      vertexShader: 'varying vec3 vWorld; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
+      fragmentShader: `uniform vec3 uBase; uniform vec2 uPos[3]; uniform vec3 uCol[3]; varying vec3 vWorld;
+        void main() {
+          vec3 c = uBase;
+          for (int i = 0; i < 3; i++) {
+            float d = length(vWorld.xz - uPos[i]);
+            c += uCol[i] * (exp(-d * 0.0007) * 0.22 + exp(-d * 0.0025) * 0.18);
+          }
+          // Faint view-dependent sheen toward the camera, like lacquer.
+          float toward = 1.0 - smoothstep(0.0, 9000.0, length(vWorld.xz - cameraPosition.xz));
+          c += vec3(0.05, 0.045, 0.09) * toward;
+          gl_FragColor = vec4(c, 1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`,
     });
-    r.rotation.x = -Math.PI / 2;
-    return r;
-  }, [size.width, size.height, viewport.dpr]);
-  useEffect(() => () => { reflector.dispose(); }, [reflector]);
+  }, []);
+  const reflector = useMemo(() => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(40000, 30000), floor);
+    m.rotation.x = -Math.PI / 2;
+    return m;
+  }, [floor]);
+  useEffect(() => () => { reflector.geometry.dispose(); floor.dispose(); }, [reflector, floor]);
   // Reflections read near the exhibits; with distance the floor melts into the hall's haze (no hard horizon).
   const veil = useMemo(() => new THREE.ShaderMaterial({
     transparent: true,

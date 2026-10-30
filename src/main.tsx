@@ -8,6 +8,7 @@ import PortfolioJourney from './journey/pages/PortfolioJourney.tsx';
 import SolutionsJourney from './journey/pages/SolutionsJourney.tsx';
 import SoftwareJourney from './journey/pages/SoftwareJourney.tsx';
 import { journeyEligible } from './journey/core/mode.ts';
+import { pendingRestore, rememberScroll } from './journey/core/restore.ts';
 import './style.css';
 import './mobile.css';
 import './journey/journey.css';
@@ -77,26 +78,38 @@ function PortfolioSite() {
     const previousRestoration = history.scrollRestoration;
     history.scrollRestoration = 'manual';
 
-    const onBackOrForward = () => {
+    const onBackOrForward = (event: PopStateEvent) => {
       const nextPage = currentPage();
+      const saved = (event.state as { scrollY?: number } | null)?.scrollY;
+      pendingRestore.y = typeof saved === 'number' ? saved : null;
       setPage(nextPage);
       // When browser history changes only the hash, React's page state stays
       // the same, so explicitly move to the section without a route remount.
       requestAnimationFrame(() => {
+        if (pendingRestore.y !== null && !JOURNEY) { window.scrollTo({ top: pendingRestore.y, behavior: 'instant' }); pendingRestore.y = null; return; }
+        if (JOURNEY && pendingRestore.y !== null) return; // the journey applies it after layout
         const id = decodeURIComponent(window.location.hash.slice(1));
         if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
         else window.scrollTo({ top: 0, behavior: 'instant' });
       });
     };
 
+    // Keep the current entry's scroll position up to date, so back AND forward can restore it
+    // (popstate fires after the entry has already changed, too late to save it then).
+    let saveTimer = 0;
+    const onScroll = () => { clearTimeout(saveTimer); saveTimer = window.setTimeout(rememberScroll, 150); };
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('popstate', onBackOrForward);
     return () => {
+      clearTimeout(saveTimer);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('popstate', onBackOrForward);
       history.scrollRestoration = previousRestoration;
     };
   }, []);
 
   useLayoutEffect(() => {
+    if (JOURNEY && pendingRestore.y !== null) return;
     const id = decodeURIComponent(window.location.hash.slice(1));
     if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
     else window.scrollTo({ top: 0, behavior: 'instant' });
@@ -118,6 +131,7 @@ function PortfolioSite() {
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }));
       return;
     }
+    rememberScroll();
     window.history.pushState(null, '', destination);
     setPage(target);
   }, [page]);
@@ -127,6 +141,7 @@ function PortfolioSite() {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
+    rememberScroll();
     window.history.pushState(null, '', pagePath(target) + '#' + encodeURIComponent(id));
     setPage(target);
   }, [page]);

@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-30T03:42:07.502Z",
+  "measuredAt": "2026-10-30T06:46:25.056Z",
   "viewport": "1440x900",
   "targets": {
     "firstMotionPx": {
@@ -38,20 +38,20 @@
     {
       "path": "/",
       "metrics": {
-        "totalVh": 13.56,
+        "totalVh": 13.79,
         "destinations": 6,
-        "vhPerDestination": 2.26,
+        "vhPerDestination": 2.3,
         "firstMotionPx": 2,
         "resumeMedianPx": 318,
         "resumeMedianVh": 0.35,
-        "resumeMaxPx": 328,
+        "resumeMaxPx": 330,
         "deadShare": 0.25,
         "longestDeadPx": 310,
         "longestDeadNotches": 3.1,
-        "notchesPerTravel": 9,
-        "settle95Ms": 450,
+        "notchesPerTravel": 9.1,
+        "settle95Ms": 433,
         "velocityStepRatio": 0.33,
-        "streamSpeedCv": 0.24
+        "streamSpeedCv": 0.2
       },
       "score": {
         "firstMotionPx": {
@@ -67,11 +67,11 @@
           "pass": true
         },
         "vhPerDestination": {
-          "value": 2.26,
+          "value": 2.3,
           "pass": true
         },
         "settle95Ms": {
-          "value": 450,
+          "value": 433,
           "pass": true
         },
         "velocityStepRatio": {
@@ -79,7 +79,7 @@
           "pass": true
         },
         "streamSpeedCv": {
-          "value": 0.24,
+          "value": 0.2,
           "pass": true
         }
       }
@@ -87,24 +87,24 @@
     {
       "path": "/solutions",
       "metrics": {
-        "totalVh": 19.11,
+        "totalVh": 18.69,
         "destinations": 7,
-        "vhPerDestination": 2.73,
-        "firstMotionPx": 10,
+        "vhPerDestination": 2.67,
+        "firstMotionPx": 8,
         "resumeMedianPx": 320,
         "resumeMedianVh": 0.36,
         "resumeMaxPx": 320,
         "deadShare": 0.29,
         "longestDeadPx": 310,
         "longestDeadNotches": 3.1,
-        "notchesPerTravel": 9,
+        "notchesPerTravel": 8.5,
         "settle95Ms": 433,
-        "velocityStepRatio": 0.34,
-        "streamSpeedCv": 0.27
+        "velocityStepRatio": 0.35,
+        "streamSpeedCv": 0.17
       },
       "score": {
         "firstMotionPx": {
-          "value": 10,
+          "value": 8,
           "pass": true
         },
         "resumeMedianPx": {
@@ -116,7 +116,7 @@
           "pass": true
         },
         "vhPerDestination": {
-          "value": 2.73,
+          "value": 2.67,
           "pass": true
         },
         "settle95Ms": {
@@ -124,11 +124,11 @@
           "pass": true
         },
         "velocityStepRatio": {
-          "value": 0.34,
+          "value": 0.35,
           "pass": true
         },
         "streamSpeedCv": {
-          "value": 0.27,
+          "value": 0.17,
           "pass": true
         }
       }
@@ -136,24 +136,24 @@
     {
       "path": "/software",
       "metrics": {
-        "totalVh": 17.13,
+        "totalVh": 16.73,
         "destinations": 6,
-        "vhPerDestination": 2.85,
-        "firstMotionPx": 10,
+        "vhPerDestination": 2.79,
+        "firstMotionPx": 8,
         "resumeMedianPx": 318,
         "resumeMedianVh": 0.35,
         "resumeMaxPx": 320,
-        "deadShare": 0.22,
+        "deadShare": 0.23,
         "longestDeadPx": 310,
         "longestDeadNotches": 3.1,
-        "notchesPerTravel": 9,
-        "settle95Ms": 467,
-        "velocityStepRatio": 0.35,
-        "streamSpeedCv": 0.22
+        "notchesPerTravel": 8.8,
+        "settle95Ms": 433,
+        "velocityStepRatio": 0.32,
+        "streamSpeedCv": 0.17
       },
       "score": {
         "firstMotionPx": {
-          "value": 10,
+          "value": 8,
           "pass": true
         },
         "resumeMedianPx": {
@@ -165,19 +165,19 @@
           "pass": true
         },
         "vhPerDestination": {
-          "value": 2.85,
+          "value": 2.79,
           "pass": true
         },
         "settle95Ms": {
-          "value": 467,
+          "value": 433,
           "pass": true
         },
         "velocityStepRatio": {
-          "value": 0.35,
+          "value": 0.32,
           "pass": true
         },
         "streamSpeedCv": {
-          "value": 0.22,
+          "value": 0.17,
           "pass": true
         }
       }

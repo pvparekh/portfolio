@@ -39,8 +39,21 @@ export default function InspectOverlay() {
         event.preventDefault();
       }
     };
+    // The page must not scroll behind an open dialog (the camera would leave the exhibit).
+    // Blocking the inputs rather than hiding overflow avoids a scrollbar-width resize.
+    const block = (event: Event) => event.preventDefault();
+    const blockKeys = (event: KeyboardEvent) => {
+      const onButton = (event.target as Element | null)?.closest?.('button');
+      if (['PageUp', 'PageDown', 'Home', 'End', 'ArrowUp', 'ArrowDown'].includes(event.key) || (event.key === ' ' && !onButton)) event.preventDefault();
+    };
+    window.addEventListener('wheel', block, { passive: false });
+    window.addEventListener('touchmove', block, { passive: false });
+    window.addEventListener('keydown', blockKeys);
     window.addEventListener('keydown', onKey);
     return () => {
+      window.removeEventListener('wheel', block);
+      window.removeEventListener('touchmove', block);
+      window.removeEventListener('keydown', blockKeys);
       window.removeEventListener('keydown', onKey);
       document.documentElement.classList.remove('journey-inspecting');
     };

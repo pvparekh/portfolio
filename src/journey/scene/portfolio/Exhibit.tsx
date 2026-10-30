@@ -51,6 +51,9 @@ const gradientTexture = (() => {
   };
 })();
 
+/** Invisible (never drawn) material for pick proxies. */
+const HIT_MATERIAL = new THREE.MeshBasicMaterial({ visible: false });
+
 /** Shared hover state for one exhibit: which display (if any) the visitor is pointing at. */
 interface HoverState { index: number }
 
@@ -74,13 +77,16 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
   const lift = useRef<THREE.Group>(null);
   const shadowMesh = useRef<THREE.Mesh>(null);
   const screenMesh = useRef<THREE.Mesh>(null);
+  const hitMesh = useRef<THREE.Mesh>(null);
   const amount = useRef(0);
   const phase = useMemo(() => index * 1.7 + spec.width * 0.01, [index, spec.width]);
 
   useEffect(() => {
-    if (!screenMesh.current) return;
+    if (!hitMesh.current) return;
     return registerPickable({
-      mesh: screenMesh.current,
+      // Picking uses a fixed proxy at the screen's resting pose, never the lifted screen:
+      // a target that moves away from the cursor on hover would flicker in and out.
+      mesh: hitMesh.current,
       onHover: on => {
         hover.index = on ? index : hover.index === index ? -1 : hover.index;
         frameRef.current?.requestFrames(45);
@@ -112,6 +118,9 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
 
   return (
     <group position={spec.position} rotation={[0, yaw, 0]}>
+      <mesh ref={hitMesh} material={HIT_MATERIAL}>
+        <planeGeometry args={[spec.width + 44, h + 44]} />
+      </mesh>
       <group ref={lift}>
         <mesh material={glow} position={[0, 0, -60]}>
           <planeGeometry args={[spec.width * 1.6, h * 1.9]} />
@@ -139,8 +148,19 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
  * parallax while the visitor reads the adjacent panel.
  */
 export default function Exhibit({ position, yaw, accent, title, floorY, displays, focus, bare = false }: Props) {
-  const textures = useLoader(THREE.TextureLoader, displays.map(d => d.src));
-  useMemo(() => textures.forEach(t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; }), [textures]);
+  // ImageBitmapLoader decodes off the main thread (TextureLoader decodes during upload,
+  // which stalls a frame per large screenshot). Bitmaps are pre-flipped, so flipY stays off.
+  const bitmaps = useLoader(THREE.ImageBitmapLoader, displays.map(d => d.src), loader => {
+    (loader as THREE.ImageBitmapLoader).setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none' });
+  }) as unknown as ImageBitmap[];
+  const textures = useMemo(() => bitmaps.map(bitmap => {
+    const t = new THREE.Texture(bitmap as unknown as HTMLImageElement);
+    t.flipY = false;
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 8;
+    t.needsUpdate = true;
+    return t;
+  }), [bitmaps]);
   const accentColor = useMemo(() => new THREE.Color(accent), [accent]);
   const group = useRef<THREE.Group>(null);
   const tilt = useRef({ x: 0, y: 0 });

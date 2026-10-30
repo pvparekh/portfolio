@@ -24,6 +24,7 @@ Evolve the homepage's six amber speed lines into **SLIPSTREAM**: a real-time Web
 | 11 | [Implementation log](11-implementation-log.md) | V1 desktop build: what shipped, deviations, measurements, review notes |
 | 12 | [V2 implementation](12-v2-implementation.md) | V2 destination journey: diagnosis, architecture, worlds, exhibits, validation, measurements, limitations |
 | 13 | [Scroll feel, interaction and life](13-scroll-feel-and-life.md) | Scroll-feel targets and before/after measurements, exhibit hover and inspect, ambient life, grouped experience |
+| 14 | [Smoothness root causes](14-smoothness-root-causes.md) | What caused jitter, freezes and hitches, the fixes, and the scroll QA suite that guards them |
 
 Visual overview (live filament sketch + illustrated storyboard frames): [`slipstream-blueprint.html`](slipstream-blueprint.html), also published privately at https://claude.ai/artifact/6pzPXFFHjqSWGZGrqWaFQ8.
 

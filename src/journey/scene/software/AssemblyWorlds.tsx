@@ -6,6 +6,7 @@ import { frameRef, usePresence } from '../shared/frame';
 import Exhibit, { type DisplaySpec } from '../portfolio/Exhibit';
 import { FLOOR, GALLERY_STEP, S, servicePosition } from '../../worlds/software';
 import { softwareProjects } from '../../../softwareProjects';
+import ProcessConduit from '../shared/ProcessConduit';
 
 const WHITE = '#E2E8F0';
 const BLUE = '#93C5FD';
@@ -133,7 +134,7 @@ export function ServiceModules({ index, count }: { index: number; count: number 
 const GALLERY: Record<string, string[]> = {
   salon: ['/projects/perfect-threading-home.webp', '/projects/perfect-threading-services.webp'],
   formula: ['/projects/formula-vision-replay-map.webp', '/projects/formula-vision-chase-camera.webp'],
-  aetherflow: ['/projects/aetherflow-home.webp', '/projects/aetherflow-features.webp'],
+  aetherflow: ['/projects/aetherflow-home.webp', '/projects/aetherflow-signup.webp'],
   'review-bot': ['/projects/review-bot-pipeline.webp', '/projects/review-bot-engineering.webp'],
   biaslens: ['/projects/biaslens-dashboard.webp', '/projects/biaslens-table.webp'],
 };
@@ -174,6 +175,7 @@ export function AssemblyStack({ index }: { index: number }) {
   const ref = useWorld(index);
   return (
     <group ref={ref}>
+      <ProcessConduit position={S.approach} under="sw-approach" color={BLUE} />
       {Array.from({ length: 5 }, (_, i) => (
         <Module key={i} position={at(S.approach, [0, -1600 + i * (360 + (4 - i) * 140), -6200])} size={[5200 - i * 300, 220, 2600]} edge={i === 4 ? WHITE : BLUE} edgeOpacity={0.35 + i * 0.1} />
       ))}

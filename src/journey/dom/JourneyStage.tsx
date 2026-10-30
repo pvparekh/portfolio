@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { JourneyEngine } from '../core/engine';
 import { setLayoutPreference } from '../core/mode';
 import type { JourneyDefinition } from '../core/types';
@@ -7,6 +7,7 @@ import { isTestMode, readMotionPreference, onReducedMotionChange } from '../../s
 import { spatialStore, useSpatial } from '../../spatial/core/store';
 import { sampleTimeline } from '../core/timeline';
 import InspectOverlay from './InspectOverlay';
+import { pendingRestore } from '../core/restore';
 import { SceneBoundary } from './SceneBoundary';
 
 export interface SceneProps { engine: JourneyEngine }
@@ -33,7 +34,26 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
   const hudRef = useRef<HTMLDivElement>(null);
   const [total, setTotal] = useState(0);
   const [markers, setMarkers] = useState<number[]>([]);
+  const arrived = useRef(false);
   const [panelMarkers, setPanelMarkers] = useState<{ id: string; top: number }[]>([]);
+
+  // After the spacer and markers reflect a new layout: re-apply the engine's remapped
+  // offset (resize), and on the first layout honour a back/forward position or a deep link,
+  // which the browser could not apply while the page was still short.
+  useLayoutEffect(() => {
+    if (!total) return;
+    engine.applyPendingScroll();
+    if (arrived.current) return;
+    arrived.current = true;
+    if (pendingRestore.y !== null) {
+      engine.jumpTo(pendingRestore.y);
+      pendingRestore.y = null;
+      return;
+    }
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    const target = id ? document.getElementById(id) : null;
+    if (target) engine.jumpTo(target.getBoundingClientRect().top + window.scrollY);
+  }, [total, markers, panelMarkers, engine]);
   const [active, setActive] = useState(0);
   const Scene = useMemo(() => lazy(loadScene), [loadScene]);
   const motion = useSpatial(state => state.motion);

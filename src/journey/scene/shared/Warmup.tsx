@@ -1,54 +1,110 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { frameRef, worlds } from './frame';
 
 /**
- * Pays every first-use cost up front, so arriving at a new destination never
- * stalls: textures are uploaded, and the whole scene (every world, culling off)
- * is drawn once to the canvas and once into each reflector's target. Drawing,
- * not just compiling, matters: drivers such as ANGLE/D3D finish shader work
- * at first draw. The normal frame is drawn straight after, so nothing shows.
- * Re-runs when lazily loaded content (exhibit textures) appears.
+ * Pays first-use costs up front without ever blocking a frame:
+ * - shaders for every world (and for each reflector-style render target) are
+ *   compiled with `compileAsync`, which uses KHR_parallel_shader_compile where
+ *   available so linking happens off the main thread;
+ * - textures are uploaded one per frame instead of all at once.
+ * An earlier version drew the whole universe in one frame to force drivers to
+ * finish shader work; that cost 0.7-1 s freezes after load, so it is gone.
  */
 export default function Warmup() {
   const { gl, scene, camera } = useThree();
-  const done = useRef(new WeakSet<THREE.Texture>());
 
   useEffect(() => {
-    const warm = () => {
+    let cancelled = false;
+    const uploaded = new WeakSet<THREE.Texture>();
+
+    const warm = async () => {
+      if (cancelled) return;
       const hidden: THREE.Object3D[] = [];
-      const culled: THREE.Object3D[] = [];
+      const textures: THREE.Texture[] = [];
       const targets = new Set<THREE.WebGLRenderTarget>();
       scene.traverse(object => {
         if (!object.visible) { hidden.push(object); object.visible = true; }
-        if (object.frustumCulled) { culled.push(object); object.frustumCulled = false; }
         const reflector = object as THREE.Object3D & { getRenderTarget?: () => THREE.WebGLRenderTarget };
         if (reflector.getRenderTarget) targets.add(reflector.getRenderTarget());
         const material = (object as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
-        const materials = Array.isArray(material) ? material : material ? [material] : [];
-        for (const m of materials) {
+        for (const m of Array.isArray(material) ? material : material ? [material] : []) {
           for (const value of Object.values(m as unknown as Record<string, unknown>)) {
-            if (value instanceof THREE.Texture && value.image && !done.current.has(value)) {
-              gl.initTexture(value);
-              done.current.add(value);
-            }
+            if (value instanceof THREE.Texture && value.image && !uploaded.has(value)) textures.push(value);
           }
         }
       });
+      const pending: Promise<unknown>[] = [gl.compileAsync(scene, camera)];
       const previous = gl.getRenderTarget();
       for (const target of targets) {
         gl.setRenderTarget(target);
-        gl.render(scene, camera);
+        pending.push(gl.compileAsync(scene, camera));
       }
       gl.setRenderTarget(previous);
-      gl.render(scene, camera);
       hidden.forEach(object => { object.visible = false; });
-      culled.forEach(object => { object.frustumCulled = true; });
-      gl.render(scene, camera);
+      await Promise.all(pending).catch(() => {});
+      // One texture per animation frame keeps every upload inside a frame budget.
+      for (const texture of textures) {
+        if (cancelled) return;
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        if (!uploaded.has(texture)) { gl.initTexture(texture); uploaded.add(texture); }
+      }
     };
-    // Once after mount, and again after async content (textures) has had time to arrive.
-    const timers = [80, 1500, 4000].map(ms => window.setTimeout(warm, ms));
-    return () => timers.forEach(clearTimeout);
+    // Drivers such as ANGLE/D3D finish shader work only at a world's first real draw.
+    // So while the visitor is idle, draw each world once, nearest first, one world per
+    // idle slot, clipped to a single pixel: the driver work happens, the fill cost does not.
+    const drawn = new Set<THREE.Object3D>();
+    const warmNextWorld = (deadline?: IdleDeadline) => {
+      if (cancelled) return;
+      if (deadline && deadline.timeRemaining() < 12 && !deadline.didTimeout) { schedule(); return; }
+      const place = frameRef.current?.place ?? 0;
+      // Work in small pieces (each drawable part of a world separately) so no single idle
+      // slot carries a whole world's driver work.
+      const parts: [THREE.Object3D, number][] = [];
+      for (const [world, index] of worlds) {
+        world.traverse(o => {
+          const drawable = (o as THREE.Mesh).isMesh || (o as THREE.Points).isPoints || (o as THREE.Line).isLine;
+          if (drawable && !drawn.has(o)) parts.push([o, index]);
+        });
+      }
+      if (!parts.length) return;
+      parts.sort((a, b) => Math.abs(a[1] - place) - Math.abs(b[1] - place));
+      const batch = parts.slice(0, 2).map(([o]) => o);
+      const changed: [THREE.Object3D, boolean, boolean][] = [];
+      for (const part of batch) {
+        drawn.add(part);
+        // The part and its ancestors must be visible for it to draw.
+        for (let o: THREE.Object3D | null = part; o; o = o.parent) {
+          changed.push([o, o.visible, o.frustumCulled]);
+          o.visible = true;
+        }
+        part.frustumCulled = false;
+      }
+      const scissor = gl.getScissorTest();
+      gl.setScissorTest(true);
+      gl.setScissor(0, 0, 1, 1);
+      gl.render(scene, camera);
+      gl.setScissorTest(scissor);
+      gl.setScissor(0, 0, gl.domElement.width, gl.domElement.height);
+      for (let i = changed.length - 1; i >= 0; i--) { const [o, v, f] = changed[i]; o.visible = v; o.frustumCulled = f; }
+      schedule();
+    };
+    let idleId = 0;
+    const schedule = () => {
+      idleId = window.requestIdleCallback
+        ? window.requestIdleCallback(warmNextWorld, { timeout: 1500 })
+        : window.setTimeout(() => warmNextWorld(), 200);
+    };
+    // Once after mount, and again after lazily loaded textures have arrived.
+    const timers = [120, 2500].map(ms => window.setTimeout(() => { void warm(); }, ms));
+    const worldTimer = window.setTimeout(schedule, 700);
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+      clearTimeout(worldTimer);
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idleId); else clearTimeout(idleId);
+    };
   }, [gl, scene, camera]);
 
   return null;

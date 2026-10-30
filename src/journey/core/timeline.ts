@@ -100,6 +100,17 @@ function composite(panel: PanelSpec, withIds: string[], panels: Map<string, Pane
 
 const ARC_SAMPLES = 96;
 
+export function pathLength(path: Vec3[]): number {
+  let total = 0;
+  let prev = catmullRom(path, 0);
+  for (let i = 1; i <= 64; i++) {
+    const p = catmullRom(path, i / 64);
+    total += Math.hypot(p[0] - prev[0], p[1] - prev[1], p[2] - prev[2]);
+    prev = p;
+  }
+  return total;
+}
+
 /** Inverse arc-length table: entry i is the spline parameter at i/ARC_SAMPLES of the path's length. */
 export function arcTable(path: Vec3[]): number[] {
   const fine = ARC_SAMPLES * 8;
@@ -149,10 +160,15 @@ export function buildTimeline(
       const poses = shotPoses(framed, framedHeight, vp, shot.offsetX, shot.offsetY);
       if (previous) {
         const isTravel = si === 0;
-        const length = isTravel ? lengths.travel : lengths.move;
         const path = isTravel
           ? travelPath(previous.pose, previous.normal, dest.approach, poses.start, vp)
           : movePath(previous.pose, poses.start, previous.normal, poses.normal, vp);
+        // Scroll length grows (gently) with how far the camera actually goes, so similar
+        // transitions cost similar scroll and long hops do not feel rushed.
+        const distance = pathLength(path);
+        const length = isTravel
+          ? lengths.travel * clamp(0.8 + distance / 200000, 0.85, 1.2)
+          : lengths.move * clamp(0.62 + distance / 14000, 0.7, 1.35);
         segments.push({ kind: isTravel ? 'travel' : 'move', start: cursor, end: cursor + length, destination: di, shot: si, from: previous.pose, to: poses.start, path, arc: arcTable(path) });
         cursor += length;
       }
@@ -171,15 +187,21 @@ export function buildTimeline(
 }
 
 /** Pull back off the panel, rise, pass the destination's establishing viewpoint, then settle. */
-function travelPath(from: Pose, fromNormal: Vec3, approach: Vec3, to: Pose, vp: Viewport): Vec3[] {
-  const depart = add(add(from.position, scale(fromNormal, vp.perspective * 1.4)), [0, vp.perspective * 0.35, 0]);
+function travelPath(from: Pose, _fromNormal: Vec3, approach: Vec3, to: Pose, vp: Viewport): Vec3[] {
+  // Depart toward where we are going (rising slightly), never straight back off the panel:
+  // the camera arrived moving into the panel, so pulling back would reverse it, which reads
+  // as a bounce whenever someone scrolls through without stopping.
+  const toward = sub(approach, from.position);
+  const reach = Math.hypot(toward[0], toward[1], toward[2]) || 1;
+  const depart = add(add(from.position, scale(toward, (vp.perspective * 1.4) / reach)), [0, vp.perspective * 0.25, 0]);
   return [from.position, depart, approach, to.position];
 }
 
 /** A gentle lateral arc between two shots in the same destination. */
 function movePath(from: Pose, to: Pose, n0: Vec3, n1: Vec3, vp: Viewport): Vec3[] {
   const mid = lerp3(from.position, to.position, 0.5);
-  const back = scale(add(n0, n1), vp.perspective * 0.22);
+  // A shallow arc only: a deep pull-back between neighbouring shots reverses the camera.
+  const back = scale(add(n0, n1), vp.perspective * 0.06);
   return [from.position, add(mid, back), to.position];
 }
 
@@ -209,7 +231,9 @@ export function sampleTimeline(timeline: Timeline, scrollY: number): Sample {
   const raw = segment.end > segment.start ? (y - segment.start) / (segment.end - segment.start) : 0;
   if (segment.kind === 'dwell') {
     return {
-      pose: { position: lerp3(segment.from.position, segment.to.position, raw), target: lerp3(segment.from.target, segment.to.target, raw) },
+      // Pans down tall panels ease in and out, so the camera is at rest at both ends and the
+      // change of direction into the next travel never reads as a kink.
+      pose: { position: lerp3(segment.from.position, segment.to.position, easeInOutSine(raw)), target: lerp3(segment.from.target, segment.to.target, easeInOutSine(raw)) },
       segment, t: raw, travel: 0,
     };
   }

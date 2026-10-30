@@ -57,6 +57,8 @@ export class JourneyEngine {
   /** Spring-smoothed scroll offset and its velocity: the camera samples the path here. */
   private smoothY = -1;
   private smoothV = 0;
+  /** Scroll offset to re-apply once the page has grown to the new journey length. */
+  pendingScroll: number | null = null;
   private settledFrames = 0;
   private pointer: [number, number] = [0, 0];
   private pointerTarget: [number, number] = [0, 0];
@@ -139,6 +141,23 @@ export class JourneyEngine {
   getViewport() { return this.vp; }
   getFrame() { return this.lastFrame; }
 
+  /** Re-apply a scroll offset computed during layout, after the spacer has been resized. */
+  applyPendingScroll() {
+    if (this.pendingScroll === null) return;
+    window.scrollTo({ top: this.pendingScroll, behavior: 'instant' });
+    this.pendingScroll = null;
+  }
+
+  /** Place the visitor at a scroll offset with the camera already there (restore, deep link). */
+  jumpTo(y: number) {
+    window.scrollTo({ top: y, behavior: 'instant' });
+    this.smoothY = window.scrollY;
+    this.smoothV = 0;
+    this.lastScroll = window.scrollY;
+    this.pose = null;
+    this.wake();
+  }
+
   /** Scroll offset where a destination's first reading position begins. */
   destinationOffset(index: number) {
     return this.timeline?.destinationStarts[index] ?? 0;
@@ -211,7 +230,26 @@ export class JourneyEngine {
       el.style.transform = objectCss(composeMatrix(spec.position, right, up, normal));
     }
     const heights = new Map([...this.sizes].map(([id, s]) => [id, s.height]));
+    const previous = this.timeline;
     this.timeline = buildTimeline(this.definition.destinations, this.panels, heights, this.vp);
+    // A new layout (resize, font load) changes segment lengths. Keep the visitor at the same
+    // point of the journey (same segment, same fraction) instead of letting the same scroll
+    // offset land somewhere else, which would snap the camera.
+    if (previous && previous.segments.length === this.timeline.segments.length && window.scrollY > 0) {
+      const remap = (y: number) => {
+        const i = previous.segments.findIndex(s => y < s.end);
+        if (i < 0) return this.timeline!.total;
+        const from = previous.segments[i];
+        const to = this.timeline!.segments[i];
+        const f = from.end > from.start ? (y - from.start) / (from.end - from.start) : 0;
+        return to.start + f * (to.end - to.start);
+      };
+      const nextScroll = remap(window.scrollY);
+      if (this.smoothY >= 0) this.smoothY = remap(this.smoothY);
+      this.lastScroll = nextScroll;
+      this.pendingScroll = nextScroll;
+      window.scrollTo({ top: nextScroll, behavior: 'instant' });
+    }
     this.layoutListeners.forEach(l => l());
     this.wake();
   }
@@ -227,20 +265,24 @@ export class JourneyEngine {
   private tick = (now: number) => {
     this.frameId = 0;
     if (!this.timeline || !this.camera) return;
-    const dt = Math.min((now - this.lastTime) / 1000, 0.05);
+    // Real elapsed time (capped only for long gaps such as a backgrounded tab), so ambient
+    // motion never slows or pauses when a frame runs long.
+    const elapsed = Math.min((now - this.lastTime) / 1000, 0.25);
+    const dt = Math.min(elapsed, 0.1);
     this.lastTime = now;
     const scrollY = window.scrollY;
-    const jumped = this.lastScroll >= 0 && Math.abs(scrollY - this.lastScroll) > this.vp.height * 3;
+    // Only a programmatic teleport (far beyond any gesture) cuts; everything else is travelled.
+    const jumped = this.lastScroll >= 0 && Math.abs(scrollY - this.lastScroll) > this.vp.height * 40;
     this.lastScroll = scrollY;
 
     // Critically damped spring on the scroll offset (not on the pose): wheel notches
     // become continuous velocity in either direction, and the camera stays on the
-    // authored path instead of cutting corners. ω = 13 settles 95% in ~0.36 s.
+    // authored path instead of cutting corners. ω = 11 settles 95% in ~0.43 s (the measured balance of smoothness and response).
     if (this.smoothY < 0 || !this.pose || this.testMode || jumped) {
       this.smoothY = scrollY;
       this.smoothV = 0;
     } else {
-      const omega = 13;
+      const omega = 11;
       const steps = Math.max(1, Math.ceil(dt / (1 / 120)));
       const h = dt / steps;
       for (let i = 0; i < steps; i++) {
@@ -257,11 +299,23 @@ export class JourneyEngine {
     const sample = sampleTimeline(this.timeline, this.smoothY);
     const target = sample.pose;
     const prev = this.pose?.position;
-    this.pose = { position: [...target.position] as Vec3, target: [...target.target] as Vec3 };
+    // Speed-adaptive glide: at reading speeds the camera rides the exact authored path;
+    // when scrolling fast it low-passes that path, so the cinematic pull-backs and
+    // stop-go holds of a whole sequence blend into one continuous sweep instead of
+    // reading as jitter. Continuous in speed, so it vanishes as scrolling slows.
+    const speedVh = Math.abs(this.smoothV) / this.vp.height;
+    const tau = smoothstep(1.2, 4, speedVh) * 0.3;
+    if (!this.pose || jumped || this.testMode || tau < 0.002) {
+      this.pose = { position: [...target.position] as Vec3, target: [...target.target] as Vec3 };
+    } else {
+      const a = 1 - Math.exp(-dt / tau);
+      const mix = (from: Vec3, to: Vec3): Vec3 => [from[0] + (to[0] - from[0]) * a, from[1] + (to[1] - from[1]) * a, from[2] + (to[2] - from[2]) * a];
+      this.pose = { position: mix(this.pose.position, target.position), target: mix(this.pose.target, target.target) };
+    }
     const delta = prev ? length(sub(target.position, prev)) + (this.smoothY === scrollY ? 0 : 0.05) : 0;
     this.speed = delta > 0 ? this.speed * 0.85 + (length(sub(target.position, prev!)) / Math.max(dt, 1e-3)) * 0.15 : this.speed * 0.8;
 
-    if (!this.testMode && this.ambient) this.time += dt;
+    if (!this.testMode && this.ambient) this.time += elapsed;
     this.pointer = [this.pointer[0] + (this.pointerTarget[0] - this.pointer[0]) * (1 - Math.exp(-4 * dt)), this.pointer[1] + (this.pointerTarget[1] - this.pointer[1]) * (1 - Math.exp(-4 * dt))];
 
     const view = lookAtView(this.pose.position, this.pose.target);
@@ -289,7 +343,11 @@ export class JourneyEngine {
     this.settledFrames = moving || !pointerSettled ? 0 : this.settledFrames + 1;
     // Keep animating while moving, while ambient motion plays, or for a few frames to settle.
     if (this.extraFrames > 0) this.extraFrames--;
-    if (moving || (this.ambient && this.renderer && !this.testMode) || this.settledFrames < 3 || this.extraFrames > 0) this.wake();
+    // Continue directly (not via wake(), which resets the clock): lastTime must stay the previous
+    // frame's timestamp or every frame loses its own processing time and motion runs slow.
+    if ((moving || (this.ambient && this.renderer && !this.testMode) || this.settledFrames < 3 || this.extraFrames > 0) && !document.hidden) {
+      this.frameId = requestAnimationFrame(this.tick);
+    }
   };
 
   private updatePanels(eye: Vec3) {

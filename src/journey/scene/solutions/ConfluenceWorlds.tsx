@@ -6,6 +6,7 @@ import { frameRef, usePresence } from '../shared/frame';
 import StreamField, { type Stream } from '../shared/StreamField';
 import { D } from '../../worlds/solutions';
 import Exhibit, { type DisplaySpec } from '../portfolio/Exhibit';
+import ProcessConduit from '../shared/ProcessConduit';
 
 /** Beside the products intro: the independent products, floating (hover lifts, click inspects). */
 const PRODUCT_TEASER: DisplaySpec[] = [
@@ -156,6 +157,7 @@ export function ProcessAqueduct({ index }: { index: number }) {
   return (
     <group ref={ref}>
       <StreamField streams={streams} presence={presence} />
+      <ProcessConduit position={D.approach} under="sol-approach" color={VALID} />
       {Array.from({ length: 5 }, (_, i) => (
         <Gate key={i} position={at(D.approach, [0, -2700, -2500 - i * 3200])} width={9000 - i * 900} height={5200 - i * 500} color={CALM} />
       ))}

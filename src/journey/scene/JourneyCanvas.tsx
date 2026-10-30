@@ -10,6 +10,7 @@ import TravelStreaks from './shared/TravelStreaks';
 import Warmup from './shared/Warmup';
 import { Picker } from './shared/pick';
 import Motes from './shared/Motes';
+import AdaptiveResolution from './shared/AdaptiveResolution';
 
 /** Keeps the three.js camera identical to the engine's (same pose, fov, aspect). */
 function CameraSync({ palettes }: { palettes: Palette[] }) {
@@ -105,6 +106,7 @@ export default function JourneyCanvas({ engine, palettes, children }: Props) {
       <SkyDome palettes={palettes} />
       <TravelStreaks />
       {children}
+      <AdaptiveResolution max={dpr} />
       <Motes />
       <Picker />
       <Warmup />

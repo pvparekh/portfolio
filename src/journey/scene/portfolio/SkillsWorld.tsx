@@ -34,39 +34,59 @@ export default function SkillsWorld({ index }: { index: number }) {
     let s = 29;
     const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
     const stars: number[] = [];
+    const sizes: number[] = [];
     const segments: number[] = [];
+    // One constellation per skill group, set in the margins around the panel so they
+    // are actually in frame at the reading position (depth 3600 behind the panel:
+    // 1 px on screen is ~3.3 world units there).
+    const slots: [number, number][] = [[-1760, 1160], [0, 1260], [1760, 1160], [-1760, -1160], [0, -1260], [1760, -1160]];
     const centres: THREE.Vector3[] = [];
     for (let g = 0; g < GROUPS; g++) {
-      const angle = (g / GROUPS) * Math.PI * 2 + 0.4;
-      const centre = new THREE.Vector3(SKILLS[0] + Math.cos(angle) * 9800, SKILLS[1] + Math.sin(angle) * 4600, SKILLS[2] - 3600 - (g % 2) * 1600);
+      const [sx, sy] = slots[g];
+      const centre = new THREE.Vector3(SKILLS[0] + sx, SKILLS[1] + sy, SKILLS[2] - 3600 - (g % 2) * 500);
       centres.push(centre);
-      const count = 6 + Math.round(r() * 5);
+      const count = 5 + Math.round(r() * 3);
       const cluster: THREE.Vector3[] = [];
       for (let i = 0; i < count; i++) {
-        const p = centre.clone().add(new THREE.Vector3((r() - 0.5) * 1800, (r() - 0.5) * 1200, (r() - 0.5) * 1400));
+        const p = centre.clone().add(new THREE.Vector3((r() - 0.5) * 1150, (r() - 0.5) * 420, (r() - 0.5) * 500));
         cluster.push(p);
         stars.push(p.x, p.y, p.z);
+        sizes.push(i === 0 ? 9 : 4 + r() * 4);
       }
+      // A path through the cluster, nearest-neighbour ordered so lines read as a figure.
+      cluster.sort((a, b) => a.x - b.x);
       for (let i = 1; i < cluster.length; i++) segments.push(...cluster[i - 1].toArray(), ...cluster[i].toArray());
     }
-    for (let g = 0; g < GROUPS; g++) segments.push(...centres[g].toArray(), ...centres[(g + 1) % GROUPS].toArray());
-    // Background dust.
-    for (let i = 0; i < 900; i++) stars.push(SKILLS[0] + (r() - 0.5) * 60000, SKILLS[1] + (r() - 0.5) * 30000, SKILLS[2] - 9000 - r() * 40000);
+    // Deep field: mostly tiny, a few brighter.
+    for (let i = 0; i < 1400; i++) {
+      stars.push(SKILLS[0] + (r() - 0.5) * 60000, SKILLS[1] + (r() - 0.5) * 30000, SKILLS[2] - 9000 - r() * 40000);
+      const v = r();
+      sizes.push(1 + v * v * v * 5);
+    }
     const pg = new THREE.BufferGeometry();
     pg.setAttribute('position', new THREE.Float32BufferAttribute(stars, 3));
+    pg.setAttribute('aSize', new THREE.Float32BufferAttribute(sizes, 1));
     const lg = new THREE.BufferGeometry();
     lg.setAttribute('position', new THREE.Float32BufferAttribute(segments, 3));
-    const glow = document.createElement('canvas');
-    glow.width = glow.height = 64;
-    const gc = glow.getContext('2d')!;
-    const grad = gc.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grad.addColorStop(0, 'rgba(255,255,255,1)');
-    grad.addColorStop(0.18, 'rgba(210,225,255,0.85)');
-    grad.addColorStop(1, 'rgba(120,150,255,0)');
-    gc.fillStyle = grad;
-    gc.fillRect(0, 0, 64, 64);
-    const sm = new THREE.PointsMaterial({ color: '#D6E2FF', map: new THREE.CanvasTexture(glow), size: 18, sizeAttenuation: false, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending });
-    const lm = new THREE.LineBasicMaterial({ color: '#7D93E0', transparent: true, opacity: 0.32, depthWrite: false, blending: THREE.AdditiveBlending });
+    const sm = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uTime: { value: 0 }, uOpacity: { value: 1 }, uScale: { value: 1 }, uColor: { value: new THREE.Color('#D6E2FF') } },
+      vertexShader: `uniform float uTime; uniform float uScale; attribute float aSize; varying float vTwinkle;
+        void main() {
+          float seed = fract(sin(dot(position.xy, vec2(12.9898, 78.233))) * 43758.5453);
+          vTwinkle = 0.7 + 0.3 * sin(uTime * (0.6 + seed * 1.4) + seed * 40.0);
+          gl_PointSize = aSize * uScale;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }`,
+      fragmentShader: `uniform vec3 uColor; uniform float uOpacity; varying float vTwinkle;
+        void main() {
+          float d = length(gl_PointCoord - 0.5) * 2.0;
+          float core = smoothstep(1.0, 0.0, d);
+          float a = core * core * vTwinkle * uOpacity;
+          gl_FragColor = vec4(uColor * a, a);
+        }`,
+    });
+    const lm = new THREE.LineBasicMaterial({ color: '#7D93E0', transparent: true, opacity: 0.4, depthWrite: false, blending: THREE.AdditiveBlending });
     const nm = new THREE.ShaderMaterial({
       vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
       fragmentShader: nebulaFragment, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
@@ -76,8 +96,10 @@ export default function SkillsWorld({ index }: { index: number }) {
   }, []);
 
   const ref = usePresence(index, (presence, frame) => {
-    starMaterial.opacity = 0.9 * presence;
-    lineMaterial.opacity = 0.32 * presence;
+    starMaterial.uniforms.uOpacity.value = presence;
+    starMaterial.uniforms.uTime.value = frame.time;
+    starMaterial.uniforms.uScale.value = Math.min(window.devicePixelRatio, 2);
+    lineMaterial.opacity = 0.4 * presence;
     nebula.uniforms.uTime.value = frame.time;
     nebula.uniforms.uPresence.value = presence;
   }, 1.0);

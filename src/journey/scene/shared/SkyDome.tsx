@@ -23,8 +23,11 @@ void main() {
   float h = vDir.y;
   vec3 color = mix(uHorizon, uTop, smoothstep(0.0, 0.55, h));
   color = mix(color, uBottom, smoothstep(0.0, -0.35, h));
-  // Sparse, very faint distant stars (deterministic per direction).
-  vec3 g = vDir * 900.0;
+  // Sparse, very faint distant stars (deterministic per direction), slowly wheeling
+  // so the sky is never still even when the visitor is.
+  float spin = uTime * 0.0045;
+  vec3 d = vec3(vDir.x * cos(spin) - vDir.z * sin(spin), vDir.y, vDir.x * sin(spin) + vDir.z * cos(spin));
+  vec3 g = d * 900.0;
   vec3 cell = floor(g);
   vec3 local = fract(g) - 0.5;
   float star = step(0.9982, hash(cell)) * (1.0 - smoothstep(0.05, 0.22, length(local)));
