@@ -49,10 +49,10 @@ public/           Static assets (logos, images)
 
 ## Spatial journey
 
-On capable devices each page is a 3D world you travel through: every section is a destination, and scrolling flies the camera between them. All content is still real HTML (selectable, focusable, indexable), placed in the world and read at exact 1:1 scale.
+On capable desktops each page is a 3D world you travel through (phones and tablets get the standard layout for now): every section is a destination, and scrolling flies the camera between them. All content is still real HTML (selectable, focusable, indexable), placed in the world and read at exact 1:1 scale.
 
 - Visitors with `prefers-reduced-motion`, or without a capable GPU, get the standard layout.
-- Anyone can switch with the "Standard layout" button. URLs also accept `?layout=classic` or `?layout=spatial`.
+- URLs accept `?layout=classic` or `?layout=spatial` to override. A visible "Standard layout" switch exists behind `SHOW_LAYOUT_SWITCH` in `src/journey/core/mode.ts` (currently off).
 - Ambient motion can be paused from the navigation bar.
 - If WebGL fails or is lost, the content stays usable.
 

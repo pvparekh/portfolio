@@ -202,7 +202,27 @@ try {
   await reduced.close();
   console.log('JOURNEY_PASS reduced motion');
 
-  // 10. Phones: journey with capped DPR and readable 1:1 panels.
+  // 10a. Phones and tablets get the standard site by default (desktop-only journey for now).
+  const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+  const touch = await touchContext.newPage();
+  await touch.goto(base + '/', { waitUntil: 'networkidle' });
+  assert.equal(await touch.locator('.journey').count(), 0, 'phones get the standard page by default');
+  assert.ok(await touch.locator('main #about').count(), 'standard page content present on phones');
+  await touchContext.close();
+  console.log('JOURNEY_PASS phones default to standard layout');
+
+  // 10b. Desktop default (no override) gets the journey, with no visible layout switch.
+  const desk = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const dp = await desk.newPage();
+  await dp.goto(base + '/', { waitUntil: 'networkidle' });
+  if (!swift) {
+    assert.ok(await dp.locator('.journey').count(), 'desktop gets the journey by default');
+    assert.equal(await dp.locator('.journey-layout-switch').count(), 0, 'no visible layout switch');
+    console.log('JOURNEY_PASS desktop default journey, switch hidden');
+  }
+  await desk.close();
+
+  // 10. Phones (forced with ?layout=spatial): journey with capped DPR and readable 1:1 panels.
   const phoneContext = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const phone = await phoneContext.newPage();
   phone.on('pageerror', e => errors.push('phone: ' + e.message));

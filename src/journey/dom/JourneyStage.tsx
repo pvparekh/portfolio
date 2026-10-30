@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { JourneyEngine } from '../core/engine';
-import { setLayoutPreference } from '../core/mode';
+import { SHOW_LAYOUT_SWITCH, setLayoutPreference } from '../core/mode';
 import type { JourneyDefinition } from '../core/types';
 import { getStableViewportHeight } from '../../spatial/core/viewport';
 import { isTestMode, readMotionPreference, onReducedMotionChange } from '../../spatial/core/capability';
@@ -151,7 +151,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
             </li>
           ))}
         </ol>
-        <button type="button" className="journey-layout-switch" onClick={() => setLayoutPreference('classic')}>Standard layout</button>
+        {SHOW_LAYOUT_SWITCH && <button type="button" className="journey-layout-switch" onClick={() => setLayoutPreference('classic')}>Standard layout</button>}
       </nav>
       <div className="journey-spacer" style={{ height: total ? total + engine.getViewport().height : '100vh' }} aria-hidden="true">
         {definition.destinations.map((dest, i) => (
