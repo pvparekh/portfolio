@@ -134,7 +134,7 @@ export class JourneyEngine {
     if (!this.timeline) return null;
     const { destinations } = this.definition;
     for (let d = 0; d < destinations.length; d++) {
-      const s = destinations[d].shots.findIndex(shot => shot.panel === panelId);
+      const s = destinations[d].shots.findIndex(shot => shot.panel === panelId || shot.with?.includes(panelId));
       if (s >= 0) return this.timeline.dwellStarts.get(`${d}:${s}`) ?? null;
     }
     return null;
@@ -172,9 +172,24 @@ export class JourneyEngine {
       if (!spec) continue;
       const panelWidth = Math.min(spec.width, narrow ? width - 32 : width - 140);
       el.style.width = `${panelWidth}px`;
+      this.sizes.set(id, { width: panelWidth, height: el.offsetHeight });
+    }
+    // Stacked panels hang under their parent at its measured height; then place everything.
+    for (const authored of this.definition.panels) {
+      const parent = authored.below && this.panels.get(authored.below.panel);
+      const own = this.sizes.get(authored.id);
+      const parentSize = authored.below && this.sizes.get(authored.below.panel);
+      if (!parent || !own || !parentSize) continue;
+      const { up } = basis(parent.yaw, parent.pitch ?? 0);
+      const drop = parentSize.height / 2 + (authored.below!.gap ?? 28) + own.height / 2;
+      const position: Vec3 = [parent.position[0] - up[0] * drop, parent.position[1] - up[1] * drop, parent.position[2] - up[2] * drop];
+      this.panels.set(authored.id, { ...authored, position, yaw: parent.yaw, pitch: parent.pitch });
+    }
+    for (const [id, el] of this.elements) {
+      const spec = this.panels.get(id);
+      if (!spec) continue;
       const { right, up, normal } = basis(spec.yaw, spec.pitch ?? 0);
       el.style.transform = objectCss(composeMatrix(spec.position, right, up, normal));
-      this.sizes.set(id, { width: panelWidth, height: el.offsetHeight });
     }
     const heights = new Map([...this.sizes].map(([id, s]) => [id, s.height]));
     this.timeline = buildTimeline(this.definition.destinations, this.panels, heights, this.vp);

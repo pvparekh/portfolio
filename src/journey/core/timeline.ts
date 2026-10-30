@@ -80,6 +80,21 @@ export function shotPoses(panel: PanelSpec, panelHeight: number, vp: Viewport, o
   };
 }
 
+/** A shot frames its panel together with any panels stacked below it, as one block. */
+function composite(panel: PanelSpec, withIds: string[], panels: Map<string, PanelSpec>, heights: Map<string, number>, vp: Viewport) {
+  let height = heights.get(panel.id) ?? vp.height * 0.6;
+  const top = height / 2;
+  for (const id of withIds) {
+    const other = panels.get(id);
+    if (other?.below?.panel !== panel.id) continue;
+    height += (other.below.gap ?? 28) + (heights.get(id) ?? 0);
+  }
+  const shift = top - height / 2; // negative: centre moves down the panel's up axis
+  if (shift === 0) return { spec: panel, height };
+  const { up } = basis(panel.yaw, panel.pitch ?? 0);
+  return { spec: { ...panel, position: add(panel.position, scale(up, shift)) }, height };
+}
+
 export function buildTimeline(
   destinations: DestinationSpec[],
   panels: Map<string, PanelSpec>,
@@ -97,7 +112,8 @@ export function buildTimeline(
     dest.shots.forEach((shot, si) => {
       const panel = panels.get(shot.panel);
       if (!panel) return;
-      const poses = shotPoses(panel, heights.get(panel.id) ?? vp.height * 0.6, vp, shot.offsetX, shot.offsetY);
+      const { spec: framed, height: framedHeight } = composite(panel, shot.with ?? [], panels, heights, vp);
+      const poses = shotPoses(framed, framedHeight, vp, shot.offsetX, shot.offsetY);
       if (previous) {
         const isTravel = si === 0;
         const length = isTravel ? lengths.travel : lengths.move;

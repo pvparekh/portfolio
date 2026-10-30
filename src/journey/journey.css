@@ -284,10 +284,13 @@ html.journey-active body {
   color: rgba(169, 182, 201, 0.0);
   transition: color 0.25s;
 }
+/* Labels stay out of the composition while reading; they surface in transit, on hover and on focus. */
 .journey-rail:hover button,
-.journey-rail button:focus-visible,
-.journey-rail button.is-active { color: rgba(169, 182, 201, 0.9); }
-.journey-rail button.is-active { color: var(--jp-ink); }
+.journey-rail:focus-within button { color: rgba(169, 182, 201, 0.9); transition-delay: 0s; }
+.journey-rail button.is-active { transition: color 0.5s 0.5s; }
+.journey:has(.journey-camera.is-moving) .journey-rail button.is-active,
+.journey-rail:hover button.is-active,
+.journey-rail button.is-active:focus-visible { color: var(--jp-ink); transition-delay: 0s; }
 .jp-mobile-preview { display: none; }
 .journey-rail-dot { order: 2; width: 6px; height: 6px; border-radius: 50%; background: rgba(169, 182, 201, 0.35); transition: transform 0.25s, background 0.25s; }
 .journey-rail button.is-active .journey-rail-dot { background: var(--jp-warm); transform: scale(1.5); }

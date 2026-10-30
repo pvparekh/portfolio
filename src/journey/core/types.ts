@@ -12,11 +12,15 @@ export interface PanelSpec {
   width: number;
   /** Optional id for a scroll marker at this panel's reading position (deep links such as #work). */
   anchor?: string;
+  /** Stack this panel under another panel (same plane), measured at layout so it never overlaps. */
+  below?: { panel: string; gap?: number };
 }
 
 /** A readable camera composition. The focus panel is shown at exactly 1:1 scale. */
 export interface ShotSpec {
   panel: string;
+  /** Secondary panels composed into this shot; focusing one of them travels here. */
+  with?: string[];
   /** Lateral offset of the panel from screen centre, as a fraction of viewport width (wide screens only). */
   offsetX?: number;
   /** Vertical offset as a fraction of viewport height. */

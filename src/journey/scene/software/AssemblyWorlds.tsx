@@ -4,14 +4,14 @@ import * as THREE from 'three';
 import type { Vec3 } from '../../core/math';
 import { frameRef, usePresence } from '../shared/frame';
 import Exhibit, { type DisplaySpec } from '../portfolio/Exhibit';
-import { FLOOR, GALLERY_STEP, S } from '../../worlds/software';
+import { FLOOR, GALLERY_STEP, S, servicePosition } from '../../worlds/software';
 import { softwareProjects } from '../../../softwareProjects';
 
 const WHITE = '#E2E8F0';
 const BLUE = '#93C5FD';
 const at = (base: Vec3, o: Vec3): Vec3 => [base[0] + o[0], base[1] + o[1], base[2] + o[2]];
 
-const stone = new THREE.MeshStandardMaterial({ color: '#12151C', roughness: 0.7, metalness: 0.25 });
+const stone = new THREE.MeshStandardMaterial({ color: '#161B26', emissive: '#0A0F1A', roughness: 0.6, metalness: 0.3 });
 
 /** A graphite module with a fine structural-white edge. */
 function Module({ position, size, rotation = [0, 0, 0], edge = WHITE, edgeOpacity = 0.55, faces = true }: { position: Vec3; size: Vec3; rotation?: Vec3; edge?: string; edgeOpacity?: number; faces?: boolean }) {
@@ -64,9 +64,9 @@ export function ExplodedLayers({ index }: { index: number }) {
   return (
     <group ref={ref}>
       {layers.map(i => (
-        <group key={i} position={at(base, [240 + i * 220, 120 - i * 60, -900 - i * 900])} rotation={[0, -0.24, 0]}>
-          <mesh material={fill}><planeGeometry args={[760, 480]} /></mesh>
-          <Module position={[0, 0, 0]} size={[760, 480, 2]} faces={false} edge={i === 0 ? WHITE : BLUE} edgeOpacity={0.5 - i * 0.09} />
+        <group key={i} position={at(base, [-980 - i * 360, 60 + i * 50, -1300 - i * 700])} rotation={[0, 0.3, 0]}>
+          <mesh material={fill}><planeGeometry args={[600, 380]} /></mesh>
+          <Module position={[0, 0, 0]} size={[600, 380, 2]} faces={false} edge={i === 0 ? WHITE : BLUE} edgeOpacity={0.5 - i * 0.09} />
         </group>
       ))}
     </group>
@@ -115,13 +115,13 @@ export function ServiceModules({ index, count }: { index: number; count: number 
     <group ref={ref}>
       <group ref={spin}>
         {Array.from({ length: count }, (_, i) => {
-          const centre = at(S.services, [(i + 1) * 4600 + 1900, 600, -1800 - (i % 2) * 900]);
-          const sizes: Vec3[] = [[900, 900, 900], [1400, 260, 900], [500, 1300, 500], [1100, 500, 1100], [700, 700, 1300]];
+          const centre = at(servicePosition(i), [1200, 40, -1500]);
+          const sizes: Vec3[] = [[480, 480, 480], [700, 150, 480], [260, 680, 260], [560, 260, 560], [380, 380, 640]];
           const size = sizes[i % sizes.length];
           return (
             <group key={i} position={centre}>
               <Module position={[0, 0, 0]} size={size} edge={BLUE} edgeOpacity={0.6} />
-              <Module position={[0, -size[1] / 2 - 380, 0]} size={[size[0] * 1.3, 40, size[2] * 1.3]} faces={false} edgeOpacity={0.25} />
+              <Module position={[0, -size[1] / 2 - 200, 0]} size={[size[0] * 1.3, 24, size[2] * 1.3]} faces={false} edgeOpacity={0.25} />
             </group>
           );
         })}
@@ -150,8 +150,8 @@ export function Gallery({ index }: { index: number }) {
           if (!sources) return null;
           const aspect = project.id === 'review-bot' ? 1257 / 740 : 1.6;
           const displays: DisplaySpec[] = [
-            { src: sources[0], position: [1020, 40, -900], width: 660, yaw: -20, aspect, emphasis: 1 },
-            { src: sources[1], position: [1320, 540, -1900], width: 540, yaw: -24, aspect: project.id === 'review-bot' ? 1257 / 680 : 1.6, emphasis: 0.45 },
+            { src: sources[0], position: [900, 40, -900], width: 600, yaw: -18, aspect, emphasis: 1 },
+            { src: sources[1], position: [1120, 500, -1900], width: 500, yaw: -22, aspect: project.id === 'review-bot' ? 1257 / 680 : 1.6, emphasis: 0.45 },
           ];
           const position = at(S.work, [(i + 1) * GALLERY_STEP, 0, -(i % 2) * 700]);
           return <Exhibit key={project.id} position={position} yaw={4} accent={i === 0 ? '#F59E0B' : WHITE} floorY={FLOOR} displays={displays} focus={shot => shot === i + 1} />;

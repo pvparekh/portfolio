@@ -64,7 +64,7 @@ export function AboutBioPanel() {
       <h2>Who <span className="jp-accent">am I?</span></h2>
       <div className="jp-about-row">
         <figure className="jp-portrait">
-          <img src="/IMG_2395.jpeg" alt="Parth Parekh photographed in front of a colorful mural" width={1114} height={1536} decoding="async" />
+          <img src="/about-portrait-400.webp" alt="Parth Parekh photographed in front of a colorful mural" width={400} height={551} decoding="async" />
         </figure>
         <div className="jp-prose"><AboutBio /></div>
       </div>

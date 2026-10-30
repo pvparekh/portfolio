@@ -34,8 +34,9 @@ export const proofIds = deliveryExamples.map(item => `sol-proof-${item.id}`);
 export const approvedCases = caseStudies.filter(study => study.publicationApproved);
 export const caseIds = approvedCases.map(study => `sol-case-${study.id}`);
 
-const services = lane(D.services, [...serviceIds, 'sol-tooling'], 5200, 1120, 'services');
-const proofs = lane(D.work, [...proofIds, 'sol-proof-close'], 5000, 1100, 'work');
+const services = lane(D.services, serviceIds, 5200, 1040, 'services');
+const proofs = lane(D.work, proofIds, 5000, 1040, 'work');
+const lastProof = proofIds[proofIds.length - 1];
 const cases = lane(D.independent, caseIds, 5600, 1100, 'independent', approvedCases.map(s => s.id));
 
 export const solutionsJourney: JourneyDefinition = {
@@ -44,9 +45,11 @@ export const solutionsJourney: JourneyDefinition = {
     { id: 'sol-graphic', destination: 'hero', position: at(D.hero, [1250, 0, -1900]), yaw: -14, width: 640 },
     { id: 'sol-problems', destination: 'problems', position: D.problems, yaw: 0, width: 1180 },
     { id: 'sol-services-intro', destination: 'services', position: D.services, yaw: 0, width: 780 },
+    { id: 'sol-tooling', destination: 'services', position: D.services, yaw: 0, width: 780, below: { panel: 'sol-services-intro' } },
     ...services,
     { id: 'sol-work-intro', destination: 'work', position: D.work, yaw: 0, width: 780 },
     ...proofs,
+    { id: 'sol-proof-close', destination: 'work', position: D.work, yaw: 0, width: 1040, below: { panel: lastProof } },
     { id: 'sol-approach', destination: 'approach', position: D.approach, yaw: 0, width: 1180 },
     { id: 'sol-independent-intro', destination: 'independent', position: D.independent, yaw: 0, width: 780 },
     ...cases,
@@ -61,10 +64,10 @@ export const solutionsJourney: JourneyDefinition = {
       shots: [{ panel: 'sol-problems' }],
       palette: { background: '#0A0604', atmosphere: '#2A1A0C', accent: '#F5A524' } },
     { id: 'services', label: 'Services', anchor: 'services', center: D.services, approach: at(D.services, [5000, 5000, 15000]),
-      shots: [{ panel: 'sol-services-intro' }, ...services.map(p => ({ panel: p.id, offsetX: p.position[0] < D.services[0] ? -0.06 : 0.06 }))],
+      shots: [{ panel: 'sol-services-intro', with: ['sol-tooling'] }, ...services.map(p => ({ panel: p.id, offsetX: p.position[0] < D.services[0] ? -0.06 : 0.06 }))],
       palette: { background: '#03090B', atmosphere: '#0D3036', accent: '#67E8F9' } },
     { id: 'work', label: 'Delivery', anchor: 'work', center: D.work, approach: at(D.work, [-5000, 5000, 15000]),
-      shots: [{ panel: 'sol-work-intro' }, ...proofs.map(p => ({ panel: p.id, offsetX: p.position[0] < D.work[0] ? -0.06 : 0.06 }))],
+      shots: [{ panel: 'sol-work-intro' }, ...proofs.map(p => ({ panel: p.id, offsetX: p.position[0] < D.work[0] ? -0.06 : 0.06, with: p.id === lastProof ? ['sol-proof-close'] : undefined }))],
       palette: { background: '#020A0C', atmosphere: '#0A3540', accent: '#5EEAD4' } },
     { id: 'approach', label: 'Approach', anchor: 'approach', center: D.approach, approach: at(D.approach, [4000, 5000, 15000]),
       shots: [{ panel: 'sol-approach' }],
@@ -73,7 +76,7 @@ export const solutionsJourney: JourneyDefinition = {
       shots: [{ panel: 'sol-independent-intro' }, ...cases.map(p => ({ panel: p.id, offsetX: p.position[0] < D.independent[0] ? -0.06 : 0.06 }))],
       palette: { background: '#05070C', atmosphere: '#16203A', accent: '#A5B4FC' } },
     { id: 'contact', label: 'Contact', anchor: 'contact', center: D.contact, approach: at(D.contact, [0, 3000, 15000]),
-      shots: [{ panel: 'sol-contact', offsetX: -0.16, dwell: 0.2 }, { panel: 'sol-contact-aside', offsetX: 0.14 }],
+      shots: [{ panel: 'sol-contact', offsetX: -0.16, dwell: 0.4, with: ['sol-contact-aside'] }],
       palette: { background: '#03070A', atmosphere: '#0B2630', accent: '#67E8F9' } },
   ],
 };

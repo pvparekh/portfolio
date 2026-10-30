@@ -68,4 +68,15 @@ describe('journey timeline', () => {
     expect(arrive.segment.kind).toBe('dwell');
     expect(arrive.segment.destination).toBe(1);
   });
+
+  it('frames a panel and the panels stacked below it as one block', () => {
+    const main: PanelSpec = { id: 'm', destination: 'one', position: [0, 0, 0], yaw: 0, width: 600 };
+    const note: PanelSpec = { id: 'n', destination: 'one', position: [0, -364, 0], yaw: 0, width: 600, below: { panel: 'm', gap: 28 } };
+    const dests: DestinationSpec[] = [{ ...destinations[0], shots: [{ panel: 'm', with: ['n'] }] }];
+    const t = buildTimeline(dests, new Map([[main.id, main], [note.id, note]]), new Map([['m', 300], ['n', 200]]), vp);
+    const dwell = t.segments.find(s => s.kind === 'dwell')!;
+    const pose = sampleTimeline(t, dwell.start + 1).pose;
+    // Block is 300 + 28 + 200 = 528 tall; its centre sits 114 below the main panel's centre.
+    expect(pose.position[1]).toBeCloseTo(-114, 6);
+  });
 });

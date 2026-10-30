@@ -45,6 +45,16 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
     const offReduced = onReducedMotionChange(() => spatialStore.setState({ motion: readMotionPreference() }));
     engine.attach(stageRef.current!, cameraRef.current!);
     document.documentElement.classList.add('journey-active');
+    // Panels far down the journey are off-screen until arrival; decode their images
+    // while idle so arriving never waits on a fetch or decode.
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1200));
+    idle(() => {
+      cameraRef.current?.querySelectorAll('img').forEach(img => {
+        if (img.loading === 'lazy' && img.closest('.jp-mobile-preview, [hidden]')) return;
+        img.loading = 'eager';
+        img.decode().catch(() => {});
+      });
+    });
     const offLayout = engine.subscribeLayout(() => {
       const timeline = engine.getTimeline();
       if (!timeline) return;
