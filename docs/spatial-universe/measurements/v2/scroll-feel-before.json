@@ -1,0 +1,186 @@
+{
+  "measuredAt": "2026-10-30T03:05:31.752Z",
+  "viewport": "1440x900",
+  "targets": {
+    "firstMotionPx": {
+      "max": 100,
+      "why": "The first wheel notch must visibly move the world."
+    },
+    "resumeMedianPx": {
+      "max": 0.5,
+      "unit": "vh",
+      "why": "Leaving a reading stop is a short deliberate push, not a wall."
+    },
+    "longestDeadNotches": {
+      "max": 4,
+      "why": "No stretch of scroll longer than ~4 notches without visible response."
+    },
+    "vhPerDestination": {
+      "min": 1,
+      "max": 3,
+      "why": "Scrollytelling budgets 1-2 vh per text beat, 3-5 for visual showcases."
+    },
+    "settle95Ms": {
+      "min": 200,
+      "max": 500,
+      "why": "Smoothing comparable to Lenis lerp 0.1 (~450 ms) without feeling laggy."
+    },
+    "velocityStepRatio": {
+      "max": 0.35,
+      "why": "Camera velocity should ramp, not jump, when a notch lands."
+    },
+    "streamSpeedCv": {
+      "max": 0.45,
+      "why": "A steady stream of notches should produce steady motion."
+    }
+  },
+  "routes": [
+    {
+      "path": "/",
+      "metrics": {
+        "totalVh": 23.85,
+        "destinations": 6,
+        "vhPerDestination": 3.98,
+        "firstMotionPx": 880,
+        "resumeMedianPx": 608,
+        "resumeMedianVh": 0.68,
+        "resumeMaxPx": 880,
+        "deadShare": 0.42,
+        "longestDeadPx": 920,
+        "longestDeadNotches": 9.2,
+        "notchesPerTravel": 13.5,
+        "settle95Ms": 1600,
+        "velocityStepRatio": 1,
+        "streamSpeedCv": 2.36
+      },
+      "score": {
+        "firstMotionPx": {
+          "value": 880,
+          "pass": false
+        },
+        "resumeMedianPx": {
+          "value": 0.68,
+          "pass": false
+        },
+        "longestDeadNotches": {
+          "value": 9.2,
+          "pass": false
+        },
+        "vhPerDestination": {
+          "value": 3.98,
+          "pass": false
+        },
+        "settle95Ms": {
+          "value": 1600,
+          "pass": false
+        },
+        "velocityStepRatio": {
+          "value": 1,
+          "pass": false
+        },
+        "streamSpeedCv": {
+          "value": 2.36,
+          "pass": false
+        }
+      }
+    },
+    {
+      "path": "/solutions",
+      "metrics": {
+        "totalVh": 30.01,
+        "destinations": 7,
+        "vhPerDestination": 4.29,
+        "firstMotionPx": 774,
+        "resumeMedianPx": 588,
+        "resumeMedianVh": 0.65,
+        "resumeMaxPx": 774,
+        "deadShare": 0.4,
+        "longestDeadPx": 920,
+        "longestDeadNotches": 9.2,
+        "notchesPerTravel": 13.5,
+        "settle95Ms": 400,
+        "velocityStepRatio": 1,
+        "streamSpeedCv": 1.66
+      },
+      "score": {
+        "firstMotionPx": {
+          "value": 774,
+          "pass": false
+        },
+        "resumeMedianPx": {
+          "value": 0.65,
+          "pass": false
+        },
+        "longestDeadNotches": {
+          "value": 9.2,
+          "pass": false
+        },
+        "vhPerDestination": {
+          "value": 4.29,
+          "pass": false
+        },
+        "settle95Ms": {
+          "value": 400,
+          "pass": true
+        },
+        "velocityStepRatio": {
+          "value": 1,
+          "pass": false
+        },
+        "streamSpeedCv": {
+          "value": 1.66,
+          "pass": false
+        }
+      }
+    },
+    {
+      "path": "/software",
+      "metrics": {
+        "totalVh": 26.83,
+        "destinations": 6,
+        "vhPerDestination": 4.47,
+        "firstMotionPx": 780,
+        "resumeMedianPx": 584,
+        "resumeMedianVh": 0.65,
+        "resumeMaxPx": 780,
+        "deadShare": 0.33,
+        "longestDeadPx": 920,
+        "longestDeadNotches": 9.2,
+        "notchesPerTravel": 13.5,
+        "settle95Ms": 417,
+        "velocityStepRatio": 1,
+        "streamSpeedCv": 1.45
+      },
+      "score": {
+        "firstMotionPx": {
+          "value": 780,
+          "pass": false
+        },
+        "resumeMedianPx": {
+          "value": 0.65,
+          "pass": false
+        },
+        "longestDeadNotches": {
+          "value": 9.2,
+          "pass": false
+        },
+        "vhPerDestination": {
+          "value": 4.47,
+          "pass": false
+        },
+        "settle95Ms": {
+          "value": 417,
+          "pass": true
+        },
+        "velocityStepRatio": {
+          "value": 1,
+          "pass": false
+        },
+        "streamSpeedCv": {
+          "value": 1.45,
+          "pass": false
+        }
+      }
+    }
+  ]
+}

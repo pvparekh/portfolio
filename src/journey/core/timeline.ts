@@ -1,4 +1,4 @@
-import { add, basis, catmullRom, clamp, easeInOutCubic, easeInOutSine, lerp3, scale, smoothstep, sub, type Vec3 } from './math';
+import { add, basis, catmullRom, clamp, easeInOutSine, lerp3, scale, smoothstep, sub, type Vec3 } from './math';
 import type { DestinationSpec, PanelSpec, Pose } from './types';
 
 /**
@@ -19,6 +19,8 @@ export interface Segment {
   to: Pose;
   /** Control points for move/travel paths (camera positions). */
   path?: Vec3[];
+  /** Spline parameter at evenly spaced arc lengths (so steady scroll means steady camera speed). */
+  arc?: number[];
 }
 
 export interface Timeline {
@@ -45,9 +47,10 @@ export interface Lengths {
 }
 
 export const defaultLengths = (vp: Viewport): Lengths => ({
-  travel: vp.height * 1.5,
-  move: vp.height * 0.75,
-  dwell: vp.height * 0.6,
+  // Measured against scroll-feel targets (docs 13): ~1 vh per beat, short reading holds.
+  travel: vp.height * 1.0,
+  move: vp.height * 0.55,
+  dwell: vp.height * 0.35,
 });
 
 export interface ShotPoses {
@@ -95,6 +98,36 @@ function composite(panel: PanelSpec, withIds: string[], panels: Map<string, Pane
   return { spec: { ...panel, position: add(panel.position, scale(up, shift)) }, height };
 }
 
+const ARC_SAMPLES = 96;
+
+/** Inverse arc-length table: entry i is the spline parameter at i/ARC_SAMPLES of the path's length. */
+export function arcTable(path: Vec3[]): number[] {
+  const fine = ARC_SAMPLES * 8;
+  const lengths = [0];
+  let prev = catmullRom(path, 0);
+  for (let i = 1; i <= fine; i++) {
+    const p = catmullRom(path, i / fine);
+    lengths.push(lengths[i - 1] + Math.hypot(p[0] - prev[0], p[1] - prev[1], p[2] - prev[2]));
+    prev = p;
+  }
+  const total = lengths[fine] || 1;
+  const table: number[] = [];
+  let j = 0;
+  for (let i = 0; i <= ARC_SAMPLES; i++) {
+    const target = (i / ARC_SAMPLES) * total;
+    while (j < fine && lengths[j + 1] < target) j++;
+    const span = lengths[j + 1] - lengths[j] || 1;
+    table.push((j + Math.min(1, Math.max(0, (target - lengths[j]) / span))) / fine);
+  }
+  return table;
+}
+
+function fromArc(table: number[], v: number) {
+  const x = clamp(v, 0, 1) * ARC_SAMPLES;
+  const i = Math.min(Math.floor(x), ARC_SAMPLES - 1);
+  return table[i] + (table[i + 1] - table[i]) * (x - i);
+}
+
 export function buildTimeline(
   destinations: DestinationSpec[],
   panels: Map<string, PanelSpec>,
@@ -120,12 +153,14 @@ export function buildTimeline(
         const path = isTravel
           ? travelPath(previous.pose, previous.normal, dest.approach, poses.start, vp)
           : movePath(previous.pose, poses.start, previous.normal, poses.normal, vp);
-        segments.push({ kind: isTravel ? 'travel' : 'move', start: cursor, end: cursor + length, destination: di, shot: si, from: previous.pose, to: poses.start, path });
+        segments.push({ kind: isTravel ? 'travel' : 'move', start: cursor, end: cursor + length, destination: di, shot: si, from: previous.pose, to: poses.start, path, arc: arcTable(path) });
         cursor += length;
       }
       if (si === 0) destinationStarts.push(cursor);
       dwellStarts.set(`${di}:${si}`, cursor);
-      const dwell = lengths.dwell + poses.pan + (shot.dwell ?? 0) * vp.height;
+      // No hold on landing: the very first notch of scroll should already move the world.
+      const hold = di === 0 && si === 0 ? 0 : lengths.dwell;
+      const dwell = hold + poses.pan + (shot.dwell ?? 0) * vp.height;
       segments.push({ kind: 'dwell', start: cursor, end: cursor + dwell, destination: di, shot: si, from: poses.start, to: poses.end });
       cursor += dwell;
       previous = { pose: poses.end, normal: poses.normal };
@@ -179,14 +214,16 @@ export function sampleTimeline(timeline: Timeline, scrollY: number): Sample {
     };
   }
   const travel = segment.kind === 'travel';
-  const t = travel ? easeInOutCubic(raw) : easeInOutSine(raw);
+  // Part linear so motion starts the moment scrolling does; part eased so arrivals still settle.
+  const t = travel ? 0.55 * raw + 0.45 * easeInOutSine(raw) : 0.6 * raw + 0.4 * easeInOutSine(raw);
   const path = segment.path ?? [segment.from.position, segment.to.position];
-  const position = catmullRom(path, t);
+  const u = (v: number) => (segment.arc ? fromArc(segment.arc, v) : v);
+  const position = catmullRom(path, u(t));
   // Look target: start at the departing shot's target, lead along the path mid-journey, end on the arriving shot's target.
   const settled = lerp3(segment.from.target, segment.to.target, smoothstep(0.15, 0.85, t));
   let target = settled;
   if (travel) {
-    const ahead = catmullRom(path, Math.min(1, t + 0.06));
+    const ahead = catmullRom(path, u(Math.min(1, t + 0.06)));
     const lead = add(ahead, scale(sub(ahead, position), 6));
     const w = smoothstep(0.06, 0.3, t) * (1 - smoothstep(0.62, 0.92, t));
     target = lerp3(settled, lead, w * 0.85);

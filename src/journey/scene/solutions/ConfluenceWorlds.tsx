@@ -1,10 +1,17 @@
-import { useMemo, useRef } from 'react';
+import { Suspense, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { Vec3 } from '../../core/math';
 import { frameRef, usePresence } from '../shared/frame';
 import StreamField, { type Stream } from '../shared/StreamField';
 import { D } from '../../worlds/solutions';
+import Exhibit, { type DisplaySpec } from '../portfolio/Exhibit';
+
+/** Beside the products intro: the independent products, floating (hover lifts, click inspects). */
+const PRODUCT_TEASER: DisplaySpec[] = [
+  { src: '/projects/formula-vision-replay-map.webp', position: [930, 30, -1500], width: 660, yaw: -14, aspect: 1.6, emphasis: 1, alt: 'Formula Vision screenshot' },
+  { src: '/projects/aetherflow-home.webp', position: [1320, 380, -2700], width: 580, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'AetherFlow screenshot' },
+];
 
 /* Colour carries meaning on this page: amber is raw, manual data; cyan is validated. */
 const RAW = '#C9822F';
@@ -165,7 +172,15 @@ export function ProductDelta({ index, branches }: { index: number; branches: num
       count: 260, color: '#A5B4FC', speed: 0.03, width: 60, chaos: 0, length: 380,
     };
   }), [branches]);
-  return <group ref={ref}><StreamField streams={streams} presence={presence} /></group>;
+  return (
+    <group ref={ref}>
+      <StreamField streams={streams} presence={presence} />
+      <hemisphereLight args={['#A5B4FC', '#05060A', 0.5]} position={D.independent} />
+      <Suspense fallback={null}>
+        <Exhibit position={D.independent} yaw={0} accent="#A5B4FC" title="Products" floorY={D.independent[1] - 2600} displays={PRODUCT_TEASER} focus={shot => shot === 0} bare />
+      </Suspense>
+    </group>
+  );
 }
 
 export function Reservoir({ index }: { index: number }) {

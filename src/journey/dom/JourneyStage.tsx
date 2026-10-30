@@ -5,6 +5,8 @@ import type { JourneyDefinition } from '../core/types';
 import { getStableViewportHeight } from '../../spatial/core/viewport';
 import { isTestMode, readMotionPreference, onReducedMotionChange } from '../../spatial/core/capability';
 import { spatialStore, useSpatial } from '../../spatial/core/store';
+import { sampleTimeline } from '../core/timeline';
+import InspectOverlay from './InspectOverlay';
 import { SceneBoundary } from './SceneBoundary';
 
 export interface SceneProps { engine: JourneyEngine }
@@ -75,6 +77,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
       engine,
       frame: () => engine.getFrame(),
       timeline: () => engine.getTimeline(),
+      sample: (y: number) => { const t = engine.getTimeline(); return t ? sampleTimeline(t, y).pose : null; },
     };
     void debug;
     return () => {
@@ -101,6 +104,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
   return (
     <div className={`journey journey--${page}`}>
       <a className="journey-skip" href="#journey-main">Skip to content</a>
+      <InspectOverlay />
       <SceneBoundary>
         <Suspense fallback={null}>
           <Scene engine={engine} />

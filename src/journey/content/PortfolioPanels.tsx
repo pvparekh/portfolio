@@ -114,50 +114,63 @@ export function ExperienceIntroPanel() {
   );
 }
 
-/** Flattened roles in display order, each with its company and whether it opens that company. */
-export const ROLE_ENTRIES = EXPERIENCE.flatMap(exp => exp.roles.map((role, index) => ({ exp, role, first: index === 0 })));
+/**
+ * Experience grouped the way a profile reads: the current employer gets a stop of
+ * its own with every role under one company header; earlier companies share stops
+ * in pairs. Grouping is derived from the data, so the copy stays the single source.
+ */
+export const EXPERIENCE_GROUPS: (typeof EXPERIENCE)[] = [EXPERIENCE.slice(0, 1)];
+for (let i = 1; i < EXPERIENCE.length; i += 2) EXPERIENCE_GROUPS.push(EXPERIENCE.slice(i, i + 2));
 
-export function RolePanel({ index }: { index: number }) {
+const logoBackground = (exp: (typeof EXPERIENCE)[number]) => (exp.company === 'DOWC' ? '#050508' : (exp.logoBg ?? '#111119'));
+
+function CompanyBlock({ exp }: { exp: (typeof EXPERIENCE)[number] }) {
   const asOf = useMonth();
-  const entry = ROLE_ENTRIES[index];
-  if (!entry) return null;
-  const { exp, role, first } = entry;
-  const employmentType = employmentTypeFor(exp, role);
+  const current = exp.roles.some(role => role.current);
   return (
-    <article className={`jp-role ${role.current ? 'is-current' : ''}`} aria-label={`${exp.company}: ${role.role}`}>
-      {first ? (
-        <header className="jp-company">
-          {exp.logo && (
-            <span className="jp-company-logo" style={{ background: exp.company === 'DOWC' ? '#050508' : (exp.logoBg ?? '#111119') }}>
-              <img src={exp.company === 'DOWC' ? '/dowc-logo-supplied.png' : exp.logo} alt="" style={exp.logoScale ? { transform: `scale(${exp.logoScale})` } : undefined} />
-            </span>
-          )}
-          <div>
-            <h3>
-              {exp.companyUrl
-                ? <a href={exp.companyUrl} target="_blank" rel="noreferrer">{exp.company}<ArrowUpRight size={17} aria-hidden="true" /></a>
-                : exp.company}
-            </h3>
-            <p className="jp-meta">{formatExperienceTenure(exp.companyPeriod, asOf)}</p>
-            <p className="jp-meta">{companyLocationFor(exp)}</p>
-          </div>
-        </header>
-      ) : (
-        <p className="jp-company-continued" aria-hidden="true">
-          <span className="jp-company-logo jp-company-logo--small" style={{ background: exp.company === 'DOWC' ? '#050508' : (exp.logoBg ?? '#111119') }}>
-            {exp.logo && <img src={exp.company === 'DOWC' ? '/dowc-logo-supplied.png' : exp.logo} alt="" />}
+    <section className={`jp-company-block ${current ? 'is-current' : ''}`} aria-label={exp.company}>
+      <header className="jp-company">
+        {exp.logo && (
+          <span className="jp-company-logo" style={{ background: logoBackground(exp) }}>
+            <img src={exp.company === 'DOWC' ? '/dowc-logo-supplied.png' : exp.logo} alt="" style={exp.logoScale ? { transform: `scale(${exp.logoScale})` } : undefined} />
           </span>
-        </p>
-      )}
-      <div className="jp-role-body">
-        <div className="jp-role-title">
-          <h4>{role.role}</h4>
-          {role.current && <span className="jp-current">CURRENT</span>}
+        )}
+        <div>
+          <h3>
+            {exp.companyUrl
+              ? <a href={exp.companyUrl} target="_blank" rel="noreferrer">{exp.company}<ArrowUpRight size={17} aria-hidden="true" /></a>
+              : exp.company}
+          </h3>
+          <p className="jp-meta">{formatExperienceTenure(exp.companyPeriod, asOf)}</p>
+          <p className="jp-meta">{companyLocationFor(exp)}</p>
         </div>
-        {employmentType && <p className="jp-role-type">{employmentType}</p>}
-        <p className="jp-meta">{formatExperienceTenure(role.period, asOf, exp.roles.length > 1)}</p>
-        {role.bullets && <RoleBullets exp={exp} role={role} />}
-      </div>
+      </header>
+      <ol className={`jp-role-list ${exp.roles.length > 1 ? 'is-timeline' : ''}`}>
+        {exp.roles.map(role => {
+          const employmentType = employmentTypeFor(exp, role);
+          return (
+            <li key={role.role + role.period} className={`jp-role-item ${role.current ? 'is-current' : ''}`} aria-label={`${exp.company}: ${role.role}`}>
+              <div className="jp-role-title">
+                <h4>{role.role}</h4>
+                {role.current && <span className="jp-current">CURRENT</span>}
+              </div>
+              {employmentType && <p className="jp-role-type">{employmentType}</p>}
+              <p className="jp-meta">{formatExperienceTenure(role.period, asOf, exp.roles.length > 1)}</p>
+              {role.bullets && <RoleBullets exp={exp} role={role} />}
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
+export function ExperienceGroupPanel({ index }: { index: number }) {
+  const group = EXPERIENCE_GROUPS[index];
+  if (!group) return null;
+  return (
+    <article className={`jp-role jp-exp-group ${group.length > 1 ? 'is-pair' : ''}`}>
+      {group.map(exp => <CompanyBlock key={exp.company} exp={exp} />)}
     </article>
   );
 }

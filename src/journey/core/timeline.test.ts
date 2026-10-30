@@ -47,8 +47,15 @@ describe('journey timeline', () => {
     }
   });
 
+  it('starts moving immediately: no hold on the landing shot', () => {
+    expect(timeline.segments[0].end - timeline.segments[0].start).toBe(0);
+    const a = sampleTimeline(timeline, 0).pose.position;
+    const b = sampleTimeline(timeline, 100).pose.position;
+    expect(a).not.toEqual(b);
+  });
+
   it('holds still while reading a panel that fits the viewport', () => {
-    const dwell = timeline.segments[0];
+    const dwell = timeline.segments.find(s => s.kind === 'dwell' && s.destination === 1)!;
     const a = sampleTimeline(timeline, dwell.start + 1).pose.position;
     const b = sampleTimeline(timeline, dwell.end - 1).pose.position;
     expect(a).toEqual(b);

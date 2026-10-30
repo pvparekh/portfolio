@@ -21,20 +21,18 @@ export const local = (base: Vec3, yawDeg: number, [x, y, z]: Vec3): Vec3 => {
   return [base[0] + x * Math.cos(r) + z * Math.sin(r), base[1] + y, base[2] - x * Math.sin(r) + z * Math.cos(r)];
 };
 
-export const ROLE_SPACING = 5200;
-export const ROLE_COUNT = 4;
+export const ROLE_SPACING = 6400;
+/** Experience stops: the current employer alone, earlier companies in pairs (see EXPERIENCE_GROUPS). */
+export const ROLE_COUNT = 2;
 
-/** Experience role panels alternate sides of the colonnade, angled toward its axis. */
-export const rolePanels: PanelSpec[] = Array.from({ length: ROLE_COUNT }, (_, i) => {
-  const side = i % 2 === 0 ? -1 : 1;
-  return {
-    id: `role-${i}`,
-    destination: 'experience',
-    position: at(EXPERIENCE, [side * 1500, 0, -(i + 1) * ROLE_SPACING]),
-    yaw: -side * 26,
-    width: 680,
-  };
-});
+/** The current employer stands to one side of the colonnade; the paired stop faces down the path. */
+export const rolePanels: PanelSpec[] = Array.from({ length: ROLE_COUNT }, (_, i) => ({
+  id: `role-${i}`,
+  destination: 'experience',
+  position: at(EXPERIENCE, [i === 0 ? -1300 : 0, 0, -(i + 1) * ROLE_SPACING]),
+  yaw: i === 0 ? 20 : 0,
+  width: i === 0 ? 820 : 1180,
+}));
 
 /** Project exhibits: an info panel plus WebGL displays positioned in the panel's local frame. */
 export const EXHIBITS = {
@@ -61,7 +59,7 @@ export const portfolioJourney: JourneyDefinition = {
   destinations: [
     {
       id: 'origin', label: 'Origin', anchor: 'hero', center: ORIGIN, approach: [0, 600, 9000],
-      shots: [{ panel: 'origin', dwell: 0.2 }],
+      shots: [{ panel: 'origin' }],
       palette: { background: '#04050A', atmosphere: '#0A1022', accent: '#F59E0B' },
     },
     {
@@ -71,13 +69,13 @@ export const portfolioJourney: JourneyDefinition = {
     },
     {
       id: 'experience', label: 'Experience', anchor: 'experience', center: EXPERIENCE, approach: at(EXPERIENCE, [0, 3200, 15000]),
-      shots: [{ panel: 'exp-intro' }, ...rolePanels.map(p => ({ panel: p.id, offsetX: p.position[0] < EXPERIENCE[0] ? -0.08 : 0.08 }))],
+      shots: [{ panel: 'exp-intro' }, ...rolePanels.map((p, i) => ({ panel: p.id, offsetX: i === 0 ? -0.12 : 0 }))],
       palette: { background: '#05070B', atmosphere: '#1A2230', accent: '#CBD5E1' },
     },
     {
       id: 'projects', label: 'Projects', anchor: 'projects', center: PROJECTS, approach: at(PROJECTS, [-3000, 5200, 19000]),
       shots: [
-        { panel: 'projects-intro' },
+        { panel: 'projects-intro', offsetX: -0.17 },
         { panel: 'fv-info', offsetX: -0.22 },
         { panel: 'fv-architecture', offsetX: 0.26 },
         { panel: 'bot-info', offsetX: -0.22 },
@@ -92,7 +90,7 @@ export const portfolioJourney: JourneyDefinition = {
     },
     {
       id: 'contact', label: 'Contact', anchor: 'contact', center: CONTACT, approach: at(CONTACT, [0, 2400, 16000]),
-      shots: [{ panel: 'contact', dwell: 0.4 }],
+      shots: [{ panel: 'contact', dwell: 0.15 }],
       palette: { background: '#05040A', atmosphere: '#2A1A0C', accent: '#F59E0B' },
     },
   ],

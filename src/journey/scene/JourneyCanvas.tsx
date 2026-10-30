@@ -8,6 +8,8 @@ import { frameRef } from './shared/frame';
 import SkyDome from './shared/SkyDome';
 import TravelStreaks from './shared/TravelStreaks';
 import Warmup from './shared/Warmup';
+import { Picker } from './shared/pick';
+import Motes from './shared/Motes';
 
 /** Keeps the three.js camera identical to the engine's (same pose, fov, aspect). */
 function CameraSync({ palettes }: { palettes: Palette[] }) {
@@ -103,6 +105,8 @@ export default function JourneyCanvas({ engine, palettes, children }: Props) {
       <SkyDome palettes={palettes} />
       <TravelStreaks />
       {children}
+      <Motes />
+      <Picker />
       <Warmup />
     </Canvas>
   );

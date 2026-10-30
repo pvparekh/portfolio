@@ -58,7 +58,7 @@ export const solutionsJourney: JourneyDefinition = {
   ],
   destinations: [
     { id: 'hero', label: 'Overview', anchor: 'sol-main', center: D.hero, approach: [0, 800, 9000],
-      shots: [{ panel: 'sol-hero', offsetX: -0.18, dwell: 0.15 }, { panel: 'sol-graphic', offsetX: 0.16 }],
+      shots: [{ panel: 'sol-hero', offsetX: -0.18 }, { panel: 'sol-graphic', offsetX: 0.16 }],
       palette: { background: '#03080A', atmosphere: '#0B2A30', accent: '#67E8F9' } },
     { id: 'problems', label: 'The problem', anchor: 'problems', center: D.problems, approach: at(D.problems, [-6000, 6000, 15000]),
       shots: [{ panel: 'sol-problems' }],
@@ -73,10 +73,10 @@ export const solutionsJourney: JourneyDefinition = {
       shots: [{ panel: 'sol-approach' }],
       palette: { background: '#04080C', atmosphere: '#12283A', accent: '#7DD3FC' } },
     { id: 'independent', label: 'Products', anchor: 'independent', center: D.independent, approach: at(D.independent, [5000, 5000, 15000]),
-      shots: [{ panel: 'sol-independent-intro' }, ...cases.map(p => ({ panel: p.id, offsetX: p.position[0] < D.independent[0] ? -0.06 : 0.06 }))],
+      shots: [{ panel: 'sol-independent-intro', offsetX: -0.17 }, ...cases.map(p => ({ panel: p.id, offsetX: p.position[0] < D.independent[0] ? -0.06 : 0.06 }))],
       palette: { background: '#05070C', atmosphere: '#16203A', accent: '#A5B4FC' } },
     { id: 'contact', label: 'Contact', anchor: 'contact', center: D.contact, approach: at(D.contact, [0, 3000, 15000]),
-      shots: [{ panel: 'sol-contact', offsetX: -0.16, dwell: 0.4, with: ['sol-contact-aside'] }],
+      shots: [{ panel: 'sol-contact', offsetX: -0.16, dwell: 0.15, with: ['sol-contact-aside'] }],
       palette: { background: '#03070A', atmosphere: '#0B2630', accent: '#67E8F9' } },
   ],
 };

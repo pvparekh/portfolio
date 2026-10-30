@@ -138,6 +138,13 @@ const GALLERY: Record<string, string[]> = {
   biaslens: ['/projects/biaslens-dashboard.webp', '/projects/biaslens-table.webp'],
 };
 
+/** Beside the work intro: a floating preview of the applications ahead. */
+const WORK_TEASER: DisplaySpec[] = [
+  { src: '/projects/perfect-threading-home.webp', position: [930, 30, -1500], width: 640, yaw: -14, aspect: 1.6, emphasis: 1, alt: 'Perfect Threading Salon screenshot' },
+  { src: '/projects/formula-vision-replay-map.webp', position: [1360, 420, -2700], width: 560, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'Formula Vision screenshot' },
+  { src: '/projects/biaslens-dashboard.webp', position: [1240, -480, -2600], width: 540, yaw: -16, aspect: 1.6, emphasis: 0.5, alt: 'BiasLens screenshot' },
+];
+
 /** Work: a gallery of real applications, each on a framed screen beside its case. */
 export function Gallery({ index }: { index: number }) {
   const ref = useWorld(index);
@@ -145,6 +152,7 @@ export function Gallery({ index }: { index: number }) {
     <group ref={ref}>
       <hemisphereLight args={['#B8C6DD', '#06070A', 0.5]} position={S.work} />
       <Suspense fallback={null}>
+        <Exhibit position={S.work} yaw={0} accent={WHITE} title="Selected software" floorY={FLOOR} displays={WORK_TEASER} focus={shot => shot === 0} bare />
         {softwareProjects.map((project, i) => {
           const sources = GALLERY[project.id];
           if (!sources) return null;
@@ -154,7 +162,7 @@ export function Gallery({ index }: { index: number }) {
             { src: sources[1], position: [1120, 500, -1900], width: 500, yaw: -22, aspect: project.id === 'review-bot' ? 1257 / 680 : 1.6, emphasis: 0.45 },
           ];
           const position = at(S.work, [(i + 1) * GALLERY_STEP, 0, -(i % 2) * 700]);
-          return <Exhibit key={project.id} position={position} yaw={4} accent={i === 0 ? '#F59E0B' : WHITE} floorY={FLOOR} displays={displays} focus={shot => shot === i + 1} />;
+          return <Exhibit key={project.id} position={position} yaw={4} accent={i === 0 ? '#F59E0B' : WHITE} title={project.title} floorY={FLOOR} displays={displays} focus={shot => shot === i + 1} />;
         })}
       </Suspense>
     </group>

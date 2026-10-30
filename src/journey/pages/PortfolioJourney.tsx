@@ -4,7 +4,7 @@ import { portfolioJourney } from '../worlds/portfolio';
 import { Footer, TELEMETRY } from '../../App';
 import {
   AboutBioPanel, AboutProfilePanel, ContactPanel, ExperienceIntroPanel, FlagshipArchitecturePanel, FlagshipPanel,
-  OriginPanel, ProjectsIntroPanel, RolePanel, SkillsPanel, SupportingPanel,
+  ExperienceGroupPanel, OriginPanel, ProjectsIntroPanel, SkillsPanel, SupportingPanel,
 } from '../content/PortfolioPanels';
 
 const loadScene = () => import('../scene/PortfolioScene');
@@ -39,7 +39,7 @@ export default function PortfolioJourney({ onNavigateSolutions }: { onNavigateSo
       case 'skills': return <SkillsPanel />;
       case 'contact': return <ContactPanel onNavigateSolutions={onNavigateSolutions} onReturn={returnToOrigin} />;
       default:
-        if (id.startsWith('role-')) return <RolePanel index={Number(id.slice(5))} />;
+        if (id.startsWith('role-')) return <ExperienceGroupPanel index={Number(id.slice(5))} />;
         return null;
     }
   }, [onNavigateSolutions, returnToOrigin]);

@@ -23,6 +23,7 @@ Evolve the homepage's six amber speed lines into **SLIPSTREAM**: a real-time Web
 | 10 | [Acceptance criteria](10-acceptance-criteria.md) | 11. Acceptance criteria and verification plan |
 | 11 | [Implementation log](11-implementation-log.md) | V1 desktop build: what shipped, deviations, measurements, review notes |
 | 12 | [V2 implementation](12-v2-implementation.md) | V2 destination journey: diagnosis, architecture, worlds, exhibits, validation, measurements, limitations |
+| 13 | [Scroll feel, interaction and life](13-scroll-feel-and-life.md) | Scroll-feel targets and before/after measurements, exhibit hover and inspect, ambient life, grouped experience |
 
 Visual overview (live filament sketch + illustrated storyboard frames): [`slipstream-blueprint.html`](slipstream-blueprint.html), also published privately at https://claude.ai/artifact/6pzPXFFHjqSWGZGrqWaFQ8.
 

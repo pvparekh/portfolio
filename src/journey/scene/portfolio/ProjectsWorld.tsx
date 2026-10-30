@@ -1,9 +1,9 @@
-import { Suspense, useEffect, useMemo } from 'react';
-import { useThree } from '@react-three/fiber';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
-import { usePresence } from '../shared/frame';
-import { EXHIBITS, PROJECTS } from '../../worlds/portfolio';
+import { frameRef, usePresence } from '../shared/frame';
+import { EXHIBITS, PROJECTS, local, portfolioJourney } from '../../worlds/portfolio';
 import Exhibit, { type DisplaySpec } from './Exhibit';
 
 const FLOOR_Y = PROJECTS[1] - 1500;
@@ -57,6 +57,106 @@ function ReflectiveFloor() {
   );
 }
 
+const INTRO = portfolioJourney.panels.find(p => p.id === 'projects-intro')!.position;
+/** Beside the Projects intro: the three projects as a floating teaser (hover lifts, click inspects). */
+const TEASER: DisplaySpec[] = [
+  { src: '/projects/formula-vision-replay-map.webp', position: [930, 30, -1500], width: 640, yaw: -14, aspect: 1.6, emphasis: 1, alt: 'Formula Vision screenshot' },
+  { src: '/projects/aetherflow-home.webp', position: [1360, 420, -2700], width: 560, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'AetherFlow screenshot' },
+  { src: '/projects/review-bot-pipeline.webp', position: [1240, -480, -2600], width: 540, yaw: -16, aspect: 1257 / 740, emphasis: 0.5, alt: 'GitHub Review Bot screenshot' },
+];
+
+/** Soft round sprite texture (white core fading out). */
+const radialTexture = (() => {
+  let cache: THREE.Texture | null = null;
+  return () => {
+    if (cache) return cache;
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g = c.getContext('2d')!;
+    const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.3, 'rgba(255,255,255,0.35)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 64, 64);
+    cache = new THREE.CanvasTexture(c);
+    return cache;
+  };
+})();
+
+/**
+ * Formula Vision's installation: a holographic circuit loop behind its screens,
+ * with a car of light running laps and leaving a fading trail. Decorative and
+ * abstract (not a real track or real timing data).
+ */
+function FormulaCircuit() {
+  const { curve, track, glow, car, halo, trail, trailGeometry } = useMemo(() => {
+    const points: THREE.Vector3[] = [];
+    const n = 14;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const wobble = 1 + 0.18 * Math.sin(a * 3 + 0.6) + 0.1 * Math.cos(a * 5);
+      points.push(new THREE.Vector3(Math.cos(a) * 1500 * wobble, Math.sin(a) * 820 * wobble, 0));
+    }
+    const c = new THREE.CatmullRomCurve3(points, true, 'centripetal');
+    const trailPoints = 48;
+    const tg = new THREE.BufferGeometry();
+    tg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(trailPoints * 3), 3));
+    const fade = new Float32Array(trailPoints);
+    for (let i = 0; i < trailPoints; i++) fade[i] = i / (trailPoints - 1);
+    tg.setAttribute('aFade', new THREE.BufferAttribute(fade, 1));
+    return {
+      curve: c,
+      track: new THREE.MeshBasicMaterial({ color: '#E8002D', transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }),
+      glow: new THREE.MeshBasicMaterial({ color: '#E8002D', transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }),
+      car: new THREE.MeshBasicMaterial({ color: '#FFF4F4', toneMapped: false }),
+      halo: new THREE.SpriteMaterial({ map: radialTexture(), color: '#FF3355', transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }),
+      trail: new THREE.ShaderMaterial({
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+        vertexShader: 'attribute float aFade; varying float vFade; void main(){ vFade = aFade; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+        fragmentShader: 'varying float vFade; void main(){ gl_FragColor = vec4(vec3(1.0, 0.25, 0.35) * vFade, vFade); }',
+      }),
+      trailGeometry: tg,
+    };
+  }, []);
+  const trailLine = useMemo(() => new THREE.Line(trailGeometry, trail), [trailGeometry, trail]);
+  const carRef = useRef<THREE.Group>(null);
+  const tube = useMemo(() => new THREE.TubeGeometry(curve, 360, 9, 6, true), [curve]);
+  const glowTube = useMemo(() => new THREE.TubeGeometry(curve, 360, 46, 6, true), [curve]);
+  const tmp = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame(() => {
+    const f = frameRef.current;
+    if (!f || !carRef.current) return;
+    const lap = 11;
+    // Arc-length parameter kept strictly inside [0, 1) (getPointAt rejects 1 and NaN).
+    const wrap = (u: number) => (Number.isFinite(u) ? Math.min(((u % 1) + 1) % 1, 0.99999) : 0);
+    const t = wrap(f.time / lap);
+    curve.getPointAt(t, tmp);
+    carRef.current.position.copy(tmp);
+    const attr = trailGeometry.getAttribute('position') as THREE.BufferAttribute;
+    const count = attr.count;
+    for (let i = 0; i < count; i++) {
+      curve.getPointAt(wrap(t - (1 - i / (count - 1)) * 0.09), tmp);
+      attr.setXYZ(i, tmp.x, tmp.y, tmp.z);
+    }
+    attr.needsUpdate = true;
+  });
+
+  const centre = local(EXHIBITS.fv.info, EXHIBITS.fv.yaw, [1050, -180, -3300]);
+  return (
+    <group position={centre} rotation={[-1.05, (EXHIBITS.fv.yaw * Math.PI) / 180, 0, 'YXZ']}>
+      <mesh geometry={tube} material={track} />
+      <mesh geometry={glowTube} material={glow} />
+      <primitive object={trailLine} />
+      <group ref={carRef}>
+        <mesh material={car}><sphereGeometry args={[22, 16, 12]} /></mesh>
+        <sprite material={halo} scale={[260, 260, 1]} />
+      </group>
+    </group>
+  );
+}
+
 /** Tall, faint light planes give the hall vertical scale without real volumetrics. */
 function HallLight() {
   const material = useMemo(() => new THREE.ShaderMaterial({
@@ -91,10 +191,12 @@ export default function ProjectsWorld({ index }: { index: number }) {
       <hemisphereLight args={['#4B3F8F', '#05040A', 0.6]} position={PROJECTS} />
       <ReflectiveFloor />
       <HallLight />
+      <FormulaCircuit />
       <Suspense fallback={null}>
-        <Exhibit position={EXHIBITS.fv.info} yaw={EXHIBITS.fv.yaw} accent={EXHIBITS.fv.accent} floorY={FLOOR_Y} displays={FV_DISPLAYS} focus={shot => shot === 1 || shot === 2} />
-        <Exhibit position={EXHIBITS.bot.info} yaw={EXHIBITS.bot.yaw} accent={EXHIBITS.bot.accent} floorY={FLOOR_Y} displays={BOT_DISPLAYS} focus={shot => shot === 3} />
-        <Exhibit position={EXHIBITS.aether.info} yaw={EXHIBITS.aether.yaw} accent={EXHIBITS.aether.accent} floorY={FLOOR_Y} displays={AETHER_DISPLAYS} focus={shot => shot === 4} />
+        <Exhibit position={INTRO} yaw={0} accent="#A78BFA" title="Projects" floorY={FLOOR_Y} displays={TEASER} focus={shot => shot === 0} bare />
+        <Exhibit position={EXHIBITS.fv.info} yaw={EXHIBITS.fv.yaw} accent={EXHIBITS.fv.accent} title="Formula Vision" floorY={FLOOR_Y} displays={FV_DISPLAYS} focus={shot => shot === 1 || shot === 2} />
+        <Exhibit position={EXHIBITS.bot.info} yaw={EXHIBITS.bot.yaw} accent={EXHIBITS.bot.accent} title="GitHub Review Bot" floorY={FLOOR_Y} displays={BOT_DISPLAYS} focus={shot => shot === 3} />
+        <Exhibit position={EXHIBITS.aether.info} yaw={EXHIBITS.aether.yaw} accent={EXHIBITS.aether.accent} title="AetherFlow" floorY={FLOOR_Y} displays={AETHER_DISPLAYS} focus={shot => shot === 4} />
       </Suspense>
     </group>
   );

@@ -157,6 +157,32 @@ try {
   assert.equal(await page.locator('canvas').count(), 1, 'single canvas after back navigation');
   console.log('JOURNEY_PASS routes');
 
+  // 7b. Exhibits respond to the pointer: hover lifts (cursor changes), click inspects, Escape closes.
+  await page.goto(journeyUrl('/'), { waitUntil: 'networkidle' });
+  await glReady(page);
+  await page.evaluate(() => window.scrollTo({ top: window.__journey.engine.panelOffset('fv-info') + 2, behavior: 'instant' }));
+  await settle(page, 2500);
+  let hoverAt = null;
+  for (let x = 1400; x >= 760 && !hoverAt; x -= 40) {
+    for (let y = 220; y <= 760 && !hoverAt; y += 40) {
+      await page.mouse.move(x, y);
+      await page.waitForTimeout(40);
+      if (await page.evaluate(() => document.documentElement.classList.contains('journey-pick'))) hoverAt = [x, y];
+    }
+  }
+  assert.ok(hoverAt, 'pointer finds a Formula Vision screen');
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: 'qa-spatial/exhibit-hover.jpg', type: 'jpeg', quality: 75 }).catch(() => {});
+  await page.mouse.click(hoverAt[0], hoverAt[1]);
+  await page.waitForSelector('.journey-inspect img');
+  assert.equal(await page.evaluate(() => document.activeElement?.classList.contains('journey-inspect-close')), true, 'inspect view takes focus');
+  const firstSrc = await page.locator('.journey-inspect img').getAttribute('src');
+  await page.keyboard.press('ArrowRight');
+  assert.notEqual(await page.locator('.journey-inspect img').getAttribute('src'), firstSrc, 'arrow keys step through the screenshots');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('.journey-inspect').count(), 0, 'Escape closes the inspect view');
+  console.log('JOURNEY_PASS exhibit hover and inspect', JSON.stringify(hoverAt));
+
   // 8. WebGL context loss keeps content usable and recovers.
   await glReady(page);
   await page.evaluate(() => window.__journey.loseContext());

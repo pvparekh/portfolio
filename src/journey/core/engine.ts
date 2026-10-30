@@ -24,6 +24,12 @@ export interface JourneyFrame {
   time: number;
   /** Smoothed pointer in [-1, 1]. */
   pointer: [number, number];
+  /** Undamped pointer in -1..1 (y down), or null when no mouse is over the page; used for picking. */
+  pointerRaw: [number, number] | null;
+  /** True while the mouse is over HTML content (a panel or chrome), where 3D picking yields. */
+  pointerOnContent: boolean;
+  /** Keep rendering for at least this many more frames (interaction animations while motion is paused). */
+  requestFrames: (count: number) => void;
   panelSizes: Map<string, { width: number; height: number }>;
 }
 
@@ -48,9 +54,16 @@ export class JourneyEngine {
   private time = 0;
   private speed = 0;
   private lastScroll = -1;
+  /** Spring-smoothed scroll offset and its velocity: the camera samples the path here. */
+  private smoothY = -1;
+  private smoothV = 0;
   private settledFrames = 0;
   private pointer: [number, number] = [0, 0];
   private pointerTarget: [number, number] = [0, 0];
+  private pointerRaw: [number, number] | null = null;
+  private pointerOnContent = false;
+  private extraFrames = 0;
+  private requestFrames = (count: number) => { this.extraFrames = Math.max(this.extraFrames, count); };
   private moving = false;
   private opacities = new Map<string, number>();
   private resizeObserver: ResizeObserver | null = null;
@@ -79,6 +92,7 @@ export class JourneyEngine {
     window.addEventListener('scroll', this.wake, { passive: true });
     window.addEventListener('resize', this.onResize, { passive: true });
     window.addEventListener('pointermove', this.onPointer, { passive: true });
+    document.documentElement.addEventListener('pointerleave', this.onPointerLeave);
     document.addEventListener('visibilitychange', this.wake);
     this.layout();
     this.wake();
@@ -91,6 +105,7 @@ export class JourneyEngine {
     window.removeEventListener('scroll', this.wake);
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('pointermove', this.onPointer);
+    document.documentElement.removeEventListener('pointerleave', this.onPointerLeave);
     document.removeEventListener('visibilitychange', this.wake);
     this.stage = this.camera = null;
   }
@@ -146,8 +161,12 @@ export class JourneyEngine {
   private onPointer = (event: PointerEvent) => {
     if (event.pointerType !== 'mouse') return;
     this.pointerTarget = [event.clientX / window.innerWidth * 2 - 1, event.clientY / window.innerHeight * 2 - 1];
-    if (this.ambient) this.wake();
+    this.pointerRaw = this.pointerTarget;
+    const target = event.target as Element | null;
+    this.pointerOnContent = !!target?.closest?.('.journey-panel > *, [data-journey-ui], nav, header, footer, a, button');
+    this.wake();
   };
+  private onPointerLeave = () => { this.pointerRaw = null; this.wake(); };
 
   private queueLayout() {
     if (this.layoutQueued) return;
@@ -211,29 +230,36 @@ export class JourneyEngine {
     const dt = Math.min((now - this.lastTime) / 1000, 0.05);
     this.lastTime = now;
     const scrollY = window.scrollY;
-    const sample = sampleTimeline(this.timeline, scrollY);
-    const target = sample.pose;
     const jumped = this.lastScroll >= 0 && Math.abs(scrollY - this.lastScroll) > this.vp.height * 3;
     this.lastScroll = scrollY;
 
-    let delta = 0;
-    if (!this.pose || this.testMode || jumped) {
-      this.pose = { position: [...target.position] as Vec3, target: [...target.target] as Vec3 };
+    // Critically damped spring on the scroll offset (not on the pose): wheel notches
+    // become continuous velocity in either direction, and the camera stays on the
+    // authored path instead of cutting corners. ω = 13 settles 95% in ~0.36 s.
+    if (this.smoothY < 0 || !this.pose || this.testMode || jumped) {
+      this.smoothY = scrollY;
+      this.smoothV = 0;
     } else {
-      const k = 1 - Math.exp(-9 * dt);
-      const prev = this.pose.position;
-      const next: Vec3 = [prev[0] + (target.position[0] - prev[0]) * k, prev[1] + (target.position[1] - prev[1]) * k, prev[2] + (target.position[2] - prev[2]) * k];
-      const nextTarget: Vec3 = [0, 1, 2].map(i => this.pose!.target[i] + (target.target[i] - this.pose!.target[i]) * k) as Vec3;
-      delta = length(sub(target.position, next)) + length(sub(target.target, nextTarget)) * 0.05;
-      if (delta < 0.05) {
-        // Settle exactly on the authored pose so panels land at 1:1 with crisp text.
-        this.pose = { position: [...target.position] as Vec3, target: [...target.target] as Vec3 };
-      } else {
-        this.speed = this.speed * 0.85 + (length(sub(next, prev)) / Math.max(dt, 1e-3)) * 0.15;
-        this.pose = { position: next, target: nextTarget };
+      const omega = 13;
+      const steps = Math.max(1, Math.ceil(dt / (1 / 120)));
+      const h = dt / steps;
+      for (let i = 0; i < steps; i++) {
+        const accel = omega * omega * (scrollY - this.smoothY) - 2 * omega * this.smoothV;
+        this.smoothV += accel * h;
+        this.smoothY += this.smoothV * h;
+      }
+      if (Math.abs(scrollY - this.smoothY) < 0.5 && Math.abs(this.smoothV) < 8) {
+        // Settle exactly so panels land at 1:1 with crisp text.
+        this.smoothY = scrollY;
+        this.smoothV = 0;
       }
     }
-    if (delta < 0.05) this.speed *= 0.8;
+    const sample = sampleTimeline(this.timeline, this.smoothY);
+    const target = sample.pose;
+    const prev = this.pose?.position;
+    this.pose = { position: [...target.position] as Vec3, target: [...target.target] as Vec3 };
+    const delta = prev ? length(sub(target.position, prev)) + (this.smoothY === scrollY ? 0 : 0.05) : 0;
+    this.speed = delta > 0 ? this.speed * 0.85 + (length(sub(target.position, prev!)) / Math.max(dt, 1e-3)) * 0.15 : this.speed * 0.8;
 
     if (!this.testMode && this.ambient) this.time += dt;
     this.pointer = [this.pointer[0] + (this.pointerTarget[0] - this.pointer[0]) * (1 - Math.exp(-4 * dt)), this.pointer[1] + (this.pointerTarget[1] - this.pointer[1]) * (1 - Math.exp(-4 * dt))];
@@ -253,7 +279,7 @@ export class JourneyEngine {
     this.place = seg.kind === 'travel' ? seg.destination - 1 + sample.t : seg.destination;
     const frame: JourneyFrame = {
       pose: this.pose, view, vp: this.vp, fov: this.fov, segment: seg, travel: sample.travel,
-      place: this.place, speed: this.speed, time: this.time, pointer: this.pointer, panelSizes: this.sizes,
+      place: this.place, speed: this.speed, time: this.time, pointer: this.pointer, pointerRaw: this.pointerRaw, pointerOnContent: this.pointerOnContent, requestFrames: this.requestFrames, panelSizes: this.sizes,
     };
     this.lastFrame = frame;
     this.renderer?.(frame);
@@ -262,7 +288,8 @@ export class JourneyEngine {
     const pointerSettled = Math.abs(this.pointerTarget[0] - this.pointer[0]) + Math.abs(this.pointerTarget[1] - this.pointer[1]) < 0.002;
     this.settledFrames = moving || !pointerSettled ? 0 : this.settledFrames + 1;
     // Keep animating while moving, while ambient motion plays, or for a few frames to settle.
-    if (moving || (this.ambient && this.renderer && !this.testMode) || this.settledFrames < 3) this.wake();
+    if (this.extraFrames > 0) this.extraFrames--;
+    if (moving || (this.ambient && this.renderer && !this.testMode) || this.settledFrames < 3 || this.extraFrames > 0) this.wake();
   };
 
   private updatePanels(eye: Vec3) {
