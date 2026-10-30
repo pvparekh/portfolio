@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { usePresence } from '../shared/frame';
 import { CONTACT } from '../../worlds/portfolio';
+import { particles } from '../../core/budget';
 
 const ringFragment = /* glsl */ `
 uniform float uTime;
@@ -61,7 +62,7 @@ export default function ContactWorld({ index }: { index: number }) {
   const inflow = useMemo(() => {
     let s = 11;
     const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
-    const count = 700;
+    const count = particles(700);
     const seeds = new Float32Array(count * 3);
     for (let i = 0; i < count * 3; i++) seeds[i] = r();
     const g = new THREE.BufferGeometry();

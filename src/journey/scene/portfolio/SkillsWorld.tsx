@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { usePresence } from '../shared/frame';
 import { SKILLS } from '../../worlds/portfolio';
+import { particles } from '../../core/budget';
 
 const GROUPS = 6;
 
@@ -58,7 +59,7 @@ export default function SkillsWorld({ index }: { index: number }) {
       for (let i = 1; i < cluster.length; i++) segments.push(...cluster[i - 1].toArray(), ...cluster[i].toArray());
     }
     // Deep field: mostly tiny, a few brighter.
-    for (let i = 0; i < 1400; i++) {
+    for (let i = 0; i < particles(1400); i++) {
       stars.push(SKILLS[0] + (r() - 0.5) * 60000, SKILLS[1] + (r() - 0.5) * 30000, SKILLS[2] - 9000 - r() * 40000);
       const v = r();
       sizes.push(1 + v * v * v * 5);

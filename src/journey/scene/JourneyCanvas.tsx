@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import type { JourneyEngine } from '../core/engine';
 import type { Palette } from '../core/types';
 import { demoteForSession } from '../../spatial/core/capability';
+import { DPR_CAP } from '../core/budget';
 import { frameRef } from './shared/frame';
 import SkyDome from './shared/SkyDome';
 import TravelStreaks from './shared/TravelStreaks';
@@ -54,10 +55,7 @@ interface Props {
  */
 export default function JourneyCanvas({ engine, palettes, children }: Props) {
   const losses = useRef(0);
-  const dpr = useMemo(() => {
-    const coarse = window.matchMedia('(pointer: coarse)').matches;
-    return Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2);
-  }, []);
+  const dpr = useMemo(() => Math.min(window.devicePixelRatio || 1, DPR_CAP), []);
 
   useEffect(() => {
     engine.setRenderer(frame => {
@@ -76,10 +74,12 @@ export default function JourneyCanvas({ engine, palettes, children }: Props) {
       aria-hidden="true"
       frameloop="never"
       dpr={[1, dpr]}
+      // The canvas is fixed to the viewport: re-measuring it on every scroll only forces layout.
+      resize={{ scroll: false }}
       gl={{ antialias: true, alpha: false, powerPreference: 'high-performance', stencil: false }}
       camera={{ fov: 32, near: 20, far: 900000, position: [0, 0, 1600] }}
       style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 0, pointerEvents: 'none' }}
-      onCreated={({ gl }) => {
+      onCreated={({ gl, scene }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 1.0;
         gl.domElement.addEventListener('webglcontextlost', event => {
@@ -95,6 +95,7 @@ export default function JourneyCanvas({ engine, palettes, children }: Props) {
         const debug = (window as Window & { __journey?: Record<string, unknown> }).__journey;
         if (debug) {
           debug.gl = () => ({ ...gl.info.render, memory: { ...gl.info.memory }, dpr: gl.getPixelRatio() });
+          debug.scene = scene;
           debug.loseContext = () => gl.forceContextLoss();
           debug.restoreContext = () => gl.forceContextRestore();
         }

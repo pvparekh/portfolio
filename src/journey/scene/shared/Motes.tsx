@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { frameRef } from './frame';
+import { particles } from '../../core/budget';
 
 const BOX = 9000;
 
@@ -11,7 +12,7 @@ const BOX = 9000;
  * and a quiet sense of life, and parallaxes naturally while travelling.
  * Frozen (no drift) when motion is paused.
  */
-export default function Motes({ count = 900, color = '#C7D2E4' }: { count?: number; color?: string }) {
+export default function Motes({ count = particles(900), color = '#C7D2E4' }: { count?: number; color?: string }) {
   const { geometry, material } = useMemo(() => {
     let seed = 7;
     const r = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);

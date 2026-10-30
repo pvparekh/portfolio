@@ -4,8 +4,10 @@ import { chromium } from 'playwright';
 
 // V2 spatial journey checks against Vite's local production preview.
 // Real GPU by default (ANGLE D3D11); SPATIAL_GPU=swiftshader for CI.
-const base = 'http://127.0.0.1:4173';
-const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort'], { stdio: 'pipe' });
+// JOURNEY_PORT picks another port when 4173 is taken by another preview.
+const port = process.env.JOURNEY_PORT ?? '4173';
+const base = 'http://127.0.0.1:' + port;
+const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', port, '--strictPort'], { stdio: 'pipe' });
 let serverOutput = '';
 server.stdout.on('data', d => { serverOutput += String(d); });
 server.stderr.on('data', d => { serverOutput += String(d); });

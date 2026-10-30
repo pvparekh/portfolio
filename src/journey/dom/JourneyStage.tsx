@@ -9,6 +9,7 @@ import { sampleTimeline } from '../core/timeline';
 import InspectOverlay from './InspectOverlay';
 import { pendingRestore } from '../core/restore';
 import { SceneBoundary } from './SceneBoundary';
+import { LITE } from '../core/budget';
 
 export interface SceneProps { engine: JourneyEngine }
 
@@ -66,6 +67,17 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
     spatialStore.setState({ page, tier: Math.max(spatialStore.getState().tier, 2) as 2 | 3, ready: true, motion: isTestMode() ? 'still' : readMotionPreference() });
     const offReduced = onReducedMotionChange(() => spatialStore.setState({ motion: readMotionPreference() }));
     engine.attach(stageRef.current!, cameraRef.current!);
+    // Lite budget: skip painting faded panels, until a keyboard user starts tabbing
+    // (hidden panels would leave the tab order, and Tab travels to far panels).
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+      engine.setHideFaded(false);
+      window.removeEventListener('keydown', onKey, true);
+    };
+    if (LITE) {
+      engine.setHideFaded(true);
+      window.addEventListener('keydown', onKey, true);
+    }
     document.documentElement.classList.add('journey-active');
     // Panels far down the journey are off-screen until arrival; decode their images
     // while idle so arriving never waits on a fetch or decode.
@@ -102,6 +114,7 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
     void debug;
     return () => {
       offLayout(); offFrame(); offReduced();
+      window.removeEventListener('keydown', onKey, true);
       engine.detach();
       document.documentElement.classList.remove('journey-active');
       spatialStore.setState({ ready: false });
@@ -113,6 +126,16 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
   const scrollTo = (top: number) => window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
 
   // Keyboard users: focusing content inside a panel travels to it.
+  // The scene and the panels do not depend on the active destination: memoized so that
+  // arriving somewhere re-renders only the rail, not every panel and the whole 3D tree
+  // (a long frame at each arrival, most visible on phones).
+  const scene = useMemo(() => <Scene engine={engine} />, [Scene, engine]);
+  const panels = useMemo(() => definition.panels.map(panel => (
+    <section key={panel.id} ref={refs.get(panel.id)} className="journey-panel" data-panel={panel.id} data-destination={panel.destination}>
+      {renderPanel(panel.id)}
+    </section>
+  )), [definition, refs, renderPanel]);
+
   const onFocus = (event: React.FocusEvent) => {
     const panel = (event.target as HTMLElement).closest<HTMLElement>('[data-panel]');
     const offset = panel ? engine.panelOffset(panel.dataset.panel!) : null;
@@ -127,16 +150,12 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
       <InspectOverlay />
       <SceneBoundary>
         <Suspense fallback={null}>
-          <Scene engine={engine} />
+          {scene}
         </Suspense>
       </SceneBoundary>
       <div className="journey-stage" ref={stageRef} onFocus={onFocus} onScroll={event => { event.currentTarget.scrollTop = 0; event.currentTarget.scrollLeft = 0; }}>
         <main id="journey-main" className="journey-camera" ref={cameraRef}>
-          {definition.panels.map(panel => (
-            <section key={panel.id} ref={refs.get(panel.id)} className="journey-panel" data-panel={panel.id} data-destination={panel.destination}>
-              {renderPanel(panel.id)}
-            </section>
-          ))}
+          {panels}
         </main>
       </div>
       {originHud && <div className="journey-hud" ref={hudRef}>{originHud}</div>}

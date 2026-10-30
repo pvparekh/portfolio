@@ -1,4 +1,4 @@
-import { add, basis, catmullRom, clamp, easeInOutSine, lerp3, scale, smoothstep, sub, type Vec3 } from './math';
+import { add, basis, catmullRom, clamp, easeInOutSine, length, lerp3, normalize, scale, smoothstep, sub, type Vec3 } from './math';
 import type { DestinationSpec, PanelSpec, Pose } from './types';
 
 /**
@@ -150,7 +150,7 @@ export function buildTimeline(
   const destinationStarts: number[] = [];
   const dwellStarts = new Map<string, number>();
   let cursor = 0;
-  let previous: { pose: Pose; normal: Vec3 } | null = null;
+  let previous: { pose: Pose; normal: Vec3; pan: Vec3 | null } | null = null;
 
   destinations.forEach((dest, di) => {
     dest.shots.forEach((shot, si) => {
@@ -161,7 +161,7 @@ export function buildTimeline(
       if (previous) {
         const isTravel = si === 0;
         const path = isTravel
-          ? travelPath(previous.pose, previous.normal, dest.approach, poses.start, vp)
+          ? travelPath(previous.pose, previous.normal, dest.approach, poses.start, vp, previous.pan)
           : movePath(previous.pose, poses.start, previous.normal, poses.normal, vp);
         // Scroll length grows (gently) with how far the camera actually goes, so similar
         // transitions cost similar scroll and long hops do not feel rushed.
@@ -179,7 +179,8 @@ export function buildTimeline(
       const dwell = hold + poses.pan + (shot.dwell ?? 0) * vp.height;
       segments.push({ kind: 'dwell', start: cursor, end: cursor + dwell, destination: di, shot: si, from: poses.start, to: poses.end });
       cursor += dwell;
-      previous = { pose: poses.end, normal: poses.normal };
+      const pan = sub(poses.end.position, poses.start.position);
+      previous = { pose: poses.end, normal: poses.normal, pan: length(pan) > 1 ? normalize(pan) : null };
     });
   });
 
@@ -187,12 +188,20 @@ export function buildTimeline(
 }
 
 /** Pull back off the panel, rise, pass the destination's establishing viewpoint, then settle. */
-function travelPath(from: Pose, _fromNormal: Vec3, approach: Vec3, to: Pose, vp: Viewport): Vec3[] {
+function travelPath(from: Pose, _fromNormal: Vec3, approach: Vec3, to: Pose, vp: Viewport, pan: Vec3 | null = null): Vec3[] {
   // Depart toward where we are going (rising slightly), never straight back off the panel:
   // the camera arrived moving into the panel, so pulling back would reverse it, which reads
   // as a bounce whenever someone scrolls through without stopping.
   const toward = sub(approach, from.position);
   const reach = Math.hypot(toward[0], toward[1], toward[2]) || 1;
+  // On narrow screens tall panels are read by panning down them; rising straight after a
+  // downward pan is a sharp V that a fast flick crosses in a frame or two, so there the
+  // camera first carries on along the pan, then curves away. (Wide layouts are unchanged.)
+  if (vp.narrow && pan) {
+    const carry = add(from.position, scale(pan, vp.perspective * 0.45));
+    const depart = add(carry, scale(toward, (vp.perspective * 1.4) / reach));
+    return [from.position, carry, depart, approach, to.position];
+  }
   const depart = add(add(from.position, scale(toward, (vp.perspective * 1.4) / reach)), [0, vp.perspective * 0.25, 0]);
   return [from.position, depart, approach, to.position];
 }

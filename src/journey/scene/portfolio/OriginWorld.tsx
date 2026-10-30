@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { usePresence } from '../shared/frame';
 import { ORIGIN } from '../../worlds/portfolio';
+import { particles } from '../../core/budget';
 
-const COUNT = 240;
+const COUNT = particles(240);
 
 const vertex = /* glsl */ `
 attribute vec2 corner;

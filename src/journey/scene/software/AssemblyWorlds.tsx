@@ -7,6 +7,7 @@ import Exhibit, { type DisplaySpec } from '../portfolio/Exhibit';
 import { FLOOR, GALLERY_STEP, S, servicePosition } from '../../worlds/software';
 import { softwareProjects } from '../../../softwareProjects';
 import ProcessConduit from '../shared/ProcessConduit';
+import { LITE } from '../../core/budget';
 
 const WHITE = '#E2E8F0';
 const BLUE = '#93C5FD';
@@ -153,7 +154,7 @@ export function Gallery({ index }: { index: number }) {
     <group ref={ref}>
       <hemisphereLight args={['#B8C6DD', '#06070A', 0.5]} position={S.work} />
       <Suspense fallback={null}>
-        <Exhibit position={S.work} yaw={0} accent={WHITE} title="Selected software" floorY={FLOOR} displays={WORK_TEASER} focus={shot => shot === 0} bare />
+        {!LITE && <Exhibit position={S.work} yaw={0} accent={WHITE} title="Selected software" floorY={FLOOR} displays={WORK_TEASER} focus={shot => shot === 0} bare />}
         {softwareProjects.map((project, i) => {
           const sources = GALLERY[project.id];
           if (!sources) return null;

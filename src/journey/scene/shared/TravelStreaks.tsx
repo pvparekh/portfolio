@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { frameRef } from './frame';
+import { particles } from '../../core/budget';
 
-const COUNT = 420;
+const COUNT = particles(420);
 const BOX = 9000;
 
 const vertex = /* glsl */ `

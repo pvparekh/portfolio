@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { catmullRom, type Vec3 } from '../../core/math';
 import { frameRef } from './frame';
+import { particles } from '../../core/budget';
 
 export interface Stream {
   points: Vec3[];
@@ -109,7 +110,8 @@ export default function StreamField({ streams, presence }: { streams: Stream[]; 
     tex.minFilter = tex.magFilter = THREE.NearestFilter;
     tex.needsUpdate = true;
 
-    const total = streams.reduce((n, s) => n + s.count, 0);
+    const counts = streams.map(s => particles(s.count));
+    const total = counts.reduce((n, c) => n + c, 0);
     const a = new Float32Array(total * 4);
     const b = new Float32Array(total * 4);
     const c = new Float32Array(total * 4);
@@ -118,7 +120,7 @@ export default function StreamField({ streams, presence }: { streams: Stream[]; 
     let k = 0;
     streams.forEach((stream, r) => {
       const color = new THREE.Color(stream.color);
-      for (let i = 0; i < stream.count; i++, k++) {
+      for (let i = 0; i < counts[r]; i++, k++) {
         const gauss = () => (rand() + rand() + rand() - 1.5) / 1.5;
         a.set([r, rand(), gauss(), gauss()], k * 4);
         b.set([stream.speed * (0.8 + rand() * 0.4), stream.chaos, stream.width, stream.length * (0.6 + rand() * 0.8)], k * 4);

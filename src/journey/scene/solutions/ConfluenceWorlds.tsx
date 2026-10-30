@@ -7,6 +7,7 @@ import StreamField, { type Stream } from '../shared/StreamField';
 import { D } from '../../worlds/solutions';
 import Exhibit, { type DisplaySpec } from '../portfolio/Exhibit';
 import ProcessConduit from '../shared/ProcessConduit';
+import { LITE } from '../../core/budget';
 
 /** Beside the products intro: the independent products, floating (hover lifts, click inspects). */
 const PRODUCT_TEASER: DisplaySpec[] = [
@@ -179,7 +180,7 @@ export function ProductDelta({ index, branches }: { index: number; branches: num
       <StreamField streams={streams} presence={presence} />
       <hemisphereLight args={['#A5B4FC', '#05060A', 0.5]} position={D.independent} />
       <Suspense fallback={null}>
-        <Exhibit position={D.independent} yaw={0} accent="#A5B4FC" title="Products" floorY={D.independent[1] - 2600} displays={PRODUCT_TEASER} focus={shot => shot === 0} bare />
+        {!LITE && <Exhibit position={D.independent} yaw={0} accent="#A5B4FC" title="Products" floorY={D.independent[1] - 2600} displays={PRODUCT_TEASER} focus={shot => shot === 0} bare />}
       </Suspense>
     </group>
   );

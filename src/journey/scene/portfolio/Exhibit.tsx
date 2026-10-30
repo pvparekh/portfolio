@@ -97,7 +97,8 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
 
   useFrame((_, delta) => {
     const f = frameRef.current;
-    if (!f || !lift.current) return;
+    // Hidden with its world (presence hides meshes): nothing to animate.
+    if (!f || !lift.current || screenMesh.current?.visible === false) return;
     const target = hover.index === index ? 1 : 0;
     // Critically damped-feel easing toward the hover state (~0.25 s).
     amount.current += (target - amount.current) * (1 - Math.exp(-10 * Math.min(delta, 0.05)));

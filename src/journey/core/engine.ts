@@ -75,6 +75,12 @@ export class JourneyEngine {
   private renderer: ((frame: JourneyFrame) => void) | null = null;
   private lastFrame: JourneyFrame | null = null;
   ambient = true;
+  /**
+   * Fully faded panels are also made `visibility: hidden`, so the browser skips painting
+   * and layering them every frame (the main per-frame cost on phones). Off by default:
+   * hidden panels leave the tab order, and desktop keyboard users Tab to far panels.
+   */
+  private hideFaded = false;
   /** Disable damping and freeze time (deterministic tests). */
   testMode = false;
   heightProvider: () => number = () => window.innerHeight;
@@ -172,6 +178,15 @@ export class JourneyEngine {
       if (s >= 0) return this.timeline.dwellStarts.get(`${d}:${s}`) ?? null;
     }
     return null;
+  }
+
+  /** Turn hiding of faded panels on or off (on for the lite budget until the keyboard is used). */
+  setHideFaded(on: boolean) {
+    if (on === this.hideFaded) return;
+    this.hideFaded = on;
+    if (!on) for (const el of this.elements.values()) el.style.visibility = '';
+    this.opacities.clear();
+    this.wake();
   }
 
   // ── layout ────────────────────────────────────────────────────
@@ -367,6 +382,7 @@ export class JourneyEngine {
       el.style.opacity = String(rounded);
       el.style.pointerEvents = rounded > 0.5 ? 'auto' : 'none';
       el.classList.toggle('is-near', rounded > 0.6);
+      if (this.hideFaded) el.style.visibility = rounded === 0 ? 'hidden' : '';
     }
   }
 }

@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { frameRef, usePresence } from '../shared/frame';
 import { EXHIBITS, PROJECTS, local, portfolioJourney } from '../../worlds/portfolio';
 import Exhibit, { type DisplaySpec } from './Exhibit';
+import { LITE } from '../../core/budget';
 
 const FLOOR_Y = PROJECTS[1] - 1500;
 
@@ -119,7 +120,8 @@ function FormulaCircuit() {
       points.push(new THREE.Vector3(Math.cos(a) * 1500 * wobble, Math.sin(a) * 820 * wobble, 0));
     }
     const c = new THREE.CatmullRomCurve3(points, true, 'centripetal');
-    const trailPoints = 48;
+    // The trail is re-sampled along the curve every frame; the lite budget uses a coarser one.
+    const trailPoints = LITE ? 12 : 48;
     const tg = new THREE.BufferGeometry();
     tg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(trailPoints * 3), 3));
     const fade = new Float32Array(trailPoints);
@@ -147,7 +149,7 @@ function FormulaCircuit() {
 
   useFrame(() => {
     const f = frameRef.current;
-    if (!f || !carRef.current) return;
+    if (!f || !carRef.current || trailLine.visible === false) return; // hidden with its world
     const lap = 11;
     // Arc-length parameter kept strictly inside [0, 1) (getPointAt rejects 1 and NaN).
     const wrap = (u: number) => (Number.isFinite(u) ? Math.min(((u % 1) + 1) % 1, 0.99999) : 0);
@@ -213,7 +215,8 @@ export default function ProjectsWorld({ index }: { index: number }) {
       <HallLight />
       <FormulaCircuit />
       <Suspense fallback={null}>
-        <Exhibit position={INTRO} yaw={0} accent="#A78BFA" title="Projects" floorY={FLOOR_Y} displays={TEASER} focus={shot => shot === 0} bare />
+        {/* Teasers sit beside the intro panel, outside a phone's narrow frame: skipped on the lite budget. */}
+        {!LITE && <Exhibit position={INTRO} yaw={0} accent="#A78BFA" title="Projects" floorY={FLOOR_Y} displays={TEASER} focus={shot => shot === 0} bare />}
         <Exhibit position={EXHIBITS.fv.info} yaw={EXHIBITS.fv.yaw} accent={EXHIBITS.fv.accent} title="Formula Vision" floorY={FLOOR_Y} displays={FV_DISPLAYS} focus={shot => shot === 1 || shot === 2} />
         <Exhibit position={EXHIBITS.bot.info} yaw={EXHIBITS.bot.yaw} accent={EXHIBITS.bot.accent} title="GitHub Review Bot" floorY={FLOOR_Y} displays={BOT_DISPLAYS} focus={shot => shot === 3} />
         <Exhibit position={EXHIBITS.aether.info} yaw={EXHIBITS.aether.yaw} accent={EXHIBITS.aether.accent} title="AetherFlow" floorY={FLOOR_Y} displays={AETHER_DISPLAYS} focus={shot => shot === 4} />

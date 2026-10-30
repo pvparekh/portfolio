@@ -323,6 +323,9 @@ html.journey-active body {
 
 /* ── Narrow screens: dedicated compositions ────────────────── */
 @media (max-width: 819px) {
+  /* Panels fill most of a phone's frame, so world detail behind them (gate frames, rails)
+     lands under the text: near-opaque glass keeps it from showing through. */
+  .journey { --jp-glass: linear-gradient(160deg, rgba(16, 21, 34, 0.95), rgba(8, 11, 19, 0.96)); }
   .jp-intro, .jp-about-bio, .jp-about-profile, .jp-role, .jp-exhibit, .jp-architecture, .jp-skills, .jp-contact { padding: 24px 20px; }
   .jp-origin-name { font-size: clamp(64px, 19vw, 96px); }
   .jp-origin-marker { display: none; }

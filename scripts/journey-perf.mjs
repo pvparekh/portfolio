@@ -8,10 +8,12 @@ import { chromium } from 'playwright';
 const base = process.argv[2] ?? 'http://localhost:5173';
 const outFile = process.argv[3] ?? 'docs/spatial-universe/measurements/v2/frame-times.json';
 const profiles = [
+  // SPATIAL_PHONE=1 adds the phone profile; SPATIAL_PHONE=only runs it alone.
+  ...(process.env.SPATIAL_PHONE === 'only' ? [] : [
   { name: 'desktop-1440x900-dpr1', viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 },
   { name: 'desktop-2560x1440-dpr2', viewport: { width: 1280, height: 720 }, deviceScaleFactor: 2 },
-  // Phone emulation is opt-in (SPATIAL_PHONE=1): desktop is the current target.
-  ...(process.env.SPATIAL_PHONE === '1' ? [{ name: 'phone-emulated-390x844-dpr3-cpu4x', viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true, cpuThrottle: 4 }] : []),
+  ]),
+  ...(process.env.SPATIAL_PHONE ? [{ name: 'phone-emulated-390x844-dpr3-cpu4x', viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true, cpuThrottle: 4 }] : []),
 ];
 
 const browser = await chromium.launch({ headless: true, args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'] });

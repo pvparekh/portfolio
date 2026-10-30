@@ -34,7 +34,7 @@ function analyse(out) {
     const a = out[i - 1].p.map((v, k) => v - out[i - 2].p[k]);
     const b = out[i].p.map((v, k) => v - out[i - 1].p[k]);
     const la = Math.hypot(...a), lb = Math.hypot(...b);
-    if (la > 2 && lb > 2 && (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) / (la * lb) < -0.2) { reversals++; where.push(`${out[i - 1].seg}>${out[i].seg}@${Math.round(out[i].s)}`); }
+    if (la > 2 && lb > 2 && (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) / (la * lb) < -0.2) { reversals++; where.push(`${out[i - 1].seg}>${out[i].seg}@${Math.round(out[i].s)}` + (process.env.QA_DEBUG ? ` a=${a.map(Math.round)} b=${b.map(Math.round)} y=${out[i - 2].y},${out[i - 1].y},${out[i].y} s=${Math.round(out[i - 2].s)},${Math.round(out[i - 1].s)},${Math.round(out[i].s)}` : "")); }
     if (gap > 34) where.push(`gap ${Math.round(gap)}ms@${out[i].seg}`);
   }
   return { frames: out.length, reversals, dropped, worstFrameMs: Math.round(worst), ...(where.length ? { where: where.slice(0, 4) } : {}) };
@@ -48,7 +48,9 @@ function settles(out, fromT) {
   return restAt >= 0 ? Math.round(tail[restAt].t - fromT) : null;
 }
 
-for (const path of ['/', '/solutions', '/software']) {
+// QA_ONLY=touch runs only the phone touch profiles; QA_ONLY=desktop skips them.
+const only = process.env.QA_ONLY;
+for (const path of only === 'touch' ? [] : ['/', '/solutions', '/software']) {
   console.log(`\n== ${path}`);
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(base + path + '?layout=spatial', { waitUntil: 'networkidle' });
@@ -217,6 +219,131 @@ for (const path of ['/', '/solutions', '/software']) {
   }
 
   await page.close();
+}
+
+// Phone touch scrolling at 390x844: real touch gestures through CDP, with and without
+// momentum (fling). Momentum keeps scrolling after the finger lifts, so "comes to rest"
+// is measured from when the page stops scrolling, not from the end of the gesture.
+for (const path of only === 'desktop' ? [] : (process.env.QA_PATHS ?? '/,/solutions,/software').split(',')) {
+  console.log(`\n== ${path} (phone, touch)`);
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  const cdp = await context.newCDPSession(page);
+  await page.goto(base + path + '?layout=spatial', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => document.documentElement.classList.contains('journey-gl-ready'), null, { timeout: 30000 });
+  await page.waitForTimeout(2500);
+  // Visit every reading stop once first. The GPU process compiles some raster shaders the
+  // first time certain DOM content is drawn at full size (on /software, the preview's SVG
+  // icons: a one-off ~600 ms GPU stall on this machine whatever the pixel ratio, cached by
+  // the browser afterwards; see docs 15). Desktop shows those panels at load; on a phone
+  // they first appear mid-journey. The profiles below measure scrolling, not first use.
+  for (const y of await page.evaluate(() => window.__journey.timeline().segments.filter(s => s.kind === 'dwell').map(s => Math.round(s.start + 2)))) {
+    await page.evaluate(top => scrollTo(0, top), y);
+    await page.waitForTimeout(250);
+  }
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.waitForTimeout(1500);
+
+  // Finger starts on a content panel or on the open scene: both must scroll the journey.
+  const onPanel = await page.evaluate(() => {
+    const el = [...document.querySelectorAll('.journey-panel')].find(p => p.style.opacity === '1');
+    const r = el?.getBoundingClientRect();
+    return r ? [Math.round(Math.min(Math.max(r.left + r.width / 2, 40), 350)), Math.round(Math.min(Math.max(r.top + r.height / 2, 420), 700))] : [195, 600];
+  });
+  // A finger drag through the browser's real touch-scroll path (CDP touch events, with
+  // timestamps so the drag has its intended speed however fast CDP delivers them).
+  // Headless Chromium does not generate a fling from these (nor from touch-sourced
+  // synthesizeScrollGesture, which does not scroll at all headless), so momentum after
+  // lift-off follows the iOS deceleration curve (0.998 per ms, as UIScrollView's normal
+  // rate), applied every frame and cancelled by the next touch, as a real fling is.
+  await page.evaluate(() => {
+    window.addEventListener('touchstart', () => { window.__fling = null; }, { capture: true, passive: true });
+  });
+  const swipe = async ({ dy, ms, fling = true }, at = [195, 700]) => {
+    const steps = Math.max(4, Math.round(ms / 12));
+    const t0 = Date.now() / 1000;
+    const point = i => [{ x: at[0], y: at[1] + (dy * i) / steps }];
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', timestamp: t0, touchPoints: point(0) });
+    for (let i = 1; i <= steps; i++) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', timestamp: t0 + (ms * i) / steps / 1000, touchPoints: point(i) });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', timestamp: t0 + ms / 1000 + 0.004, touchPoints: [] });
+    if (!fling) return;
+    // Finger moving up (dy < 0) scrolls down the page. Not awaited: the next touch may interrupt it.
+    page.evaluate(v0 => new Promise(resolve => {
+      const fling = window.__fling = { v: v0 };
+      let last = performance.now();
+      const step = now => {
+        if (window.__fling !== fling) return resolve();
+        const dt = now - last;
+        last = now;
+        fling.v *= Math.pow(0.998, dt);
+        if (Math.abs(fling.v) < 15) { window.__fling = null; return resolve(); }
+        window.scrollBy({ top: (fling.v * dt) / 1000, behavior: 'instant' });
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }), Math.max(-8000, Math.min(8000, (-dy / ms) * 1000))).catch(() => {});
+    await page.waitForTimeout(50); // let the fling start before the next input
+  };
+  const toRest = async y => {
+    await page.evaluate(top => scrollTo(0, top), y);
+    await page.waitForFunction(() => { const e = window.__journey.engine; return e.smoothY === scrollY && e.smoothV === 0; }, null, { timeout: 8000 });
+    await page.waitForTimeout(300);
+  };
+  const profiles = [
+    { name: 'touch: slow drag (no momentum)', run: () => swipe({ dy: -320, ms: 1000, fling: false }) },
+    { name: 'touch: swipe with momentum', run: () => swipe({ dy: -300, ms: 220 }) },
+    { name: 'touch: hard flick', run: () => swipe({ dy: -380, ms: 90 }) },
+    { name: 'touch: repeated flicks', run: async () => { for (let i = 0; i < 4; i++) { await swipe({ dy: -320, ms: 120 }); await page.waitForTimeout(150); } } },
+    { name: 'touch: swipe starting on a panel', run: () => swipe({ dy: -300, ms: 220 }, onPanel) },
+    { name: 'touch: flick back up', from: 'mid', reversing: 1, run: async () => { await swipe({ dy: -320, ms: 150 }); await page.waitForTimeout(400); await swipe({ dy: 320, ms: 150 }, [195, 200]); } },
+  ];
+  const mid = await page.evaluate(() => Math.round((document.documentElement.scrollHeight - innerHeight) * 0.4));
+  for (const profile of profiles) {
+    const from = profile.from === 'mid' ? mid : 0;
+    await toRest(from);
+    await startRecording(page);
+    await profile.run();
+    // Wait for momentum to end: scrollY unchanged for 200 ms.
+    const scrollEnd = await page.evaluate(() => new Promise(resolve => {
+      let last = scrollY, still = performance.now();
+      const f = now => {
+        if (scrollY !== last) { last = scrollY; still = now; }
+        if (now - still > 200) resolve(still); else requestAnimationFrame(f);
+      };
+      requestAnimationFrame(f);
+    }));
+    await page.waitForTimeout(1600);
+    const out = await stopRecording(page);
+    const moved = Math.abs(out.at(-1).y - from);
+    const during = analyse(out.filter(s => s.t <= scrollEnd));
+    check(moved > 150, `${profile.name}: scrolls the journey`, { moved: Math.round(moved) });
+    check(during.reversals <= (profile.reversing || 0) && during.dropped <= 2, `${profile.name}: smooth, no back-and-forth`, during);
+    let clockSlips = 0;
+    for (let i = 1; i < out.length; i++) {
+      const wall = (out[i].t - out[i - 1].t) / 1000;
+      if (wall > 0.004 && Math.abs(out[i].time - out[i - 1].time - wall) > 0.004) clockSlips++;
+    }
+    check(clockSlips === 0, `${profile.name}: ambient motion keeps real time`, { clockSlips });
+    const rest = settles(out, scrollEnd);
+    check(rest !== null && rest < 1400, `${profile.name}: comes to rest after momentum`, { restMs: rest });
+  }
+  const sideways = await page.evaluate(() => ({ x: scrollX, overflow: document.documentElement.scrollWidth - innerWidth }));
+  check(sideways.x === 0 && sideways.overflow <= 0, 'touch: no sideways page scroll', sideways);
+
+  // Tapping a 3D screen opens it (touch has no hover, so picking happens on the tap).
+  if (path === '/') {
+    const fv = await page.evaluate(() => window.__journey.engine.panelOffset('fv-info'));
+    await toRest(fv + 2);
+    await page.waitForTimeout(800);
+    const spot = await page.evaluate(() => window.__journey.pickAt?.());
+    if (spot) {
+      await page.touchscreen.tap(spot[0], spot[1]);
+      const opened = await page.waitForSelector('.journey-inspect', { timeout: 2000 }).then(() => true, () => false);
+      check(opened, 'touch: tapping a project screen opens it', { at: spot });
+      if (opened) await page.keyboard.press('Escape');
+    } else check(false, 'touch: tapping a project screen opens it', { reason: 'no screen in view' });
+  }
+  await context.close();
 }
 
 await browser.close();
