@@ -125,6 +125,9 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGroup, setDesktopGroup] = useState<SitePage | null>(null);
   const [mobileGroup, setMobileGroup] = useState<SitePage | null>(null);
+  // A section chosen from the open mobile menu waits for the menu to finish closing:
+  // the collapsing panel would otherwise cancel the smooth scroll before it starts.
+  const pendingSection = useRef<[SitePage, string] | null>(null);
   const desktopAreaRef = useRef<HTMLDivElement>(null);
   const desktopTriggers = useRef<Record<SitePage, HTMLButtonElement | null>>({ portfolio: null, solutions: null, software: null });
   const reducedMotion = !!useReducedMotion();
@@ -202,7 +205,11 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
     event.preventDefault();
     setDesktopGroup(null);
     setMobileGroup(null);
-    setMobileOpen(false);
+    if (mobileOpen) {
+      pendingSection.current = [targetPage, id];
+      setMobileOpen(false);
+      return;
+    }
     goToSection(targetPage, id);
   };
 
@@ -482,7 +489,11 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
         </button>
       </div>
 
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} onExitComplete={() => {
+        const pending = pendingSection.current;
+        pendingSection.current = null;
+        if (pending) goToSection(...pending);
+      }}>
         {mobileOpen && (
           <motion.div
             id="site-mobile-navigation"
