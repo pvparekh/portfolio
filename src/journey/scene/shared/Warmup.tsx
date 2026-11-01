@@ -19,6 +19,30 @@ export default function Warmup() {
     let cancelled = false;
     const uploaded = new WeakSet<THREE.Texture>();
 
+    // Draw these parts once, clipped to a single pixel: the driver finishes its shader work
+    // (ANGLE/D3D completes programs, and instanced input layouts, only at a first real draw).
+    const drawn = new Set<THREE.Object3D>();
+    const drawOnce = (batch: THREE.Object3D[]) => {
+      const changed: [THREE.Object3D, boolean, boolean][] = [];
+      for (const part of batch) {
+        drawn.add(part);
+        // The part and its ancestors must be visible for it to draw.
+        for (let o: THREE.Object3D | null = part; o; o = o.parent) {
+          changed.push([o, o.visible, o.frustumCulled]);
+          o.visible = true;
+        }
+        part.frustumCulled = false;
+      }
+      const scissor = gl.getScissorTest();
+      gl.setScissorTest(true);
+      gl.setScissor(0, 0, 1, 1);
+      gl.render(scene, camera);
+      gl.setScissorTest(scissor);
+      gl.setScissor(0, 0, gl.domElement.width, gl.domElement.height);
+      for (let i = changed.length - 1; i >= 0; i--) { const [o, v, f] = changed[i]; o.visible = v; o.frustumCulled = f; }
+    };
+
+    let firstWarm = true;
     const warm = async () => {
       if (cancelled) return;
       const hidden: THREE.Object3D[] = [];
@@ -44,6 +68,15 @@ export default function Warmup() {
       gl.setRenderTarget(previous);
       hidden.forEach(object => { object.visible = false; });
       await Promise.all(pending).catch(() => {});
+      // Instanced meshes cost the most at first draw (about 180 ms for the Experience
+      // colonnade): pay it now, while the page is still settling after load, rather than
+      // in an idle slot later where it reads as a freeze.
+      if (firstWarm && !cancelled) {
+        firstWarm = false;
+        const instanced: THREE.Object3D[] = [];
+        for (const [world] of worlds) world.traverse(o => { if ((o as THREE.InstancedMesh).isInstancedMesh && !drawn.has(o)) instanced.push(o); });
+        if (instanced.length) drawOnce(instanced);
+      }
       // One texture per animation frame keeps every upload inside a frame budget.
       for (const texture of textures) {
         if (cancelled) return;
@@ -51,10 +84,8 @@ export default function Warmup() {
         if (!uploaded.has(texture)) { gl.initTexture(texture); uploaded.add(texture); }
       }
     };
-    // Drivers such as ANGLE/D3D finish shader work only at a world's first real draw.
-    // So while the visitor is idle, draw each world once, nearest first, one world per
-    // idle slot, clipped to a single pixel: the driver work happens, the fill cost does not.
-    const drawn = new Set<THREE.Object3D>();
+    // While the visitor is idle, first-draw each remaining part, nearest world first,
+    // one part per idle slot.
     const warmNextWorld = (deadline?: IdleDeadline) => {
       if (cancelled) return;
       if (deadline && deadline.timeRemaining() < 12 && !deadline.didTimeout) { schedule(); return; }
@@ -70,24 +101,8 @@ export default function Warmup() {
       }
       if (!parts.length) return;
       parts.sort((a, b) => Math.abs(a[1] - place) - Math.abs(b[1] - place));
-      const batch = parts.slice(0, 2).map(([o]) => o);
-      const changed: [THREE.Object3D, boolean, boolean][] = [];
-      for (const part of batch) {
-        drawn.add(part);
-        // The part and its ancestors must be visible for it to draw.
-        for (let o: THREE.Object3D | null = part; o; o = o.parent) {
-          changed.push([o, o.visible, o.frustumCulled]);
-          o.visible = true;
-        }
-        part.frustumCulled = false;
-      }
-      const scissor = gl.getScissorTest();
-      gl.setScissorTest(true);
-      gl.setScissor(0, 0, 1, 1);
-      gl.render(scene, camera);
-      gl.setScissorTest(scissor);
-      gl.setScissor(0, 0, gl.domElement.width, gl.domElement.height);
-      for (let i = changed.length - 1; i >= 0; i--) { const [o, v, f] = changed[i]; o.visible = v; o.frustumCulled = f; }
+      const batch = parts.slice(0, 1).map(([o]) => o);
+      drawOnce(batch);
       schedule();
     };
     let idleId = 0;

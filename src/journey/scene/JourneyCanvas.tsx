@@ -6,7 +6,7 @@ import type { Palette } from '../core/types';
 import { demoteForSession } from '../../spatial/core/capability';
 import { DPR_CAP } from '../core/budget';
 import { frameRef } from './shared/frame';
-import SkyDome from './shared/SkyDome';
+import Atmosphere from './shared/Atmosphere';
 import TravelStreaks from './shared/TravelStreaks';
 import Warmup from './shared/Warmup';
 import { Picker } from './shared/pick';
@@ -104,7 +104,7 @@ export default function JourneyCanvas({ engine, palettes, children }: Props) {
       }}
     >
       <CameraSync palettes={palettes} />
-      <SkyDome palettes={palettes} />
+      <Atmosphere palettes={palettes} />
       <TravelStreaks />
       {children}
       <AdaptiveResolution max={dpr} />

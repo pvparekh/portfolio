@@ -163,11 +163,12 @@ export default function Exhibit({ position, yaw, accent, title, floorY, displays
     return t;
   }), [bitmaps]);
   const accentColor = useMemo(() => new THREE.Color(accent), [accent]);
+  const keyColor = useMemo(() => new THREE.Color('#E4DEFF').lerp(accentColor, 0.12), [accentColor]);
   const group = useRef<THREE.Group>(null);
   const tilt = useRef({ x: 0, y: 0 });
   const hover = useMemo<HoverState>(() => ({ index: -1 }), []);
   const onSelect = useMemo(() => (index: number) => openInspect(displays.map(d => ({ src: d.src, alt: d.alt ?? `${title} screenshot` })), index), [displays, title]);
-  const plinth = useMemo(() => new THREE.MeshStandardMaterial({ color: '#07070C', metalness: 0.5, roughness: 0.4 }), []);
+  const plinth = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0A0912', metalness: 0.15, roughness: 0.85 }), []);
   const yawRad = (yaw * Math.PI) / 180;
   // Main display position rotated into world orientation (for plinth and light).
   const [dx, , dz] = displays[0].position;
@@ -197,7 +198,8 @@ export default function Exhibit({ position, yaw, accent, title, floorY, displays
           <mesh material={plinth} position={[mainX, floorY - position[1] + 60, mainZ]}>
             <cylinderGeometry args={[620, 660, 40, 64]} />
           </mesh>
-          <pointLight color={accentColor} intensity={3.2} distance={4200} decay={1.4} position={[mainX, 900, mainZ + 1600]} />
+          {/* Neutral key light: the project's colour stays in its details, not washed over the hall. */}
+          <pointLight color={keyColor} intensity={1.1} distance={4200} decay={1.4} position={[mainX, 900, mainZ + 1600]} />
         </>
       )}
     </group>

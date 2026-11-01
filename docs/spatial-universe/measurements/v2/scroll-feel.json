@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-30T06:46:25.056Z",
+  "measuredAt": "2026-10-30T21:29:10.655Z",
   "viewport": "1440x900",
   "targets": {
     "firstMotionPx": {
@@ -51,7 +51,7 @@
         "notchesPerTravel": 9.1,
         "settle95Ms": 433,
         "velocityStepRatio": 0.33,
-        "streamSpeedCv": 0.2
+        "streamSpeedCv": 0.17
       },
       "score": {
         "firstMotionPx": {
@@ -79,7 +79,7 @@
           "pass": true
         },
         "streamSpeedCv": {
-          "value": 0.2,
+          "value": 0.17,
           "pass": true
         }
       }
@@ -99,7 +99,7 @@
         "longestDeadNotches": 3.1,
         "notchesPerTravel": 8.5,
         "settle95Ms": 433,
-        "velocityStepRatio": 0.35,
+        "velocityStepRatio": 0.32,
         "streamSpeedCv": 0.17
       },
       "score": {
@@ -124,7 +124,7 @@
           "pass": true
         },
         "velocityStepRatio": {
-          "value": 0.35,
+          "value": 0.32,
           "pass": true
         },
         "streamSpeedCv": {
@@ -147,8 +147,8 @@
         "longestDeadPx": 310,
         "longestDeadNotches": 3.1,
         "notchesPerTravel": 8.8,
-        "settle95Ms": 433,
-        "velocityStepRatio": 0.32,
+        "settle95Ms": 450,
+        "velocityStepRatio": 0.31,
         "streamSpeedCv": 0.17
       },
       "score": {
@@ -169,11 +169,11 @@
           "pass": true
         },
         "settle95Ms": {
-          "value": 433,
+          "value": 450,
           "pass": true
         },
         "velocityStepRatio": {
-          "value": 0.32,
+          "value": 0.31,
           "pass": true
         },
         "streamSpeedCv": {

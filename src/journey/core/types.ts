@@ -36,6 +36,29 @@ export interface Palette {
   atmosphere: string;
   /** Accent used by panels and UI here. */
   accent: string;
+  /** The procedural backdrop painted behind this destination (see scene/shared/Atmosphere). */
+  sky?: Sky;
+}
+
+/** Backdrop motifs. Each page compiles only the motifs it uses. */
+export type SkyMotif =
+  | 'nebula' | 'aurora' | 'dusk' | 'galaxy' | 'dawn'
+  | 'streams' | 'storm' | 'contours' | 'confluence' | 'ripples'
+  | 'blueprint' | 'shards' | 'circuit' | 'hex';
+
+export interface Sky {
+  motif: SkyMotif;
+  /** Primary and secondary emission colours. */
+  a: string;
+  b: string;
+  /** Overall emission strength (default 1). */
+  strength?: number;
+  /** A direction the motif organises around (sun, focal point, galactic plane normal). */
+  toward?: [number, number, number];
+  /** Distant star density (default 1). */
+  stars?: number;
+  /** The destination has a floor: the motif fades out at the horizon so the floor's haze meets the sky cleanly. */
+  ground?: boolean;
 }
 
 export interface DestinationSpec {

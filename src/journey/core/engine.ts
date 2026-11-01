@@ -1,4 +1,4 @@
-import { basis, cameraCss, clamp, composeMatrix, dot, length, lookAtView, objectCss, smoothstep, sub, type Vec3 } from './math';
+import { basis, cameraCss, clamp, composeMatrix, cross, dot, length, lookAtView, normalize, objectCss, smoothstep, sub, type Vec3 } from './math';
 import { buildTimeline, sampleTimeline, type Segment, type Timeline, type Viewport } from './timeline';
 import type { JourneyDefinition, PanelSpec, Pose } from './types';
 
@@ -342,7 +342,7 @@ export class JourneyEngine {
       this.camera.style.willChange = moving ? 'transform' : 'auto';
       this.camera.classList.toggle('is-moving', moving);
     }
-    this.updatePanels(this.pose.position);
+    this.updatePanels(this.pose.position, this.pose.target);
 
     const seg = sample.segment;
     this.place = seg.kind === 'travel' ? seg.destination - 1 + sample.t : seg.destination;
@@ -365,8 +365,12 @@ export class JourneyEngine {
     }
   };
 
-  private updatePanels(eye: Vec3) {
+  private updatePanels(eye: Vec3, target: Vec3) {
     const p = this.vp.perspective;
+    // Camera basis, to measure how much of each panel is on screen horizontally.
+    const forward = normalize(sub(target, eye));
+    const right = normalize(cross(forward, [0, 1, 0]));
+    const halfView = this.vp.width / 2;
     for (const [id, el] of this.elements) {
       const spec = this.panels.get(id);
       if (!spec) continue;
@@ -374,7 +378,17 @@ export class JourneyEngine {
       const toEye = sub(eye, spec.position);
       const distance = length(toEye);
       const facing = dot(normal, toEye) / Math.max(distance, 1);
-      const opacity = clamp(1 - smoothstep(p * 1.35, p * 3.2, distance), 0, 1) * smoothstep(0.05, 0.35, facing);
+      // A panel cut off by the screen edge fades by how much of it is out of view, so the
+      // next shot's panel glides in from the edge instead of appearing chopped.
+      const depth = -dot(toEye, forward);
+      const size = this.sizes.get(id);
+      let onScreen = 1;
+      if (depth > 1 && size) {
+        const x = (-dot(toEye, right) * p) / depth;
+        const half = (size.width / 2) * (p / depth);
+        onScreen = clamp((Math.min(x + half, halfView) - Math.max(x - half, -halfView)) / (2 * half), 0, 1);
+      }
+      const opacity = clamp(1 - smoothstep(p * 1.35, p * 3.2, distance), 0, 1) * smoothstep(0.05, 0.35, facing) * smoothstep(0.6, 0.92, onScreen);
       const rounded = Math.round(opacity * 50) / 50;
       if (this.opacities.get(id) === rounded) continue;
       this.opacities.set(id, rounded);

@@ -256,6 +256,11 @@ html.journey-active body {
 .jp-skill-group { padding: 18px; border: 1px solid var(--jp-line); border-radius: 4px; background: rgba(8, 12, 30, 0.6); }
 .jp-skill-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 14px !important; font: 500 13px 'JetBrains Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; color: var(--jp-ink-3); }
 .jp-skill-heading svg { color: var(--jp-accent); }
+/* Inline icons rasterised inside a 3D-transformed panel cost a 280 to 380 ms frame on first
+   appearance (Skills, and the solutions hero previews); their own small layers avoid it. */
+.jp-skill-heading svg,
+.journey-panel[data-panel="sw-preview"] svg,
+.journey-panel[data-panel="sol-graphic"] svg { will-change: transform; }
 .jp-skill-heading span:last-child { color: var(--jp-ink-2); }
 .jp-skill-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .jp-skill-chips span { padding: 6px 9px; border: 1px solid var(--jp-line); border-radius: 3px; font: 500 12px 'JetBrains Mono', monospace; color: var(--jp-ink-2); background: rgba(255, 255, 255, 0.02); }

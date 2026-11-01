@@ -6,6 +6,8 @@ import { EXHIBITS, PROJECTS, local, portfolioJourney } from '../../worlds/portfo
 import Exhibit, { type DisplaySpec } from './Exhibit';
 import { LITE } from '../../core/budget';
 
+const PROJECTS_INDEX = portfolioJourney.destinations.findIndex(d => d.id === 'projects');
+
 const FLOOR_Y = PROJECTS[1] - 1500;
 
 // Displays sit to the right of each info panel, angled toward the reading camera.
@@ -23,29 +25,62 @@ const AETHER_DISPLAYS: DisplaySpec[] = [
   { src: '/projects/aetherflow-signup.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
 ];
 
-/** A real planar reflection (half resolution), tinted dark so it reads as polished stone. */
-function ReflectiveFloor() {
-  // A glossy floor without a second scene render: dark lacquer with soft pools of each
-  // exhibit's accent light, faked in one shader (a planar Reflector re-rendered the whole
-  // scene every frame and rebuilt on every resize, the main cost of this section).
+/** Where each project's main screen stands (its floor pool and plinth sit under it). */
+const STATIONS = [EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether].map(e => local(e.info, e.yaw, [820, 0, -700]));
+/** Which exhibit each Projects shot reads (shot 0 is the overview). */
+const SHOT_STATION = [-1, 0, 0, 1, 2];
+
+/**
+ * The exhibition floor, designed as one installation (museum lighting hierarchy):
+ * - general light: a single platform whose engraved border and walkway line join
+ *   all three projects, so on approach the section reads as one designed group;
+ * - focal light: a neutral pool under each project, equal at the overview, then
+ *   the project being read brightens while the others recede;
+ * - project colour only as a fine ring at each plinth, a detail rather than a wash.
+ * Unlit and a single pass (a planar reflector re-rendered the whole scene).
+ */
+function ExhibitionFloor() {
   const floor = useMemo(() => {
-    const pools = [EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether];
+    const centre = STATIONS.reduce((c, p) => c.add(new THREE.Vector2(p[0], p[2]).divideScalar(STATIONS.length)), new THREE.Vector2());
     return new THREE.ShaderMaterial({
+      extensions: { derivatives: true } as never,
       uniforms: {
         uBase: { value: new THREE.Color('#0A0814') },
-        uPos: { value: pools.map(e => new THREE.Vector2(e.info[0] + 900, e.info[2] - 900)) },
-        uCol: { value: pools.map(e => new THREE.Color(e.accent)) },
+        uKey: { value: new THREE.Color('#D9D3FF') },
+        uPos: { value: STATIONS.map(p => new THREE.Vector2(p[0], p[2])) },
+        uAccent: { value: [EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether].map(e => new THREE.Color(e.accent)) },
+        uFocus: { value: [0.5, 0.5, 0.5] },
+        uCentre: { value: centre },
+        uRadii: { value: new THREE.Vector2(12500, 6400) },
+        uTime: { value: 0 },
       },
       vertexShader: 'varying vec3 vWorld; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
-      fragmentShader: `uniform vec3 uBase; uniform vec2 uPos[3]; uniform vec3 uCol[3]; varying vec3 vWorld;
+      fragmentShader: `uniform vec3 uBase; uniform vec3 uKey; uniform vec2 uPos[3]; uniform vec3 uAccent[3]; uniform float uFocus[3];
+        uniform vec2 uCentre; uniform vec2 uRadii; uniform float uTime; varying vec3 vWorld;
+        float band(float d, float w) { return 1.0 - smoothstep(w, w + fwidth(d) * 1.5, abs(d)); }
+        float segment(vec2 p, vec2 a, vec2 b) { vec2 pa = p - a, ba = b - a; return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0)); }
         void main() {
+          vec2 p = vWorld.xz;
           vec3 c = uBase;
+          // The platform: polished, slightly lighter stone inside an engraved double border.
+          float e = length((p - uCentre) / uRadii);
+          float inside = 1.0 - smoothstep(0.97, 1.0, e);
+          c += uKey * 0.018 * inside;
+          c += uKey * (band(e - 1.0, 0.0016) * 0.22 + band(e - 0.955, 0.0009) * 0.08);
+          // The walkway: one fine line joining the projects in reading order, a soft light travelling it.
+          float route = min(segment(p, uPos[0], uPos[1]), segment(p, uPos[1], uPos[2]));
+          float along = fract(dot(p - uPos[0], normalize(uPos[2] - uPos[0])) / 2400.0 - uTime * 0.05);
+          c += uKey * band(route, 5.0) * (0.06 + 0.12 * pow(along, 8.0)) * inside;
           for (int i = 0; i < 3; i++) {
-            float d = length(vWorld.xz - uPos[i]);
-            c += uCol[i] * (exp(-d * 0.0007) * 0.22 + exp(-d * 0.0025) * 0.18);
+            float d = length(p - uPos[i]);
+            float w = 0.25 + 0.75 * uFocus[i];
+            // Focal pool: neutral light, wide and soft, with a brighter core.
+            c += uKey * (exp(-d * 0.0009) * 0.06 + exp(-d * 0.0032) * 0.09) * w;
+            // The project's own colour, only as a fine ring around its plinth.
+            c += uAccent[i] * band(d - 760.0, 3.0) * (0.12 + 0.35 * uFocus[i]);
           }
           // Faint view-dependent sheen toward the camera, like lacquer.
-          float toward = 1.0 - smoothstep(0.0, 9000.0, length(vWorld.xz - cameraPosition.xz));
+          float toward = 1.0 - smoothstep(0.0, 9000.0, length(p - cameraPosition.xz));
           c += vec3(0.05, 0.045, 0.09) * toward;
           gl_FragColor = vec4(c, 1.0);
           #include <tonemapping_fragment>
@@ -53,6 +88,17 @@ function ReflectiveFloor() {
         }`,
     });
   }, []);
+  // Focus eases between projects in real time, so the light hands off as the camera moves.
+  useFrame((_, delta) => {
+    const f = frameRef.current;
+    if (!f) return;
+    const shot = f.segment?.destination === PROJECTS_INDEX ? f.segment.shot : -1;
+    const station = shot >= 0 ? SHOT_STATION[shot] ?? -1 : -1;
+    const k = 1 - Math.exp(-Math.min(delta, 0.1) * 2.5);
+    const focus = floor.uniforms.uFocus.value as number[];
+    for (let i = 0; i < 3; i++) focus[i] += ((station < 0 ? 0.45 : station === i ? 1 : 0.12) - focus[i]) * k;
+    floor.uniforms.uTime.value = f.time;
+  });
   const reflector = useMemo(() => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(40000, 30000), floor);
     m.rotation.x = -Math.PI / 2;
@@ -211,7 +257,7 @@ export default function ProjectsWorld({ index }: { index: number }) {
   return (
     <group ref={ref}>
       <hemisphereLight args={['#4B3F8F', '#05040A', 0.6]} position={PROJECTS} />
-      <ReflectiveFloor />
+      <ExhibitionFloor />
       <HallLight />
       <FormulaCircuit />
       <Suspense fallback={null}>

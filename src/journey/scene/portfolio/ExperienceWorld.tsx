@@ -17,7 +17,21 @@ export default function ExperienceWorld({ index }: { index: number }) {
   const monoliths = useRef<THREE.InstancedMesh>(null);
   const stone = useMemo(() => new THREE.MeshStandardMaterial({ color: '#141922', roughness: 0.86, metalness: 0.08 }), []);
   const floor = useMemo(() => new THREE.MeshStandardMaterial({ color: '#040508', roughness: 0.92, metalness: 0.05 }), []);
-  const path = useMemo(() => new THREE.MeshBasicMaterial({ color: '#9FC6E8', toneMapped: false, transparent: true, opacity: 0.55 }), []);
+  // The path's rails carry pulses of light down the colonnade, toward the roles.
+  const path = useMemo(() => new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, toneMapped: false,
+    uniforms: { uColor: { value: new THREE.Color('#9FC6E8') }, uTime: { value: 0 }, uPresence: { value: 1 } },
+    vertexShader: 'varying float vZ; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vZ = w.z; gl_Position = projectionMatrix * viewMatrix * w; }',
+    fragmentShader: 'uniform vec3 uColor; uniform float uTime; uniform float uPresence; varying float vZ; void main(){ float pulse = pow(fract(-vZ / 3200.0 - uTime * 0.22), 14.0); float a = (0.45 + 0.55 * pulse) * uPresence; gl_FragColor = vec4(uColor * (1.0 + pulse * 1.5), a); }',
+  }), []);
+  // Light inlays on each monolith's inner face; a slow wave of light travels down the colonnade.
+  const inlay = useMemo(() => new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false,
+    uniforms: { uColor: { value: new THREE.Color('#8FB8E8') }, uTime: { value: 0 }, uPresence: { value: 1 } },
+    vertexShader: 'varying vec3 vWorld; varying float vV; void main(){ vec4 w = modelMatrix * instanceMatrix * vec4(position, 1.0); vWorld = w.xyz; vV = position.y + 0.5; gl_Position = projectionMatrix * viewMatrix * w; }',
+    fragmentShader: 'uniform vec3 uColor; uniform float uTime; uniform float uPresence; varying vec3 vWorld; varying float vV; void main(){ float wave = pow(0.5 + 0.5 * sin(vWorld.z * 0.0011 + uTime * 0.7), 5.0); float fade = smoothstep(0.0, 0.25, vV) * (1.0 - smoothstep(0.7, 1.0, vV)); float a = (0.16 + 0.75 * wave) * fade * uPresence; gl_FragColor = vec4(uColor * a, a); }',
+  }), []);
+  const inlays = useRef<THREE.InstancedMesh>(null);
   const threshold = useMemo(() => new THREE.MeshBasicMaterial({ color: '#CFE3F7', toneMapped: false, transparent: true, opacity: 0.85 }), []);
   const current = useMemo(() => new THREE.MeshBasicMaterial({ color: '#4ADE80', toneMapped: false, transparent: true, opacity: 0.85 }), []);
 
@@ -38,10 +52,29 @@ export default function ExperienceWorld({ index }: { index: number }) {
       }
     }
     mesh.instanceMatrix.needsUpdate = true;
+    // Inlays: a thin strip down the centre of each monolith's face toward the path.
+    const strips = inlays.current;
+    if (!strips) return;
+    let j = 0;
+    for (let r = 0; r < ROWS; r++) {
+      for (const side of [-1, 1]) {
+        const h = 9000 + ((r * 7 + (side > 0 ? 3 : 0)) % 5) * 1400;
+        m.compose(
+          new THREE.Vector3(EXPERIENCE[0] + side * (HALF_WIDTH + (r % 3) * 120 - 472), FLOOR + h * 0.45, EXPERIENCE[2] + 7000 - r * STEP),
+          new THREE.Quaternion(),
+          new THREE.Vector3(16, h * 0.8, 60),
+        );
+        strips.setMatrixAt(j++, m);
+      }
+    }
+    strips.instanceMatrix.needsUpdate = true;
   }, []);
 
   const ref = usePresence(index, (presence, frame) => {
-    path.opacity = 0.55 * presence;
+    path.uniforms.uPresence.value = presence;
+    path.uniforms.uTime.value = frame.time;
+    inlay.uniforms.uPresence.value = presence;
+    inlay.uniforms.uTime.value = frame.time;
     threshold.opacity = 0.85 * presence;
     current.opacity = (0.55 + 0.3 * Math.sin(frame.time * 1.6)) * presence;
   }, 1.0);
@@ -53,6 +86,9 @@ export default function ExperienceWorld({ index }: { index: number }) {
       {/* Cool back light down the colonnade gives the monoliths lit edges. */}
       <directionalLight color="#7FB2E6" intensity={1.6} position={[EXPERIENCE[0] + 3000, EXPERIENCE[1] + 4000, EXPERIENCE[2] - 60000]} />
       <instancedMesh ref={monoliths} args={[undefined, undefined, ROWS * 2]} material={stone}>
+        <boxGeometry args={[1, 1, 1]} />
+      </instancedMesh>
+      <instancedMesh ref={inlays} args={[undefined, undefined, ROWS * 2]} material={inlay} frustumCulled={false}>
         <boxGeometry args={[1, 1, 1]} />
       </instancedMesh>
       <mesh material={floor} rotation={[-Math.PI / 2, 0, 0]} position={[EXPERIENCE[0], FLOOR, EXPERIENCE[2] - 18000]}>

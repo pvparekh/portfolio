@@ -60,17 +60,17 @@ export const portfolioJourney: JourneyDefinition = {
     {
       id: 'origin', label: 'Origin', anchor: 'hero', center: ORIGIN, approach: [0, 600, 9000],
       shots: [{ panel: 'origin' }],
-      palette: { background: '#04050A', atmosphere: '#0A1022', accent: '#F59E0B' },
+      palette: { background: '#04050A', atmosphere: '#0A1022', accent: '#F59E0B', sky: { motif: 'nebula', a: '#18245A', b: '#3B2466', strength: 0.4 } },
     },
     {
       id: 'about', label: 'About', anchor: 'about', center: ABOUT, approach: at(ABOUT, [7000, 9000, 15000]),
       shots: [{ panel: 'about-bio', offsetX: -0.14 }, { panel: 'about-profile', offsetX: 0.1 }],
-      palette: { background: '#030B10', atmosphere: '#0E3A44', accent: '#67E8F9' },
+      palette: { background: '#030B10', atmosphere: '#0E3A44', accent: '#67E8F9', sky: { motif: 'aurora', a: '#22D3AE', b: '#7C83F2', strength: 1 } },
     },
     {
       id: 'experience', label: 'Experience', anchor: 'experience', center: EXPERIENCE, approach: at(EXPERIENCE, [0, 3200, 15000]),
       shots: [{ panel: 'exp-intro' }, ...rolePanels.map((p, i) => ({ panel: p.id, offsetX: i === 0 ? -0.12 : 0 }))],
-      palette: { background: '#05070B', atmosphere: '#1A2230', accent: '#CBD5E1' },
+      palette: { background: '#05070B', atmosphere: '#1A2230', accent: '#CBD5E1', sky: { motif: 'dusk', a: '#9CC3F0', b: '#3B4D6B', strength: 1, ground: true, toward: [0.05, 0.16, -1] } },
     },
     {
       id: 'projects', label: 'Projects', anchor: 'projects', center: PROJECTS, approach: at(PROJECTS, [-3000, 5200, 19000]),
@@ -81,17 +81,17 @@ export const portfolioJourney: JourneyDefinition = {
         { panel: 'bot-info', offsetX: -0.22 },
         { panel: 'aether-info', offsetX: -0.22 },
       ],
-      palette: { background: '#07050E', atmosphere: '#1C1236', accent: '#A78BFA' },
+      palette: { background: '#07050E', atmosphere: '#1C1236', accent: '#A78BFA', sky: { motif: 'nebula', a: '#4C2C9E', b: '#C084FC', strength: 0.75, ground: true } },
     },
     {
       id: 'skills', label: 'Skills', anchor: 'skills', center: SKILLS, approach: at(SKILLS, [8000, 6000, 16000]),
       shots: [{ panel: 'skills' }],
-      palette: { background: '#04060E', atmosphere: '#141A3A', accent: '#93C5FD' },
+      palette: { background: '#04060E', atmosphere: '#141A3A', accent: '#93C5FD', sky: { motif: 'galaxy', a: '#4B6BD6', b: '#C7D6FF', strength: 1, toward: [0.32, 0.9, 0.28], stars: 1.6 } },
     },
     {
       id: 'contact', label: 'Contact', anchor: 'contact', center: CONTACT, approach: at(CONTACT, [0, 2400, 16000]),
       shots: [{ panel: 'contact', dwell: 0.15 }],
-      palette: { background: '#05040A', atmosphere: '#2A1A0C', accent: '#F59E0B' },
+      palette: { background: '#05040A', atmosphere: '#2A1A0C', accent: '#F59E0B', sky: { motif: 'dawn', a: '#F59E0B', b: '#7C2D12', strength: 0.3, toward: [0, -0.1, -1] } },
     },
   ],
 };

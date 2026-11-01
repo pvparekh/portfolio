@@ -59,18 +59,34 @@ function useWorld(index: number) {
 
 /** Hero: the product exploded into translucent interface layers behind the UI concept. */
 export function ExplodedLayers({ index }: { index: number }) {
+  // The layers stack directly behind the preview panel, in its own frame (an exploded
+  // view of that interface), stepping back and up-right so each edge stays readable.
   const ref = useWorld(index);
-  const fill = useMemo(() => new THREE.MeshBasicMaterial({ color: BLUE, transparent: true, opacity: 0.035, depthWrite: false, side: THREE.DoubleSide }), []);
+  const fill = useMemo(() => new THREE.MeshBasicMaterial({ color: BLUE, transparent: true, opacity: 0.03, depthWrite: false, side: THREE.DoubleSide }), []);
+  const scan = useMemo(() => new THREE.MeshBasicMaterial({ color: BLUE, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }), []);
+  const scanRef = useRef<THREE.Mesh>(null);
   const layers = [0, 1, 2, 3];
-  const base = at(S.hero, [1250, 0, -1700]);
+  const preview = at(S.hero, [1250, 0, -1700]);
+  const yaw = (-14 * Math.PI) / 180;
+  useFrame(() => {
+    const frame = frameRef.current;
+    if (!frame || !scanRef.current) return;
+    // A scan line sweeps down the deepest layer: the layers read as one assembly being inspected.
+    scanRef.current.position.y = 230 - ((frame.time * 0.12) % 1) * 460;
+  });
   return (
     <group ref={ref}>
-      {layers.map(i => (
-        <group key={i} position={at(base, [-980 - i * 360, 60 + i * 50, -1300 - i * 700])} rotation={[0, 0.3, 0]}>
-          <mesh material={fill}><planeGeometry args={[600, 380]} /></mesh>
-          <Module position={[0, 0, 0]} size={[600, 380, 2]} faces={false} edge={i === 0 ? WHITE : BLUE} edgeOpacity={0.5 - i * 0.09} />
-        </group>
-      ))}
+      <group position={preview} rotation={[0, yaw, 0]}>
+        {layers.map(i => (
+          <group key={i} position={[110 * (i + 1), 70 * (i + 1), -320 * (i + 1)]}>
+            <mesh material={fill}><planeGeometry args={[680, 460]} /></mesh>
+            <Module position={[0, 0, 0]} size={[680, 460, 2]} faces={false} edge={i === 0 ? WHITE : BLUE} edgeOpacity={0.42 - i * 0.08} />
+            {i === layers.length - 1 && (
+              <mesh ref={scanRef} material={scan}><planeGeometry args={[680, 3]} /></mesh>
+            )}
+          </group>
+        ))}
+      </group>
     </group>
   );
 }
@@ -108,6 +124,7 @@ export function ModularWall({ index, gaps }: { index: number; gaps: number }) {
 export function ServiceModules({ index, count }: { index: number; count: number }) {
   const ref = useWorld(index);
   const spin = useRef<THREE.Group>(null);
+  const moduleFill = useMemo(() => new THREE.MeshBasicMaterial({ color: BLUE, transparent: true, opacity: 0.05, depthWrite: false, blending: THREE.AdditiveBlending }), []);
   useFrame(() => {
     const frame = frameRef.current;
     if (!frame || !spin.current) return;
@@ -117,13 +134,16 @@ export function ServiceModules({ index, count }: { index: number; count: number 
     <group ref={ref}>
       <group ref={spin}>
         {Array.from({ length: count }, (_, i) => {
-          const centre = at(servicePosition(i), [1200, 40, -1500]);
-          const sizes: Vec3[] = [[480, 480, 480], [700, 150, 480], [260, 680, 260], [560, 260, 560], [380, 380, 640]];
+          // Clear of the reading panel (right of it and further back), drawn as a translucent
+          // wireframe so it reads as a designed module, not a solid block behind the card.
+          const centre = at(servicePosition(i), [1700, 120, -2600]);
+          const sizes: Vec3[] = [[420, 420, 420], [600, 140, 420], [240, 600, 240], [480, 240, 480], [340, 340, 560]];
           const size = sizes[i % sizes.length];
           return (
             <group key={i} position={centre}>
-              <Module position={[0, 0, 0]} size={size} edge={BLUE} edgeOpacity={0.6} />
-              <Module position={[0, -size[1] / 2 - 200, 0]} size={[size[0] * 1.3, 24, size[2] * 1.3]} faces={false} edgeOpacity={0.25} />
+              <mesh material={moduleFill} scale={size}><boxGeometry args={[1, 1, 1]} /></mesh>
+              <Module position={[0, 0, 0]} size={size} edge={BLUE} edgeOpacity={0.7} faces={false} />
+              <Module position={[0, -size[1] / 2 - 160, 0]} size={[size[0] * 1.3, 16, size[2] * 1.3]} faces={false} edgeOpacity={0.22} />
             </group>
           );
         })}
@@ -177,8 +197,10 @@ export function AssemblyStack({ index }: { index: number }) {
   return (
     <group ref={ref}>
       <ProcessConduit position={S.approach} under="sw-approach" color={BLUE} />
+      {/* The five stages as slabs assembling into one stack: a plinth well below the
+          process panel, so no outline ever crosses its text. */}
       {Array.from({ length: 5 }, (_, i) => (
-        <Module key={i} position={at(S.approach, [0, -1600 + i * (360 + (4 - i) * 140), -6200])} size={[5200 - i * 300, 220, 2600]} edge={i === 4 ? WHITE : BLUE} edgeOpacity={0.35 + i * 0.1} />
+        <Module key={i} position={at(S.approach, [0, -3300 + i * (260 + (4 - i) * 90), -6200])} size={[5200 - i * 300, 180, 2600]} edge={i === 4 ? WHITE : BLUE} edgeOpacity={0.3 + i * 0.08} />
       ))}
     </group>
   );

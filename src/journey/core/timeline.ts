@@ -64,7 +64,13 @@ export interface ShotPoses {
 /** Camera poses for reading a panel at exactly 1:1 scale, panning if it is taller than the viewport. */
 export function shotPoses(panel: PanelSpec, panelHeight: number, vp: Viewport, offsetX = 0, offsetY = 0): ShotPoses {
   const { right, up, normal } = basis(panel.yaw, panel.pitch ?? 0);
-  const ox = vp.narrow ? 0 : offsetX * vp.width;
+  // Offsets are fractions of a composition frame no wider than about 16:9, so an ultrawide
+  // screen keeps the same arrangement (centred, with more world around it) instead of
+  // pulling a panel away from its exhibit. The panel always stays fully on screen.
+  const frame = Math.min(vp.width, vp.height * 1.85);
+  const panelWidth = Math.min(panel.width, vp.width - 140);
+  const room = Math.max(0, (vp.width - panelWidth) / 2 - 56);
+  const ox = vp.narrow ? 0 : Math.min(room, Math.max(-room, offsetX * frame));
   const oy = vp.narrow ? 0 : offsetY * vp.height;
   // Camera sits on the panel normal at the 1:1 distance, shifted so the panel lands at the offset.
   const base = add(add(panel.position, scale(normal, vp.perspective)), add(scale(right, -ox), scale(up, oy)));

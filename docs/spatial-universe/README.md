@@ -25,6 +25,7 @@ Evolve the homepage's six amber speed lines into **SLIPSTREAM**: a real-time Web
 | 12 | [V2 implementation](12-v2-implementation.md) | V2 destination journey: diagnosis, architecture, worlds, exhibits, validation, measurements, limitations |
 | 13 | [Scroll feel, interaction and life](13-scroll-feel-and-life.md) | Scroll-feel targets and before/after measurements, exhibit hover and inspect, ambient life, grouped experience |
 | 14 | [Smoothness root causes](14-smoothness-root-causes.md) | What caused jitter, freezes and hitches, the fixes, and the scroll QA suite that guards them |
+| 16 | [Backdrops, composition and life](16-backdrops-and-composition.md) | A unique procedural backdrop per destination at a quarter of the cost, Projects as one designed exhibition, a living About planet, framing on every screen size |
 
 Visual overview (live filament sketch + illustrated storyboard frames): [`slipstream-blueprint.html`](slipstream-blueprint.html), also published privately at https://claude.ai/artifact/6pzPXFFHjqSWGZGrqWaFQ8.
 

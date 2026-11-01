@@ -128,7 +128,6 @@ export function ServiceChannels({ index, count }: { index: number; count: number
   return (
     <group ref={ref}>
       <StreamField streams={streams} presence={presence} />
-      <Lattice position={at(D.services, [0, 3600, -16000])} scale={0.7} color={CALM} />
     </group>
   );
 }
@@ -136,14 +135,15 @@ export function ServiceChannels({ index, count }: { index: number; count: number
 export function ValidationRings({ index, count }: { index: number; count: number }) {
   const { ref, presence } = useWorld(index);
   const streams = useMemo<Stream[]>(() => [
-    { points: [at(D.work, [-4000, -1800, 6000]), at(D.work, [-1500, -2000, -4000]), at(D.work, [0, -2000, -(count + 1) * 5000])], count: 220, color: RAW, speed: 0.03, width: 260, chaos: 0.7, length: 260, brightness: 0.7 },
-    ...[-500, 500].map(x => ({ points: [at(D.work, [x, -2000, -3000]), at(D.work, [x, -2000, -14000]), at(D.work, [x, -2000, -(count + 2) * 5000])], count: 200, color: VALID, speed: 0.035, width: 40, chaos: 0, length: 380 })),
+    { points: [at(D.work, [-4000, -2400, 6000]), at(D.work, [-1500, -2600, -4000]), at(D.work, [0, -2600, -(count + 1) * 5000])], count: 220, color: RAW, speed: 0.03, width: 260, chaos: 0.7, length: 260, brightness: 0.7 },
+    ...[-500, 500].map(x => ({ points: [at(D.work, [x, -2600, -3000]), at(D.work, [x, -2600, -14000]), at(D.work, [x, -2600, -(count + 2) * 5000])], count: 200, color: VALID, speed: 0.035, width: 40, chaos: 0, length: 380 })),
   ], [count]);
   return (
     <group ref={ref}>
       <StreamField streams={streams} presence={presence} />
+      {/* Below the reading line: the gates recede into the distance under each panel instead of touching it. */}
       {Array.from({ length: count + 1 }, (_, i) => (
-        <Gate key={i} ring position={at(D.work, [0, -2000, -(i + 1) * 5000 + 2500])} width={1500} height={0} color={i === 0 ? RAW : VALID} />
+        <Gate key={i} ring position={at(D.work, [0, -2600, -(i + 1) * 5000 + 2500])} width={1500} height={0} color={i === 0 ? RAW : VALID} />
       ))}
     </group>
   );
