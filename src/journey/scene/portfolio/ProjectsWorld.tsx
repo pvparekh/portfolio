@@ -12,9 +12,9 @@ const FLOOR_Y = PROJECTS[1] - 1500;
 
 // Displays sit to the right of each info panel, angled toward the reading camera.
 const FV_DISPLAYS: DisplaySpec[] = [
-  { src: '/projects/formula-vision-replay-map.webp', position: [820, 40, -700], width: 780, yaw: -22, aspect: 1.6, emphasis: 1 },
-  { src: '/projects/formula-vision-chase-camera.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
-  { src: '/projects/formula-vision-archive.webp', position: [560, -500, -1950], width: 560, yaw: -16, aspect: 1.6, emphasis: 0.36 },
+  { src: '/projects/formula-vision-archive.webp', position: [820, 40, -700], width: 780, yaw: -22, aspect: 1.6, emphasis: 1 },
+  { src: '/projects/formula-vision-replay-map.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
+  { src: '/projects/formula-vision-chase-camera.webp', position: [560, -500, -1950], width: 560, yaw: -16, aspect: 1.6, emphasis: 0.36 },
 ];
 const BOT_DISPLAYS: DisplaySpec[] = [
   { src: '/projects/review-bot-pipeline.webp', position: [820, 20, -700], width: 760, yaw: -22, aspect: 1257 / 740, emphasis: 1 },

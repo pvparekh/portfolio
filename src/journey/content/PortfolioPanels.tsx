@@ -190,7 +190,7 @@ export function FlagshipPanel() {
   return (
     <article className="jp-exhibit jp-exhibit--fv" aria-labelledby="jp-fv-title">
       <p className="jp-topline"><span>01 / FEATURED SYSTEM</span><span>DATA PLATFORM + INTERACTIVE PRODUCT</span></p>
-      <MobilePreview src="/projects/formula-vision-replay-map.webp" alt="Formula Vision race replay: the race order, circuit map and driver telemetry" />
+      <MobilePreview src="/projects/formula-vision-replay-map.webp" alt="Formula Vision race replay: the race order, circuit map, and the followed driver's panel with a 3D car in team colour" />
       <p className="jp-overline">{flagship.tagline}</p>
       <h3 id="jp-fv-title">{flagship.name}</h3>
       <p className="jp-lead">{FV_LEAD}</p>
@@ -204,6 +204,7 @@ export function FlagshipPanel() {
         <a href={FV_ARCHITECTURE_URL} target="_blank" rel="noreferrer" className="jp-text-link">Architecture <ArrowUpRight size={15} aria-hidden="true" /></a>
       </div>
       <div className="jp-tech" aria-label="Formula Vision technologies">{flagship.tech.map(t => <span key={t}>{t}</span>)}</div>
+      <p className="jp-meta">3D car in the screenshots: &ldquo;F1 2026 concept&rdquo; by Qvist_designs, CC BY 4.0 (modified).</p>
     </article>
   );
 }
