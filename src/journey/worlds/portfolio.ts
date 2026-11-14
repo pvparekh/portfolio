@@ -45,8 +45,8 @@ export const EXHIBITS = {
 export const portfolioJourney: JourneyDefinition = {
   panels: [
     { id: 'origin', destination: 'origin', position: ORIGIN, yaw: 0, width: 1040 },
-    { id: 'about-bio', destination: 'about', position: ABOUT, yaw: 14, width: 620 },
-    { id: 'about-profile', destination: 'about', position: at(ABOUT, [2700, 120, -1300]), yaw: -10, width: 660 },
+    // Bio with the profile beneath it, one stop; the camera pans down the pair.
+    { id: 'about', destination: 'about', position: at(ABOUT, [1200, 60, -500]), yaw: 2, width: 960 },
     { id: 'exp-intro', destination: 'experience', position: EXPERIENCE, yaw: 0, width: 760 },
     ...rolePanels,
     { id: 'projects-intro', destination: 'projects', position: at(PROJECTS, [0, 900, 4200]), yaw: 0, width: 1080 },
@@ -67,7 +67,7 @@ export const portfolioJourney: JourneyDefinition = {
     },
     {
       id: 'about', label: 'About', anchor: 'about', center: ABOUT, approach: at(ABOUT, [7000, 9000, 15000]),
-      shots: [{ panel: 'about-bio', offsetX: -0.14 }, { panel: 'about-profile', offsetX: 0.1 }],
+      shots: [{ panel: 'about', offsetX: -0.06 }],
       palette: { background: '#030B10', atmosphere: '#0E3A44', accent: '#67E8F9', sky: { motif: 'aurora', a: '#22D3AE', b: '#7C83F2', strength: 1 } },
     },
     {

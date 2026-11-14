@@ -3,7 +3,7 @@ import JourneyStage from '../dom/JourneyStage';
 import { portfolioJourney } from '../worlds/portfolio';
 import { Footer, TELEMETRY } from '../../App';
 import {
-  AboutBioPanel, AboutProfilePanel, ContactPanel, ExperienceIntroPanel, FlagshipArchitecturePanel, FlagshipPanel,
+  AboutPanel, ContactPanel, ExperienceIntroPanel, FlagshipArchitecturePanel, FlagshipPanel,
   ExperienceGroupPanel, OriginPanel, ProjectsIntroPanel, SkillsPanel, SupportingPanel, VoidLanePanel, VoidLaneStudioPanel,
 } from '../content/PortfolioPanels';
 
@@ -28,8 +28,7 @@ export default function PortfolioJourney({ onNavigateSolutions }: { onNavigateSo
   const renderPanel = useCallback((id: string) => {
     switch (id) {
       case 'origin': return <OriginPanel />;
-      case 'about-bio': return <AboutBioPanel />;
-      case 'about-profile': return <AboutProfilePanel />;
+      case 'about': return <AboutPanel />;
       case 'exp-intro': return <ExperienceIntroPanel />;
       case 'projects-intro': return <ProjectsIntroPanel />;
       case 'vl-info': return <VoidLanePanel />;
