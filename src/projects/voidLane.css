@@ -1,0 +1,136 @@
+/* ── Void Lane featured build (standard page and journey) ──
+   Lane cyan is the game's own guidance hue. No blur or large shadows here:
+   the journey copy of these styles sits in 3D-transformed panels (doc 14). */
+
+.vl-showcase, .jp-exhibit--vl, .jp-vl-studio { --vl-accent: #1fe3ff; --vl-accent-dim: rgba(31, 227, 255, 0.1); }
+
+/* Standard page */
+.vl-showcase {
+  position: relative; overflow: hidden; background: #0b0d14; margin-bottom: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.115); border-top: 2px solid rgba(31, 227, 255, 0.75);
+}
+.vl-showcase .renaissance-project-topline span:first-child { color: var(--vl-accent); }
+.vl-hero {
+  position: relative; display: block; width: 100%; padding: 0; border: 0; background: #05060a;
+  aspect-ratio: 16 / 9; overflow: hidden; cursor: zoom-in;
+}
+.vl-hero img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.vl-hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 6, 10, 0) 55%, rgba(5, 6, 10, 0.82) 100%);
+}
+.vl-hero-caption {
+  position: absolute; left: clamp(16px, 3vw, 36px); right: clamp(16px, 3vw, 36px); bottom: clamp(14px, 2.4vw, 28px); z-index: 1;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; text-align: left;
+  color: #e6edf7; font: 500 clamp(13px, 1.3vw, 16px)/1.45 'Inter', system-ui, sans-serif;
+}
+.vl-hero-caption > span:not(.vl-hero-caption-text), .vl-hero-caption-inline > span, .journey-inspect-caption > span {
+  color: var(--vl-accent, #1fe3ff); font: 500 10.5px/1.6 'JetBrains Mono', monospace; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.vl-hero:focus-visible { outline: 2px solid var(--vl-accent); outline-offset: -4px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .vl-hero:hover img { transform: scale(1.018); }
+}
+
+/* Filmstrip: a row of real captures; the button is the stable hit target, only the image moves. */
+.vl-filmstrip {
+  list-style: none; margin: 0; padding: 14px; display: grid; gap: 10px;
+  /* 16 captures: 8, 4 or 2 per row so the rows always come out full. */
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09); background: #090a10;
+}
+.vl-thumb {
+  position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; text-align: left; color: inherit;
+}
+.vl-thumb-frame {
+  display: block; aspect-ratio: 16 / 9; overflow: hidden; background: #05060a;
+  border: 1px solid rgba(255, 255, 255, 0.1); transition: border-color 0.2s ease;
+}
+.vl-thumb-frame img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease, opacity 0.2s ease; opacity: 0.86; }
+.vl-thumb-label {
+  display: block; margin-top: 6px; color: #8793a3; font: 500 9.5px/1.4 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.vl-thumb-play {
+  position: absolute; top: 8px; left: 8px; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(5, 6, 10, 0.78); color: var(--vl-accent); border: 1px solid rgba(31, 227, 255, 0.45);
+}
+.vl-thumb:hover .vl-thumb-frame, .vl-thumb:focus-visible .vl-thumb-frame { border-color: rgba(31, 227, 255, 0.7); }
+.vl-thumb:hover .vl-thumb-frame img, .vl-thumb:focus-visible .vl-thumb-frame img { opacity: 1; }
+.vl-thumb:hover .vl-thumb-label, .vl-thumb:focus-visible .vl-thumb-label { color: #e6edf7; }
+.vl-thumb:focus-visible { outline: none; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .vl-thumb:hover .vl-thumb-frame img { transform: scale(1.06); }
+}
+
+.vl-body { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); }
+.vl-story { padding: clamp(28px, 4vw, 58px); padding-bottom: clamp(24px, 2.5vw, 36px); }
+.vl-showcase .renaissance-project-overline { color: var(--vl-accent); }
+.vl-story h3 {
+  color: var(--text-1); font: 650 clamp(42px, 5.3vw, 78px)/1.04 'Space Grotesk', sans-serif;
+  letter-spacing: -0.062em; margin: 15px 0 24px;
+}
+.vl-lead {
+  color: var(--text-1); font: 500 clamp(19px, 2.2vw, 24px)/1.36 'Space Grotesk', sans-serif;
+  letter-spacing: -0.02em; margin-bottom: 16px; max-width: 520px;
+}
+.vl-proof > div > span { color: var(--vl-accent); }
+/* The gallery is the primary action; early access is a quiet link with its note, tucked beneath. */
+.vl-gallery-button { gap: 9px; cursor: pointer; border: 0; font-family: inherit; }
+.vl-showcase .vl-gallery-button { background: var(--vl-accent); color: #031014; }
+.vl-showcase .vl-gallery-button:hover, .vl-showcase .vl-gallery-button:focus-visible { background: #7cf0ff; }
+.vl-early { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 16px 0 0; max-width: 520px; }
+.vl-early-link {
+  display: inline-flex; align-items: center; gap: 5px; padding: 2px 0; color: var(--vl-accent) !important;
+  font: 500 10.5px/1.6 'JetBrains Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; border-bottom: 1px solid rgba(31, 227, 255, 0.35);
+}
+.vl-early-link:hover, .vl-early-link:focus-visible { border-color: var(--vl-accent); }
+.vl-early-note { color: #8793a3; font: 400 12px/1.6 'Inter', system-ui, sans-serif; }
+.vl-proof-label, .jp-exhibit--vl .jp-proof strong { color: #e6edf7; font-weight: 600; }
+
+.vl-studio { padding: clamp(28px, 3.4vw, 46px); border-left: 1px solid rgba(255, 255, 255, 0.09); background: #090a10; }
+.vl-studio-caption { color: #8793a3; font: 500 10.5px/1.5 'JetBrains Mono', monospace; letter-spacing: 0.16em; margin: 0 0 18px; }
+.vl-studio-flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: none; }
+.vl-studio-flow li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.vl-studio-flow li:first-child { border-top: 0; padding-top: 0; }
+.vl-step-index { color: var(--vl-accent); font: 500 11px/1.6 'JetBrains Mono', monospace; letter-spacing: 0.08em; }
+.vl-studio-flow strong { display: block; color: #e6edf7; font: 600 14.5px/1.35 'Space Grotesk', sans-serif; letter-spacing: -0.01em; }
+.vl-studio-flow p { margin: 3px 0 0; color: #94a3b8; font: 400 13px/1.6 'Inter', system-ui, sans-serif; }
+
+.vl-notes { display: grid; gap: 6px; padding: 16px 25px 20px; border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.vl-notes p { margin: 0; color: #8793a3; font: 400 12px/1.65 'Inter', system-ui, sans-serif; }
+.vl-notes strong { color: #a9b6c9; font: 500 10px/1 'JetBrains Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; margin-right: 8px; }
+
+@media (max-width: 1100px) {
+  .vl-filmstrip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .vl-body { grid-template-columns: minmax(0, 1fr); }
+  .vl-studio { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.09); }
+}
+@media (max-width: 600px) {
+  /* One swipeable row instead of eight rows of thumbnails. */
+  .vl-filmstrip {
+    display: flex; gap: 8px; padding: 10px; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .vl-filmstrip::-webkit-scrollbar { display: none; }
+  .vl-filmstrip > li { flex: 0 0 42%; scroll-snap-align: start; }
+  .vl-hero-caption-text { display: none; }
+  .vl-notes { padding: 14px 18px 18px; }
+}
+
+/* Journey panels */
+.jp-exhibit.jp-exhibit--vl, .jp-architecture.jp-vl-studio { --jp-accent: #1fe3ff; }
+.jp-exhibit--vl .jp-primary { border: 0; cursor: pointer; background: var(--vl-accent); color: #031014 !important; }
+.jp-exhibit--vl .vl-early { margin-top: 14px; }
+/* A dense contact sheet: the panel's own list rules are for the studio flow, not the thumbnails. */
+.jp-vl-studio .vl-filmstrip { padding: 0 0 18px; margin-bottom: 18px; background: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.jp-vl-studio .vl-filmstrip li { display: block; padding: 0; border: 0; }
+.jp-vl-studio .vl-thumb-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); margin: 0; }
+.jp-vl-studio .vl-thumb-play { top: 4px; left: 4px; width: 20px; height: 20px; }
+.jp-vl-studio .vl-thumb-play svg { width: 10px; height: 10px; }
+.jp-vl-studio .vl-studio-flow li { padding: 9px 0; }
+.jp-vl-studio .vl-notes { padding: 14px 0 0; }
+.vl-hero-caption-inline { margin: 0 0 12px; color: var(--jp-ink-2, #a9b6c9); font: 400 12.5px/1.55 'Inter', system-ui, sans-serif; display: flex; flex-wrap: wrap; gap: 2px 10px; }

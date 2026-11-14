@@ -107,7 +107,8 @@ try {
   console.log('JOURNEY_PASS determinism', a.position.join(','));
 
   // 3. Reading state: at a dwell the camera holds still while the reader scrolls within it.
-  const dwell = await page.evaluate(() => window.__journey.timeline().segments.find(s => s.kind === 'dwell' && s.destination === 1));
+  // The Experience intro card fits the viewport (About is a tall stacked pair that pans by design).
+  const dwell = await page.evaluate(() => window.__journey.timeline().segments.find(s => s.kind === 'dwell' && s.destination === 2 && s.shot === 0));
   await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), dwell.start + 5);
   await settle(page, 400);
   const d1 = await frame(page);

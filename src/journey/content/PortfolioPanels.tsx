@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { VOID_LANE } from '../../projects/voidLane';
 import {
   ABOUT_ACADEMICS, ABOUT_STATS, AboutBio, CONTACT_INTRO, CONTACT_LINKS, EXPERIENCE, EXPERIENCE_INTRO,
   FV_ARCHITECTURE, FV_ARCHITECTURE_URL, FV_LEAD, FV_PROOF_POINTS, GithubIcon, HERO_SUBTAGLINE, PROJECTS,
@@ -104,12 +105,35 @@ export function AboutProfilePanel() {
   );
 }
 
+/** About as one stop: the bio, then the profile beneath it at the same width. */
+export function AboutPanel() {
+  return (
+    <div className="jp-about-pair">
+      <AboutBioPanel />
+      <AboutProfilePanel />
+    </div>
+  );
+}
+
+/** Same logo tiles as the company cards that follow, so the intro previews them exactly. */
+const EMPLOYERS = EXPERIENCE.filter(exp => exp.logo);
+
 export function ExperienceIntroPanel() {
   return (
-    <article className="jp-intro">
+    <article className="jp-intro jp-intro--experience">
       <Kicker>Experience</Kicker>
       <h2>Engineering across <span className="jp-accent">data and software</span></h2>
       <p>{EXPERIENCE_INTRO}</p>
+      <ul className="jp-employers" aria-label="Companies">
+        {EMPLOYERS.map(exp => (
+          <li key={exp.company}>
+            <span className="jp-company-logo jp-company-logo--small" style={{ background: logoBackground(exp) }}>
+              <img src={exp.company === 'DOWC' ? '/dowc-logo-supplied.png' : exp.logo!} alt="" style={exp.logoScale ? { transform: `scale(${exp.logoScale})` } : undefined} />
+            </span>
+            <span className="jp-employer-name">{exp.company}</span>
+          </li>
+        ))}
+      </ul>
     </article>
   );
 }
@@ -122,7 +146,7 @@ export function ExperienceIntroPanel() {
 export const EXPERIENCE_GROUPS: (typeof EXPERIENCE)[] = [EXPERIENCE.slice(0, 1)];
 for (let i = 1; i < EXPERIENCE.length; i += 2) EXPERIENCE_GROUPS.push(EXPERIENCE.slice(i, i + 2));
 
-const logoBackground = (exp: (typeof EXPERIENCE)[number]) => (exp.company === 'DOWC' ? '#050508' : (exp.logoBg ?? '#111119'));
+function logoBackground(exp: (typeof EXPERIENCE)[number]) { return exp.company === 'DOWC' ? '#050508' : (exp.logoBg ?? '#111119'); }
 
 function CompanyBlock({ exp }: { exp: (typeof EXPERIENCE)[number] }) {
   const asOf = useMonth();
@@ -175,12 +199,43 @@ export function ExperienceGroupPanel({ index }: { index: number }) {
   );
 }
 
+export { VoidLanePanel, VoidLaneStudioPanel } from '../../projects/VoidLaneShowcase';
+
+/**
+ * The doorway into Projects: a wide title card with a contents line, so it reads
+ * as a transition into the exhibition rather than an exhibit of its own.
+ */
+const PROJECT_MARKS: { name: string; kind: string; mark: ReactNode }[] = [
+  {
+    name: VOID_LANE.name, kind: VOID_LANE.topline[1],
+    mark: <img className="jp-mark jp-mark--vl" src="/projects/logos/void-lane.webp" alt={VOID_LANE.name} width={929} height={96} />,
+  },
+  {
+    name: PROJECTS[0].name, kind: 'DATA PLATFORM + INTERACTIVE PRODUCT',
+    mark: <img className="jp-mark jp-mark--fv" src="/projects/logos/formula-vision.webp" alt={PROJECTS[0].name} width={1568} height={96} />,
+  },
+  {
+    // AetherFlow's mark is typographic on its own site: Aether, then Flow in blue.
+    name: 'AetherFlow', kind: SUPPORTING_TYPES.aetherflow,
+    mark: <span className="jp-mark jp-mark--af" role="img" aria-label="AetherFlow">Aether<span>Flow</span></span>,
+  },
+];
+
 export function ProjectsIntroPanel() {
   return (
-    <article className="jp-intro">
+    <article className="jp-intro jp-intro--projects">
       <Kicker>Projects</Kicker>
       <h2>Things I've <span className="jp-accent">built</span></h2>
       <p>{PROJECTS_INTRO}</p>
+      <ul className="jp-project-index" aria-label="Featured projects">
+        {PROJECT_MARKS.map(p => (
+          <li key={p.name}>
+            <strong className="jp-project-name">{p.mark}</strong>
+            <em>{p.kind}</em>
+          </li>
+        ))}
+      </ul>
+      <p className="jp-enter-cue" aria-hidden="true">Scroll to enter</p>
     </article>
   );
 }
@@ -189,7 +244,7 @@ export function FlagshipPanel() {
   const flagship = PROJECTS[0];
   return (
     <article className="jp-exhibit jp-exhibit--fv" aria-labelledby="jp-fv-title">
-      <p className="jp-topline"><span>01 / FEATURED SYSTEM</span><span>DATA PLATFORM + INTERACTIVE PRODUCT</span></p>
+      <p className="jp-topline"><span>02 / FEATURED SYSTEM</span><span>DATA PLATFORM + INTERACTIVE PRODUCT</span></p>
       <MobilePreview src="/projects/formula-vision-replay-map.webp" alt="Formula Vision race replay: the race order, circuit map, and the followed driver's panel with a 3D car in team colour" />
       <p className="jp-overline">{flagship.tagline}</p>
       <h3 id="jp-fv-title">{flagship.name}</h3>

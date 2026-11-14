@@ -36,6 +36,7 @@ export const rolePanels: PanelSpec[] = Array.from({ length: ROLE_COUNT }, (_, i)
 
 /** Project exhibits: an info panel plus WebGL displays positioned in the panel's local frame. */
 export const EXHIBITS = {
+  vl: { info: at(PROJECTS, [-15200, 0, 600]), yaw: 20, accent: '#1FE3FF' },
   fv: { info: at(PROJECTS, [-7600, 0, -1800]), yaw: 16, accent: '#E8002D' },
   bot: { info: at(PROJECTS, [400, 0, -5600]), yaw: 0, accent: '#4ADE80' },
   aether: { info: at(PROJECTS, [8600, 0, -2600]), yaw: -16, accent: '#8B5CF6' },
@@ -44,11 +45,13 @@ export const EXHIBITS = {
 export const portfolioJourney: JourneyDefinition = {
   panels: [
     { id: 'origin', destination: 'origin', position: ORIGIN, yaw: 0, width: 1040 },
-    { id: 'about-bio', destination: 'about', position: ABOUT, yaw: 14, width: 620 },
-    { id: 'about-profile', destination: 'about', position: at(ABOUT, [2700, 120, -1300]), yaw: -10, width: 660 },
+    // Bio with the profile beneath it, one stop; the camera pans down the pair.
+    { id: 'about', destination: 'about', position: at(ABOUT, [1200, 60, -500]), yaw: 2, width: 960 },
     { id: 'exp-intro', destination: 'experience', position: EXPERIENCE, yaw: 0, width: 760 },
     ...rolePanels,
-    { id: 'projects-intro', destination: 'projects', position: at(PROJECTS, [0, 900, 4200]), yaw: 0, width: 760 },
+    { id: 'projects-intro', destination: 'projects', position: at(PROJECTS, [0, 900, 4200]), yaw: 0, width: 1080 },
+    { id: 'vl-info', destination: 'projects', position: EXHIBITS.vl.info, yaw: EXHIBITS.vl.yaw, width: 640 },
+    { id: 'vl-studio', destination: 'projects', position: local(EXHIBITS.vl.info, EXHIBITS.vl.yaw, [1820, 0, -260]), yaw: 8, width: 500 },
     { id: 'fv-info', destination: 'projects', position: EXHIBITS.fv.info, yaw: EXHIBITS.fv.yaw, width: 600 },
     { id: 'fv-architecture', destination: 'projects', position: local(EXHIBITS.fv.info, EXHIBITS.fv.yaw, [1720, 0, -260]), yaw: 6, width: 420 },
     { id: 'bot-info', destination: 'projects', position: EXHIBITS.bot.info, yaw: EXHIBITS.bot.yaw, width: 600 },
@@ -64,7 +67,7 @@ export const portfolioJourney: JourneyDefinition = {
     },
     {
       id: 'about', label: 'About', anchor: 'about', center: ABOUT, approach: at(ABOUT, [7000, 9000, 15000]),
-      shots: [{ panel: 'about-bio', offsetX: -0.14 }, { panel: 'about-profile', offsetX: 0.1 }],
+      shots: [{ panel: 'about', offsetX: -0.06 }],
       palette: { background: '#030B10', atmosphere: '#0E3A44', accent: '#67E8F9', sky: { motif: 'aurora', a: '#22D3AE', b: '#7C83F2', strength: 1 } },
     },
     {
@@ -75,7 +78,9 @@ export const portfolioJourney: JourneyDefinition = {
     {
       id: 'projects', label: 'Projects', anchor: 'projects', center: PROJECTS, approach: at(PROJECTS, [-3000, 5200, 19000]),
       shots: [
-        { panel: 'projects-intro', offsetX: -0.17 },
+        { panel: 'projects-intro' },
+        { panel: 'vl-info', offsetX: -0.22 },
+        { panel: 'vl-studio', offsetX: 0.26 },
         { panel: 'fv-info', offsetX: -0.22 },
         { panel: 'fv-architecture', offsetX: 0.26 },
         { panel: 'bot-info', offsetX: -0.22 },

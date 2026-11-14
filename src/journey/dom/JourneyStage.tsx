@@ -7,6 +7,7 @@ import { isTestMode, readMotionPreference, onReducedMotionChange } from '../../s
 import { spatialStore, useSpatial } from '../../spatial/core/store';
 import { sampleTimeline } from '../core/timeline';
 import InspectOverlay from './InspectOverlay';
+import { STATE_EVENT } from '../../gallery/Lightbox';
 import { pendingRestore } from '../core/restore';
 import { SceneBoundary } from './SceneBoundary';
 import { LITE } from '../core/budget';
@@ -121,7 +122,15 @@ export default function JourneyStage({ definition, page, renderPanel, loadScene,
     };
   }, [engine, definition, page]);
 
-  useEffect(() => { engine.ambient = motion === 'full'; engine.wake(); }, [engine, motion]);
+  // While the lightbox is open the scene behind it is covered: ambient motion pauses so the
+  // viewer (image decode, video) gets the whole frame budget, and resumes on close.
+  const [inspecting, setInspecting] = useState(false);
+  useEffect(() => {
+    const onState = (event: Event) => setInspecting((event as CustomEvent<boolean>).detail);
+    window.addEventListener(STATE_EVENT, onState);
+    return () => window.removeEventListener(STATE_EVENT, onState);
+  }, []);
+  useEffect(() => { engine.ambient = motion === 'full' && !inspecting; engine.wake(); }, [engine, motion, inspecting]);
 
   const scrollTo = (top: number) => window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
 

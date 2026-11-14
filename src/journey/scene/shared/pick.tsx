@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { frameRef } from './frame';
+import { openLightbox } from '../../../gallery/Lightbox';
+import type { LightboxItem } from '../../../gallery/types';
 
 /**
  * Pointer picking for 3D exhibits. The HTML layer sits above WebGL, so R3F's
@@ -101,6 +103,6 @@ export function Picker() {
 }
 
 /** Ask the page to show images full size (handled by the DOM overlay in JourneyStage). */
-export function openInspect(images: { src: string; alt: string }[], index: number) {
-  window.dispatchEvent(new CustomEvent('journey-inspect', { detail: { images, index } }));
+export function openInspect(images: LightboxItem[], index: number) {
+  openLightbox(images, index);
 }
