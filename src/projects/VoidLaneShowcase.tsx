@@ -1,4 +1,4 @@
-import { Images, Play } from 'lucide-react';
+import { ArrowUpRight, Images, Play } from 'lucide-react';
 import { openLightbox } from '../gallery/Lightbox';
 import { VOID_LANE, VOID_LANE_ITEMS, VOID_LANE_MEDIA, displaySrc, thumbSrc, type GalleryMedia } from './voidLane';
 import './voidLane.css';
@@ -43,10 +43,21 @@ function GalleryButton({ className }: { className: string }) {
   );
 }
 
+/** The build is password-protected: the request opens a prefilled email instead of a dead link. */
+function EarlyAccess({ className }: { className: string }) {
+  return (
+    <a className={className} href={VOID_LANE.earlyAccess.href}>
+      {VOID_LANE.earlyAccess.label}<ArrowUpRight size={16} aria-hidden="true" />
+    </a>
+  );
+}
+
 function ProofPoints({ className }: { className: string }) {
   return (
     <div className={className} aria-label="Engineering highlights">
-      {VOID_LANE.proofPoints.map((point, i) => <div key={point}><span>0{i + 1}</span><p>{point}</p></div>)}
+      {VOID_LANE.proofPoints.map((point, i) => (
+        <div key={point.label}><span>0{i + 1}</span><p><strong className="vl-proof-label">{point.label}.</strong> {point.text}</p></div>
+      ))}
     </div>
   );
 }
@@ -68,7 +79,6 @@ function Notes({ className }: { className: string }) {
   return (
     <div className={className}>
       <p><strong>Status</strong> {VOID_LANE.status}</p>
-      <p><strong>Credit</strong> {VOID_LANE.credit}</p>
     </div>
   );
 }
@@ -102,8 +112,10 @@ export function VoidLaneShowcase() {
           <p className="renaissance-project-description">{VOID_LANE.description}</p>
           <ProofPoints className="renaissance-proof-points vl-proof" />
           <div className="renaissance-project-actions">
-            <GalleryButton className="renaissance-primary-project-link vl-gallery-button" />
+            <EarlyAccess className="renaissance-primary-project-link vl-early-access" />
+            <GalleryButton className="renaissance-text-project-link vl-gallery-button" />
           </div>
+          <p className="vl-early-note">{VOID_LANE.earlyAccess.note}</p>
         </div>
         <aside className="vl-studio" aria-label="How the Void Lane studio ships">
           <p className="vl-studio-caption">{VOID_LANE.studioCaption}</p>
@@ -130,7 +142,11 @@ export function VoidLanePanel() {
       <p className="jp-lead">{VOID_LANE.lead}</p>
       <p className="jp-desc">{VOID_LANE.description}</p>
       <ProofPoints className="jp-proof" />
-      <div className="jp-actions"><GalleryButton className="jp-primary vl-gallery-button" /></div>
+      <div className="jp-actions">
+        <EarlyAccess className="jp-primary vl-early-access" />
+        <GalleryButton className="jp-text-link vl-gallery-button" />
+      </div>
+      <p className="vl-early-note">{VOID_LANE.earlyAccess.note}</p>
       <div className="jp-tech" aria-label="Void Lane technologies">{VOID_LANE.tech.map(t => <span key={t}>{t}</span>)}</div>
     </article>
   );

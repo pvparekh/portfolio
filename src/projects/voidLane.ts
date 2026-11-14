@@ -2,9 +2,9 @@
  * Void Lane: copy and media for the featured game showcase.
  *
  * Every number below is measured and documented in the game's own repository
- * (docs/status/SESSIONS.md, docs/status/STATUS.md, docs/porting/LEDGER.md,
- * tools/size-budget, reports/perf). The repository is private, so the showcase
- * links nothing; it says so plainly and credits the MIT-licensed code it adapted.
+ * (docs/status/SESSIONS.md, docs/status/STATUS.md, docs/adr, tools/size-budget,
+ * reports/perf). The repository is private and the early access build is
+ * password-protected, so the showcase offers an email request instead of a link.
  */
 
 import type { LightboxItem } from '../gallery/types';
@@ -22,41 +22,63 @@ export interface GalleryMedia {
 const BASE = '/projects/void-lane/';
 export const VL_ASPECT = 16 / 9;
 
+const EARLY_ACCESS_EMAIL = 'pvparekh14@gmail.com';
+
 export const VOID_LANE = {
   id: 'void-lane',
   name: 'Void Lane',
-  tagline: 'Anti-gravity racer for the browser',
+  tagline: 'Anti-gravity racer, headed to Steam',
   topline: ['01 / FEATURED BUILD', 'REAL-TIME 3D GAME + AI AGENT STUDIO'] as const,
-  lead: 'A 3,240 km/h racing game in a browser tab, built by a studio of AI agents I designed and directed.',
+  lead: 'A Mach-speed racing game, built in 20 days by a studio of AI agents I designed, planned and directed.',
   description:
-    'An original anti-gravity racer in three.js and strict TypeScript. Cel-shaded worlds are generated entirely in code, a lane gate called the throat warps the race from one planet to the next, and a deterministic simulation replays identically in every major browser engine.',
+    'Three worlds, five tracks, 14 craft and 9 rival pilots, every shape and light generated in code. A lane gate called the throat warps the race from one planet to the next, and a deterministic simulation replays identically on every major browser engine. Built for the web and headed to Steam, it runs smoothly on everyday hardware: playtested through itch.io on a MacBook and a mid-range laptop.',
   proofPoints: [
-    'Deterministic 120 Hz simulation: seeded randomness and bit-exact math, identical on 100,000 test vectors across Chromium, Firefox and WebKit, guarded by golden replays.',
-    'No art files: 3 raceable worlds, 5 tracks, 14 craft and 9 rival pilots, all geometry and light generated in code inside a 459 KB initial JavaScript budget.',
-    'Holds a 180 Hz laptop display at a 5.6 ms median frame, with quality tiers, dynamic resolution and a photosensitivity flash analyzer run on race captures.',
-    '1,945 commits in 20 days from a studio I ran: a Lead, an Experience Director, a Technical Director and seven build seats in separate git worktrees, with every turn blocked until 2,400+ tests pass.',
+    {
+      label: 'Engineering',
+      text: 'Deterministic 120 Hz simulation: identical results on 100,000 test vectors across Chromium, Firefox and WebKit, locked in by golden replay tests.',
+    },
+    {
+      label: 'Performance',
+      text: 'Fast on any machine: a 5.6 ms median frame, with quality tiers and dynamic resolution that hold it smooth from a mid-range laptop to a 3440x1440 display, inside a 459 KB initial download.',
+    },
+    {
+      label: 'Leadership',
+      text: 'Run like a real studio: I lead 8 to 10 hours of sprint planning per cycle, then a Lead, an Experience Director and a Technical Director turn it into specs for seven build agents working in parallel git worktrees.',
+    },
+    {
+      label: 'Scale',
+      text: 'Built to grow without rewrites: a documentation base the agents write and maintain (design specs, architecture decisions, signed acceptance criteria), so new worlds, craft and features land without reworking the core. 1,945 commits and 2,400+ tests, and no change merges until they pass.',
+    },
   ],
   studioCaption: 'HOW THE STUDIO SHIPS',
   studio: [
-    { code: 'S1', label: 'Shape', detail: 'A pitch with a fun bar and the player moment it serves.' },
-    { code: 'S2', label: 'Bet', detail: 'The Lead and I pick what earns build time.' },
-    { code: 'S3', label: 'Signed spec', detail: 'Experience Director and Technical Director sign measurable acceptance criteria.' },
-    { code: 'S4', label: 'Build', detail: 'Seats work in their own worktrees; a Stop hook refuses to end a turn on red tests.' },
+    { code: 'S1', label: 'Plan the sprint', detail: 'I set goals and priorities and build the research base the studio works from.' },
+    { code: 'S2', label: 'Bet', detail: 'The Lead and I choose what earns build time.' },
+    { code: 'S3', label: 'Signed spec', detail: 'The Experience and Technical Directors sign measurable acceptance criteria.' },
+    { code: 'S4', label: 'Build', detail: 'Seven build agents work in their own worktrees; a hook blocks any turn that ends on failing tests.' },
     { code: 'S5', label: 'Verify', detail: 'A fresh-context verifier and real-browser captures. Compiling is not evidence.' },
-    { code: 'S6', label: 'Play', detail: 'The Director plays the merged build and returns PASS or REJECT.' },
+    { code: 'S6', label: 'Play', detail: 'The Experience Director plays the merged build and returns PASS or REJECT.' },
   ],
   tech: ['TypeScript', 'three.js', 'WebGL2', 'GLSL', 'Web Audio', 'Web Workers', 'Vite', 'Vitest', 'Playwright', 'Claude Code agents'],
-  status: 'In development. Private repository; no public build yet.',
-  credit:
-    'Physics, AI and race-rule scaffolding were adapted from Turbo Kart Rally (MIT) and rewritten for the deterministic simulation; provenance is tracked file by file and the notice ships with the game.',
+  status: 'In development, headed to Steam. Playtest builds on itch.io.',
+  earlyAccess: {
+    label: 'Request early access',
+    note: "Early access build on itch.io, password-protected while I playtest. Email me and I'll send you the password.",
+    href: `mailto:${EARLY_ACCESS_EMAIL}?subject=${encodeURIComponent('Void Lane early access')}&body=${encodeURIComponent("Hi Parth, I'd like to try the Void Lane early access build.")}`,
+  },
 };
 
 /**
- * Gallery order is the story: the throat first, then each world, then speed,
+ * Gallery order is the story: Halcyon Reach, the throat, then each world, then speed,
  * then the craft and the interface. The first three also stand in the 3D
  * exhibition. Filled from the capture manifest (C:\Dev\void-lane-media).
  */
 export const VOID_LANE_MEDIA: GalleryMedia[] = [
+  {
+    stem: 'halcyon-ring-world', kind: 'image', label: 'Halcyon Reach',
+    caption: 'Halcyon Reach: a 900 km ring world, where the horizon goes up.',
+    alt: 'Looking up from the lane: green tiled farmland curves up and over the sky like the inside of a giant ring, tall segmented spires and a dark skyline below.',
+  },
   {
     stem: 'throat-fold', kind: 'image', label: 'The throat',
     caption: 'Deep in the throat, the next world arrives before the tunnel ends.',
@@ -79,13 +101,8 @@ export const VOID_LANE_MEDIA: GalleryMedia[] = [
   },
   {
     stem: 'clip-throat', kind: 'video', label: 'Clip: world gate',
-    caption: 'One gate, two worlds, eight seconds. Recorded from the game, sped up 1.5x.',
+    caption: 'One gate, two worlds, seven seconds. Recorded from the game, sped up 1.5x.',
     alt: 'A racer enters a ring-lined warp tunnel as the HUD jumps to 3,240 km/h x13, green farmland breaks through the walls, and it exits under a ring world curling overhead.',
-  },
-  {
-    stem: 'halcyon-ring-world', kind: 'image', label: 'Halcyon Reach',
-    caption: 'Halcyon Reach: a 900 km ring world, where the horizon goes up.',
-    alt: 'Looking up from the lane: green tiled farmland curves up and over the sky like the inside of a giant ring, tall segmented spires and a dark skyline below.',
   },
   {
     stem: 'halcyon-pack', kind: 'image', label: 'Spoke and Spindle',
