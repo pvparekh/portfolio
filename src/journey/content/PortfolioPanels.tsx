@@ -175,6 +175,8 @@ export function ExperienceGroupPanel({ index }: { index: number }) {
   );
 }
 
+export { VoidLanePanel, VoidLaneStudioPanel } from '../../projects/VoidLaneShowcase';
+
 export function ProjectsIntroPanel() {
   return (
     <article className="jp-intro">
@@ -189,7 +191,7 @@ export function FlagshipPanel() {
   const flagship = PROJECTS[0];
   return (
     <article className="jp-exhibit jp-exhibit--fv" aria-labelledby="jp-fv-title">
-      <p className="jp-topline"><span>01 / FEATURED SYSTEM</span><span>DATA PLATFORM + INTERACTIVE PRODUCT</span></p>
+      <p className="jp-topline"><span>02 / FEATURED SYSTEM</span><span>DATA PLATFORM + INTERACTIVE PRODUCT</span></p>
       <MobilePreview src="/projects/formula-vision-replay-map.webp" alt="Formula Vision race replay: the race order, circuit map, and the followed driver's panel with a 3D car in team colour" />
       <p className="jp-overline">{flagship.tagline}</p>
       <h3 id="jp-fv-title">{flagship.name}</h3>

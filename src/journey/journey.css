@@ -397,14 +397,24 @@ html.journey-active body {
 /* ── Exhibit picking and inspect view ─────────────────────── */
 .journey-pick .journey-stage, .journey-pick body { cursor: zoom-in; }
 .journey-inspect {
+  /* Also used on the standard page, outside .journey: carry the tokens it needs. */
+  --jp-ink: #e6edf7; --jp-ink-3: #7d8ba0; --jp-warm: #f59e0b;
   position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 64px 88px;
-  background: rgba(3, 4, 8, 0.82); backdrop-filter: blur(10px); animation: jp-inspect-in 0.28s ease-out;
+  /* Near-opaque instead of a backdrop blur: a blur over the live canvas is recomputed every frame. */
+  background: rgba(3, 4, 8, 0.95); animation: jp-inspect-in 0.28s ease-out; touch-action: pan-y;
 }
-.journey-inspect-figure { margin: 0; max-width: min(1400px, 100%); max-height: 100%; }
-.journey-inspect-figure img {
-  display: block; max-width: 100%; max-height: calc(100vh - 128px); border-radius: 10px;
-  border: 1px solid rgba(169, 182, 201, 0.18); box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
+.journey-inspect.has-caption { padding-bottom: 96px; }
+.journey-inspect-figure { margin: 0; max-width: min(1600px, 100%); max-height: 100%; display: grid; justify-items: center; gap: 14px; }
+.journey-inspect-figure img, .journey-inspect-figure video {
+  display: block; max-width: 100%; width: auto; height: auto; max-height: calc(100vh - 128px); border-radius: 10px;
+  border: 1px solid rgba(169, 182, 201, 0.18); box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65); background: #05060a;
   animation: jp-inspect-rise 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.journey-inspect.has-caption .journey-inspect-figure img, .journey-inspect.has-caption .journey-inspect-figure video { max-height: calc(100vh - 190px); }
+.journey-inspect-figure video { width: min(1600px, 100%); aspect-ratio: 16 / 9; }
+.journey-inspect-caption {
+  max-width: 880px; margin: 0; text-align: center; color: #a9b6c9; font: 400 14px/1.55 'Inter', system-ui, sans-serif;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px 12px;
 }
 .journey-inspect button {
   position: absolute; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
@@ -415,10 +425,18 @@ html.journey-active body {
 .journey-inspect-step { top: 50%; transform: translateY(-50%); }
 .journey-inspect-step.is-prev { left: 24px; }
 .journey-inspect-step.is-next { right: 24px; }
-.journey-inspect-count { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.16em; color: var(--jp-ink-3); }
+.journey-inspect-count { position: absolute; bottom: 22px; left: 0; right: 0; margin: 0; text-align: center; font: 500 11px 'JetBrains Mono', monospace; letter-spacing: 0.16em; color: var(--jp-ink-3); }
 @keyframes jp-inspect-in { from { opacity: 0; } }
 @keyframes jp-inspect-rise { from { opacity: 0; transform: translateY(18px) scale(0.97); } }
-@media (prefers-reduced-motion: reduce) { .journey-inspect, .journey-inspect-figure img { animation: none; } }
+@media (max-width: 700px) {
+  .journey-inspect { padding: 64px 12px 72px; }
+  .journey-inspect.has-caption { padding-bottom: 120px; }
+  .journey-inspect-step { top: auto; bottom: 12px; transform: none; }
+  .journey-inspect-step.is-prev { left: 12px; }
+  .journey-inspect-step.is-next { right: 12px; }
+  .journey-inspect-caption { font-size: 12.5px; padding: 0 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .journey-inspect, .journey-inspect-figure img, .journey-inspect-figure video { animation: none; } }
 
 /* ── Card response: work cards lift toward the pointer (fine pointers, motion allowed) ── */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {

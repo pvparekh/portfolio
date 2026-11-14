@@ -4,7 +4,7 @@ import { portfolioJourney } from '../worlds/portfolio';
 import { Footer, TELEMETRY } from '../../App';
 import {
   AboutBioPanel, AboutProfilePanel, ContactPanel, ExperienceIntroPanel, FlagshipArchitecturePanel, FlagshipPanel,
-  ExperienceGroupPanel, OriginPanel, ProjectsIntroPanel, SkillsPanel, SupportingPanel,
+  ExperienceGroupPanel, OriginPanel, ProjectsIntroPanel, SkillsPanel, SupportingPanel, VoidLanePanel, VoidLaneStudioPanel,
 } from '../content/PortfolioPanels';
 
 const loadScene = () => import('../scene/PortfolioScene');
@@ -32,6 +32,8 @@ export default function PortfolioJourney({ onNavigateSolutions }: { onNavigateSo
       case 'about-profile': return <AboutProfilePanel />;
       case 'exp-intro': return <ExperienceIntroPanel />;
       case 'projects-intro': return <ProjectsIntroPanel />;
+      case 'vl-info': return <VoidLanePanel />;
+      case 'vl-studio': return <VoidLaneStudioPanel />;
       case 'fv-info': return <FlagshipPanel />;
       case 'fv-architecture': return <FlagshipArchitecturePanel />;
       case 'bot-info': return <SupportingPanel id="github-review-bot" />;

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { VoidLaneShowcase } from './projects/VoidLaneShowcase';
+import Lightbox from './gallery/Lightbox';
 import {
   motion,
   useScroll,
@@ -44,7 +46,7 @@ function LinkedinIcon({ size = 16 }: { size?: number }) {
 const PROJECTS = [
   {
   id: 'formula-vision',
-  number: '01',
+  number: '02',
   name: 'Formula Vision',
   tagline: 'F1 Race Replay Platform',
   description: 'Historical Formula 1 replay rebuilt as a verified data product: canonical Parquet, timing-authoritative race intelligence, immutable releases, and a client-owned replay engine.',
@@ -58,7 +60,7 @@ const PROJECTS = [
 },
   {
     id: 'github-review-bot',
-    number: '02',
+    number: '03',
     name: 'GitHub Review Bot',
     tagline: 'AI-Powered Code Review Automation',
     description:
@@ -73,7 +75,7 @@ const PROJECTS = [
   },
   {
     id: 'aetherflow',
-    number: '03',
+    number: '04',
     name: 'AetherFlow',
     tagline: 'Expense Data & Analytics Product',
     description:
@@ -242,7 +244,7 @@ const SOCIAL_LINKS = [
 
 const EXPERIENCE_INTRO = 'I build production data pipelines, automate reporting and integrations, and develop end-to-end software. These roles trace my progression across data engineering, analytics, and application development.';
 
-const PROJECTS_INTRO = 'Projects spanning data engineering, developer automation, and full-stack software, with the code and architecture available to explore.';
+const PROJECTS_INTRO = 'Projects spanning real-time 3D, data engineering, developer automation, and full-stack software, with the captures, code and architecture available to explore.';
 
 const FV_LEAD = 'An actual racing product. An engineering system underneath.';
 
@@ -825,9 +827,13 @@ function ProjectsSection() {
         </FadeInSection>
 
         <FadeInSection>
+          <VoidLaneShowcase />
+        </FadeInSection>
+
+        <FadeInSection>
           <article className="renaissance-flagship" aria-labelledby="formula-vision-title">
             <div className="renaissance-project-topline">
-              <span>01 / FEATURED SYSTEM</span>
+              <span>02 / FEATURED SYSTEM</span>
               <span>DATA PLATFORM + INTERACTIVE PRODUCT</span>
             </div>
             <div className="renaissance-flagship-grid">
@@ -1267,6 +1273,7 @@ export default function App({ onNavigateSolutions }: { onNavigateSolutions: () =
         <ContactSection onNavigateSolutions={onNavigateSolutions} />
       </main>
       <Footer />
+      <Lightbox />
     </>
   );
 }

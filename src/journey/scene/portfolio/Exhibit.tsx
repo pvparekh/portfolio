@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { frameRef } from '../shared/frame';
 import { openInspect, registerPickable } from '../shared/pick';
 import type { Vec3 } from '../../core/math';
+import type { LightboxItem } from '../../../gallery/types';
 
 export interface DisplaySpec {
   src: string;
@@ -31,6 +32,8 @@ interface Props {
   bare?: boolean;
   /** Index into the destination shots during which this exhibit is the focus (for pointer response). */
   focus: (shot: number) => boolean;
+  /** A fuller gallery to open instead of just these screens (display i opens gallery item i). */
+  gallery?: () => LightboxItem[];
 }
 
 const gradientTexture = (() => {
@@ -148,7 +151,7 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
  * depth (exploded layers), a plinth, accent light, and restrained pointer
  * parallax while the visitor reads the adjacent panel.
  */
-export default function Exhibit({ position, yaw, accent, title, floorY, displays, focus, bare = false }: Props) {
+export default function Exhibit({ position, yaw, accent, title, floorY, displays, focus, gallery, bare = false }: Props) {
   // ImageBitmapLoader decodes off the main thread (TextureLoader decodes during upload,
   // which stalls a frame per large screenshot). Bitmaps are pre-flipped, so flipY stays off.
   const bitmaps = useLoader(THREE.ImageBitmapLoader, displays.map(d => d.src), loader => {
@@ -167,7 +170,7 @@ export default function Exhibit({ position, yaw, accent, title, floorY, displays
   const group = useRef<THREE.Group>(null);
   const tilt = useRef({ x: 0, y: 0 });
   const hover = useMemo<HoverState>(() => ({ index: -1 }), []);
-  const onSelect = useMemo(() => (index: number) => openInspect(displays.map(d => ({ src: d.src, alt: d.alt ?? `${title} screenshot` })), index), [displays, title]);
+  const onSelect = useMemo(() => (index: number) => openInspect(gallery ? gallery() : displays.map(d => ({ src: d.src, alt: d.alt ?? `${title} screenshot` })), index), [displays, title, gallery]);
   const plinth = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0A0912', metalness: 0.15, roughness: 0.85 }), []);
   const yawRad = (yaw * Math.PI) / 180;
   // Main display position rotated into world orientation (for plinth and light).

@@ -5,12 +5,22 @@ import { frameRef, usePresence } from '../shared/frame';
 import { EXHIBITS, PROJECTS, local, portfolioJourney } from '../../worlds/portfolio';
 import Exhibit, { type DisplaySpec } from './Exhibit';
 import { LITE } from '../../core/budget';
+import { VOID_LANE_ITEMS, VOID_LANE_MEDIA, VL_ASPECT, displaySrc } from '../../../projects/voidLane';
 
 const PROJECTS_INDEX = portfolioJourney.destinations.findIndex(d => d.id === 'projects');
 
 const FLOOR_Y = PROJECTS[1] - 1500;
 
 // Displays sit to the right of each info panel, angled toward the reading camera.
+// Void Lane's three are the first gallery captures; clicking any opens the whole gallery.
+const VL_LAYOUT: { position: [number, number, number]; width: number; yaw: number; emphasis: number }[] = [
+  { position: [860, 60, -700], width: 860, yaw: -22, emphasis: 1 },
+  { position: [1240, 640, -1800], width: 640, yaw: -26, emphasis: 0.5 },
+  { position: [600, -470, -2000], width: 600, yaw: -16, emphasis: 0.36 },
+];
+const VL_DISPLAYS: DisplaySpec[] = VL_LAYOUT.slice(0, LITE ? 2 : 3).map((d, i) => ({
+  ...d, aspect: VL_ASPECT, src: displaySrc(VOID_LANE_MEDIA[i]), alt: VOID_LANE_MEDIA[i].alt,
+}));
 const FV_DISPLAYS: DisplaySpec[] = [
   { src: '/projects/formula-vision-archive.webp', position: [820, 40, -700], width: 780, yaw: -22, aspect: 1.6, emphasis: 1 },
   { src: '/projects/formula-vision-replay-map.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
@@ -26,14 +36,15 @@ const AETHER_DISPLAYS: DisplaySpec[] = [
 ];
 
 /** Where each project's main screen stands (its floor pool and plinth sit under it). */
-const STATIONS = [EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether].map(e => local(e.info, e.yaw, [820, 0, -700]));
+const ORDER = [EXHIBITS.vl, EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether];
+const STATIONS = ORDER.map((e, i) => local(e.info, e.yaw, i === 0 ? [860, 0, -700] : [820, 0, -700]));
 /** Which exhibit each Projects shot reads (shot 0 is the overview). */
-const SHOT_STATION = [-1, 0, 0, 1, 2];
+const SHOT_STATION = [-1, 0, 0, 1, 1, 2, 3];
 
 /**
  * The exhibition floor, designed as one installation (museum lighting hierarchy):
  * - general light: a single platform whose engraved border and walkway line join
- *   all three projects, so on approach the section reads as one designed group;
+ *   all four projects, so on approach the section reads as one designed group;
  * - focal light: a neutral pool under each project, equal at the overview, then
  *   the project being read brightens while the others recede;
  * - project colour only as a fine ring at each plinth, a detail rather than a wash.
@@ -48,14 +59,14 @@ function ExhibitionFloor() {
         uBase: { value: new THREE.Color('#0A0814') },
         uKey: { value: new THREE.Color('#D9D3FF') },
         uPos: { value: STATIONS.map(p => new THREE.Vector2(p[0], p[2])) },
-        uAccent: { value: [EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether].map(e => new THREE.Color(e.accent)) },
-        uFocus: { value: [0.5, 0.5, 0.5] },
+        uAccent: { value: ORDER.map(e => new THREE.Color(e.accent)) },
+        uFocus: { value: [0.5, 0.5, 0.5, 0.5] },
         uCentre: { value: centre },
-        uRadii: { value: new THREE.Vector2(12500, 6400) },
+        uRadii: { value: new THREE.Vector2(16400, 7200) },
         uTime: { value: 0 },
       },
       vertexShader: 'varying vec3 vWorld; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
-      fragmentShader: `uniform vec3 uBase; uniform vec3 uKey; uniform vec2 uPos[3]; uniform vec3 uAccent[3]; uniform float uFocus[3];
+      fragmentShader: `uniform vec3 uBase; uniform vec3 uKey; uniform vec2 uPos[4]; uniform vec3 uAccent[4]; uniform float uFocus[4];
         uniform vec2 uCentre; uniform vec2 uRadii; uniform float uTime; varying vec3 vWorld;
         float band(float d, float w) { return 1.0 - smoothstep(w, w + fwidth(d) * 1.5, abs(d)); }
         float segment(vec2 p, vec2 a, vec2 b) { vec2 pa = p - a, ba = b - a; return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0)); }
@@ -68,10 +79,10 @@ function ExhibitionFloor() {
           c += uKey * 0.018 * inside;
           c += uKey * (band(e - 1.0, 0.0016) * 0.22 + band(e - 0.955, 0.0009) * 0.08);
           // The walkway: one fine line joining the projects in reading order, a soft light travelling it.
-          float route = min(segment(p, uPos[0], uPos[1]), segment(p, uPos[1], uPos[2]));
-          float along = fract(dot(p - uPos[0], normalize(uPos[2] - uPos[0])) / 2400.0 - uTime * 0.05);
+          float route = min(min(segment(p, uPos[0], uPos[1]), segment(p, uPos[1], uPos[2])), segment(p, uPos[2], uPos[3]));
+          float along = fract(dot(p - uPos[0], normalize(uPos[3] - uPos[0])) / 2400.0 - uTime * 0.05);
           c += uKey * band(route, 5.0) * (0.06 + 0.12 * pow(along, 8.0)) * inside;
-          for (int i = 0; i < 3; i++) {
+          for (int i = 0; i < 4; i++) {
             float d = length(p - uPos[i]);
             float w = 0.25 + 0.75 * uFocus[i];
             // Focal pool: neutral light, wide and soft, with a brighter core.
@@ -96,7 +107,7 @@ function ExhibitionFloor() {
     const station = shot >= 0 ? SHOT_STATION[shot] ?? -1 : -1;
     const k = 1 - Math.exp(-Math.min(delta, 0.1) * 2.5);
     const focus = floor.uniforms.uFocus.value as number[];
-    for (let i = 0; i < 3; i++) focus[i] += ((station < 0 ? 0.45 : station === i ? 1 : 0.12) - focus[i]) * k;
+    for (let i = 0; i < 4; i++) focus[i] += ((station < 0 ? 0.45 : station === i ? 1 : 0.12) - focus[i]) * k;
     floor.uniforms.uTime.value = f.time;
   });
   const reflector = useMemo(() => {
@@ -127,9 +138,9 @@ function ExhibitionFloor() {
 const INTRO = portfolioJourney.panels.find(p => p.id === 'projects-intro')!.position;
 /** Beside the Projects intro: the three projects as a floating teaser (hover lifts, click inspects). */
 const TEASER: DisplaySpec[] = [
-  { src: '/projects/formula-vision-replay-map.webp', position: [930, 30, -1500], width: 640, yaw: -14, aspect: 1.6, emphasis: 1, alt: 'Formula Vision screenshot' },
-  { src: '/projects/aetherflow-home.webp', position: [1360, 420, -2700], width: 560, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'AetherFlow screenshot' },
-  { src: '/projects/review-bot-pipeline.webp', position: [1240, -480, -2600], width: 540, yaw: -16, aspect: 1257 / 740, emphasis: 0.5, alt: 'GitHub Review Bot screenshot' },
+  { src: displaySrc(VOID_LANE_MEDIA[0]), position: [930, 30, -1500], width: 680, yaw: -14, aspect: VL_ASPECT, emphasis: 1, alt: 'Void Lane screenshot' },
+  { src: '/projects/formula-vision-replay-map.webp', position: [1360, 420, -2700], width: 560, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'Formula Vision screenshot' },
+  { src: '/projects/aetherflow-home.webp', position: [1240, -480, -2600], width: 540, yaw: -16, aspect: 1.6, emphasis: 0.5, alt: 'AetherFlow screenshot' },
 ];
 
 /** Soft round sprite texture (white core fading out). */
@@ -225,6 +236,83 @@ function FormulaCircuit() {
   );
 }
 
+/**
+ * Void Lane's installation: the throat, a tunnel of light rings receding into
+ * the hall, with a craft of light diving through it on a loop and a streak
+ * behind it. One instanced draw for the rings; decorative, not game footage.
+ */
+const THROAT_RINGS = 11;
+const throatPath = (u: number, out: THREE.Vector3) => {
+  const t = u * 1.25 - 0.15;
+  return out.set(Math.sin(t * 2.4) * 160, Math.cos(t * 1.7) * 90 - 120, -t * 5200);
+};
+function VoidThroat() {
+  const { rings, ringMaterial, craft, halo, streak, streakGeometry } = useMemo(() => {
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: '#FFFFFF', transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+    const rings = new THREE.InstancedMesh(new THREE.TorusGeometry(1, 0.012, 6, 96), ringMaterial, THROAT_RINGS);
+    const m = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const cyan = new THREE.Color('#1FE3FF');
+    const amber = new THREE.Color('#FFB21E');
+    for (let i = 0; i < THROAT_RINGS; i++) {
+      const t = i / (THROAT_RINGS - 1);
+      const r = 900 - t * 420;
+      m.compose(new THREE.Vector3(Math.sin(t * 2.4) * 160, Math.cos(t * 1.7) * 90, -t * 5200), q, new THREE.Vector3(r, r * 0.92, r));
+      rings.setMatrixAt(i, m);
+      // Fade with depth; every fourth ring carries the game's boost amber.
+      rings.setColorAt(i, (i % 4 === 2 ? amber : cyan).clone().multiplyScalar(0.85 - t * 0.6));
+    }
+    rings.instanceMatrix.needsUpdate = true;
+    rings.frustumCulled = false;
+    const points = LITE ? 8 : 20;
+    const sg = new THREE.BufferGeometry();
+    sg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points * 3), 3));
+    const fade = new Float32Array(points);
+    for (let i = 0; i < points; i++) fade[i] = i / (points - 1);
+    sg.setAttribute('aFade', new THREE.BufferAttribute(fade, 1));
+    return {
+      rings, ringMaterial,
+      craft: new THREE.MeshBasicMaterial({ color: '#EAF2FF', toneMapped: false }),
+      halo: new THREE.SpriteMaterial({ map: radialTexture(), color: '#1FE3FF', transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }),
+      streak: new THREE.ShaderMaterial({
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+        vertexShader: 'attribute float aFade; varying float vFade; void main(){ vFade = aFade; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+        fragmentShader: 'varying float vFade; void main(){ gl_FragColor = vec4(vec3(0.12, 0.89, 1.0) * vFade, vFade); }',
+      }),
+      streakGeometry: sg,
+    };
+  }, []);
+  const streakLine = useMemo(() => new THREE.Line(streakGeometry, streak), [streakGeometry, streak]);
+  const craftRef = useRef<THREE.Group>(null);
+  const tmp = useMemo(() => new THREE.Vector3(), []);
+  useEffect(() => () => { rings.geometry.dispose(); rings.dispose(); ringMaterial.dispose(); streakGeometry.dispose(); streak.dispose(); }, [rings, ringMaterial, streakGeometry, streak]);
+
+  useFrame(() => {
+    const f = frameRef.current;
+    if (!f || !craftRef.current || streakLine.visible === false) return; // hidden with its world
+    const u = (f.time / 3.2) % 1;
+    craftRef.current.position.copy(throatPath(u, tmp));
+    const attr = streakGeometry.getAttribute('position') as THREE.BufferAttribute;
+    for (let i = 0; i < attr.count; i++) {
+      throatPath(Math.max(0, u - (1 - i / (attr.count - 1)) * 0.16), tmp);
+      attr.setXYZ(i, tmp.x, tmp.y, tmp.z);
+    }
+    attr.needsUpdate = true;
+  });
+
+  const mouth = local(EXHIBITS.vl.info, EXHIBITS.vl.yaw, [1150, 140, -3200]);
+  return (
+    <group position={mouth} rotation={[0.08, (EXHIBITS.vl.yaw * Math.PI) / 180 + 0.62, 0, 'YXZ']}>
+      <primitive object={rings} />
+      <primitive object={streakLine} />
+      <group ref={craftRef}>
+        <mesh material={craft}><sphereGeometry args={[18, 12, 10]} /></mesh>
+        <sprite material={halo} scale={[240, 240, 1]} />
+      </group>
+    </group>
+  );
+}
+
 /** Tall, faint light planes give the hall vertical scale without real volumetrics. */
 function HallLight() {
   const material = useMemo(() => new THREE.ShaderMaterial({
@@ -260,12 +348,14 @@ export default function ProjectsWorld({ index }: { index: number }) {
       <ExhibitionFloor />
       <HallLight />
       <FormulaCircuit />
+      <VoidThroat />
       <Suspense fallback={null}>
         {/* Teasers sit beside the intro panel, outside a phone's narrow frame: skipped on the lite budget. */}
         {!LITE && <Exhibit position={INTRO} yaw={0} accent="#A78BFA" title="Projects" floorY={FLOOR_Y} displays={TEASER} focus={shot => shot === 0} bare />}
-        <Exhibit position={EXHIBITS.fv.info} yaw={EXHIBITS.fv.yaw} accent={EXHIBITS.fv.accent} title="Formula Vision" floorY={FLOOR_Y} displays={FV_DISPLAYS} focus={shot => shot === 1 || shot === 2} />
-        <Exhibit position={EXHIBITS.bot.info} yaw={EXHIBITS.bot.yaw} accent={EXHIBITS.bot.accent} title="GitHub Review Bot" floorY={FLOOR_Y} displays={BOT_DISPLAYS} focus={shot => shot === 3} />
-        <Exhibit position={EXHIBITS.aether.info} yaw={EXHIBITS.aether.yaw} accent={EXHIBITS.aether.accent} title="AetherFlow" floorY={FLOOR_Y} displays={AETHER_DISPLAYS} focus={shot => shot === 4} />
+        <Exhibit position={EXHIBITS.vl.info} yaw={EXHIBITS.vl.yaw} accent={EXHIBITS.vl.accent} title="Void Lane" floorY={FLOOR_Y} displays={VL_DISPLAYS} gallery={VOID_LANE_ITEMS} focus={shot => shot === 1 || shot === 2} />
+        <Exhibit position={EXHIBITS.fv.info} yaw={EXHIBITS.fv.yaw} accent={EXHIBITS.fv.accent} title="Formula Vision" floorY={FLOOR_Y} displays={FV_DISPLAYS} focus={shot => shot === 3 || shot === 4} />
+        <Exhibit position={EXHIBITS.bot.info} yaw={EXHIBITS.bot.yaw} accent={EXHIBITS.bot.accent} title="GitHub Review Bot" floorY={FLOOR_Y} displays={BOT_DISPLAYS} focus={shot => shot === 5} />
+        <Exhibit position={EXHIBITS.aether.info} yaw={EXHIBITS.aether.yaw} accent={EXHIBITS.aether.accent} title="AetherFlow" floorY={FLOOR_Y} displays={AETHER_DISPLAYS} focus={shot => shot === 6} />
       </Suspense>
     </group>
   );
