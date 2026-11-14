@@ -21,6 +21,16 @@ const VL_LAYOUT: { position: [number, number, number]; width: number; yaw: numbe
 const VL_DISPLAYS: DisplaySpec[] = VL_LAYOUT.slice(0, LITE ? 2 : 3).map((d, i) => ({
   ...d, aspect: VL_ASPECT, src: displaySrc(VOID_LANE_MEDIA[i]), alt: VOID_LANE_MEDIA[i].alt,
 }));
+// The throat clip loops in the mouth of the ring installation while the visitor is
+// here (a light 960x540 encode, fetched on arrival); a click opens the full clip.
+const VL_CLIP = VOID_LANE_MEDIA.findIndex(m => m.stem === 'clip-throat');
+if (!LITE && VL_CLIP >= 0) {
+  VL_DISPLAYS.push({
+    position: [1760, -280, -2250], width: 760, yaw: -32, emphasis: 0.9, aspect: VL_ASPECT,
+    src: displaySrc(VOID_LANE_MEDIA[VL_CLIP]), alt: VOID_LANE_MEDIA[VL_CLIP].alt,
+    video: '/projects/void-lane/clip-throat-loop.webm', galleryIndex: VL_CLIP,
+  });
+}
 const FV_DISPLAYS: DisplaySpec[] = [
   { src: '/projects/formula-vision-archive.webp', position: [820, 40, -700], width: 780, yaw: -22, aspect: 1.6, emphasis: 1 },
   { src: '/projects/formula-vision-replay-map.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
@@ -134,14 +144,6 @@ function ExhibitionFloor() {
     </group>
   );
 }
-
-const INTRO = portfolioJourney.panels.find(p => p.id === 'projects-intro')!.position;
-/** Beside the Projects intro: the three projects as a floating teaser (hover lifts, click inspects). */
-const TEASER: DisplaySpec[] = [
-  { src: displaySrc(VOID_LANE_MEDIA[0]), position: [930, 30, -1500], width: 680, yaw: -14, aspect: VL_ASPECT, emphasis: 1, alt: 'Void Lane screenshot' },
-  { src: '/projects/formula-vision-replay-map.webp', position: [1360, 420, -2700], width: 560, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'Formula Vision screenshot' },
-  { src: '/projects/aetherflow-home.webp', position: [1240, -480, -2600], width: 540, yaw: -16, aspect: 1.6, emphasis: 0.5, alt: 'AetherFlow screenshot' },
-];
 
 /** Soft round sprite texture (white core fading out). */
 const radialTexture = (() => {
@@ -351,7 +353,6 @@ export default function ProjectsWorld({ index }: { index: number }) {
       <VoidThroat />
       <Suspense fallback={null}>
         {/* Teasers sit beside the intro panel, outside a phone's narrow frame: skipped on the lite budget. */}
-        {!LITE && <Exhibit position={INTRO} yaw={0} accent="#A78BFA" title="Projects" floorY={FLOOR_Y} displays={TEASER} focus={shot => shot === 0} bare />}
         <Exhibit position={EXHIBITS.vl.info} yaw={EXHIBITS.vl.yaw} accent={EXHIBITS.vl.accent} title="Void Lane" floorY={FLOOR_Y} displays={VL_DISPLAYS} gallery={VOID_LANE_ITEMS} focus={shot => shot === 1 || shot === 2} />
         <Exhibit position={EXHIBITS.fv.info} yaw={EXHIBITS.fv.yaw} accent={EXHIBITS.fv.accent} title="Formula Vision" floorY={FLOOR_Y} displays={FV_DISPLAYS} focus={shot => shot === 3 || shot === 4} />
         <Exhibit position={EXHIBITS.bot.info} yaw={EXHIBITS.bot.yaw} accent={EXHIBITS.bot.accent} title="GitHub Review Bot" floorY={FLOOR_Y} displays={BOT_DISPLAYS} focus={shot => shot === 5} />

@@ -117,6 +117,18 @@ html.journey-active body {
 .jp-contact h2 { font-size: 44px; line-height: 1.08; font-weight: 700; color: var(--jp-ink); }
 .jp-intro p { margin-top: 18px !important; font-size: 17px; line-height: 1.65; color: var(--jp-ink-2); max-width: 62ch; }
 
+/* Projects doorway: wider and louder than a project card, with a contents line. */
+.jp-intro--projects { padding: 56px 60px 44px; }
+.jp-intro--projects h2 { font-size: 72px; letter-spacing: -0.04em; }
+.jp-project-index { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--jp-line); }
+.jp-project-index li { display: grid; gap: 6px; align-content: start; padding: 20px 20px 0 0; }
+.jp-project-index li + li { padding-left: 20px; border-left: 1px solid var(--jp-line); }
+.jp-project-index span { font: 500 11px 'JetBrains Mono', monospace; color: var(--jp-accent); letter-spacing: 0.08em; }
+.jp-project-index strong { font: 600 19px/1.2 'Space Grotesk', sans-serif; color: var(--jp-ink); letter-spacing: -0.01em; }
+.jp-project-index em { font: 500 9.5px/1.55 'JetBrains Mono', monospace; font-style: normal; color: var(--jp-ink-3); letter-spacing: 0.1em; }
+.jp-intro .jp-enter-cue { margin-top: 36px !important; font: 500 10.5px 'JetBrains Mono', monospace; letter-spacing: 0.22em; text-transform: uppercase; color: var(--jp-ink-3); }
+.jp-enter-cue::after { content: ''; display: inline-block; width: 40px; height: 1px; margin-left: 12px; vertical-align: middle; background: currentColor; opacity: 0.6; }
+
 .jp-meta { font: 400 12px/1.7 'JetBrains Mono', monospace; color: var(--jp-ink-3); }
 
 /* ── Origin ────────────────────────────────────────────────── */
@@ -336,6 +348,10 @@ html.journey-active body {
   .jp-origin-marker { display: none; }
   .jp-origin-sub, .jp-origin-tagline { font-size: 15px; }
   .jp-intro h2, .jp-about-bio h2, .jp-skills h2 { font-size: 32px; }
+  .jp-intro--projects { padding: 24px 20px; }
+  .jp-project-index { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 16px; }
+  .jp-project-index li + li { padding-left: 0; border-left: 0; }
+  .jp-project-index li:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--jp-line); }
   .jp-contact h2 { font-size: 36px; }
   .jp-exhibit h3 { font-size: 34px; }
   .jp-about-row { grid-template-columns: 1fr; }

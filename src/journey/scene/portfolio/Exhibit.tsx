@@ -18,6 +18,13 @@ export interface DisplaySpec {
   emphasis: number;
   /** Accessible description for the inspect view. */
   alt?: string;
+  /**
+   * A muted looping clip that plays on this screen while its exhibit is in focus
+   * (src stays the poster until the first frame decodes). Fetched only when needed.
+   */
+  video?: string;
+  /** Which gallery item a click opens, when it differs from the display index. */
+  galleryIndex?: number;
 }
 
 interface Props {
@@ -59,6 +66,30 @@ const HIT_MATERIAL = new THREE.MeshBasicMaterial({ visible: false });
 
 /** Shared hover state for one exhibit: which display (if any) the visitor is pointing at. */
 interface HoverState { index: number }
+/** Whether the visitor is at this exhibit's shots (moving to or reading them). */
+interface FocusState { on: boolean }
+
+/** A small play badge so a screen with a clip reads as video. */
+const playBadgeTexture = (() => {
+  let cache: THREE.Texture | null = null;
+  return () => {
+    if (cache) return cache;
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const g = c.getContext('2d')!;
+    g.fillStyle = 'rgba(5,6,10,0.78)';
+    g.beginPath(); g.arc(64, 64, 60, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = 'rgba(31,227,255,0.7)'; g.lineWidth = 4; g.stroke();
+    g.fillStyle = '#1FE3FF';
+    g.beginPath(); g.moveTo(52, 40); g.lineTo(92, 64); g.lineTo(52, 88); g.closePath(); g.fill();
+    cache = new THREE.CanvasTexture(c);
+    cache.colorSpace = THREE.SRGBColorSpace;
+    return cache;
+  };
+})();
+
+/** Pauses in-scene clips while the lightbox covers the scene (it stops rendering, so useFrame can't). */
+const INSPECT_STATE_EVENT = 'journey-inspect-state';
 
 /**
  * A framed screen showing a real project capture, with a lit bezel, edge light and
@@ -66,9 +97,9 @@ interface HoverState { index: number }
  * blooms and its shadow spreads and softens (as a lifted object's would); click
  * opens it full size.
  */
-function Display({ spec, index, accent, floorY, texture, hover, onSelect, floating }: {
+function Display({ spec, index, accent, floorY, texture, hover, focused, onSelect, floating }: {
   spec: DisplaySpec; index: number; accent: THREE.Color; floorY: number; texture: THREE.Texture;
-  hover: HoverState; onSelect: (index: number) => void; floating: boolean;
+  hover: HoverState; focused: FocusState; onSelect: (index: number) => void; floating: boolean;
 }) {
   const h = spec.width / spec.aspect;
   const frame = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0B0D14', metalness: 0.7, roughness: 0.32 }), []);
@@ -83,6 +114,36 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
   const hitMesh = useRef<THREE.Mesh>(null);
   const amount = useRef(0);
   const phase = useMemo(() => index * 1.7 + spec.width * 0.01, [index, spec.width]);
+  // Clip screens: a video element created up front but fetched only on first play.
+  const video = useMemo(() => {
+    if (!spec.video) return null;
+    const v = document.createElement('video');
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+    v.src = spec.video;
+    return v;
+  }, [spec.video]);
+  const videoTexture = useMemo(() => {
+    if (!video) return null;
+    const t = new THREE.VideoTexture(video);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  }, [video]);
+  const badge = useMemo(() => (spec.video ? new THREE.MeshBasicMaterial({ map: playBadgeTexture(), transparent: true, depthWrite: false, toneMapped: false }) : null), [spec.video]);
+  const blocked = useRef(false);
+  useEffect(() => {
+    if (!video) return;
+    const onInspect = (e: Event) => {
+      blocked.current = (e as CustomEvent<boolean>).detail === true;
+      if (blocked.current) video.pause();
+    };
+    window.addEventListener(INSPECT_STATE_EVENT, onInspect);
+    return () => {
+      window.removeEventListener(INSPECT_STATE_EVENT, onInspect);
+      video.pause(); video.removeAttribute('src'); video.load();
+      videoTexture?.dispose();
+    };
+  }, [video, videoTexture]);
 
   useEffect(() => {
     if (!hitMesh.current) return;
@@ -94,14 +155,25 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
         hover.index = on ? index : hover.index === index ? -1 : hover.index;
         frameRef.current?.requestFrames(45);
       },
-      onSelect: () => onSelect(index),
+      onSelect: () => onSelect(spec.galleryIndex ?? index),
     });
-  }, [hover, index, onSelect]);
+  }, [hover, index, onSelect, spec.galleryIndex]);
 
   useFrame((_, delta) => {
     const f = frameRef.current;
+    const hidden = screenMesh.current?.visible === false;
+    if (video && videoTexture) {
+      // Plays only while the visitor is at this exhibit; the poster shows until a frame decodes.
+      const want = !hidden && focused.on && !blocked.current;
+      if (want && video.paused) {
+        video.preload = 'auto';
+        void video.play().catch(() => undefined);
+      } else if (!want && !video.paused) video.pause();
+      const map = video.readyState >= 2 ? videoTexture : texture;
+      if (screen.map !== map) screen.map = map;
+    }
     // Hidden with its world (presence hides meshes): nothing to animate.
-    if (!f || !lift.current || screenMesh.current?.visible === false) return;
+    if (!f || !lift.current || hidden) return;
     const target = hover.index === index ? 1 : 0;
     // Critically damped-feel easing toward the hover state (~0.25 s).
     amount.current += (target - amount.current) * (1 - Math.exp(-10 * Math.min(delta, 0.05)));
@@ -135,6 +207,11 @@ function Display({ spec, index, accent, floorY, texture, hover, onSelect, floati
         <mesh ref={screenMesh} material={screen} position={[0, 0, -2]}>
           <planeGeometry args={[spec.width, h]} />
         </mesh>
+        {badge && (
+          <mesh material={badge} position={[-spec.width / 2 + 70, h / 2 - 70, 2]}>
+            <planeGeometry args={[96, 96]} />
+          </mesh>
+        )}
         <mesh material={edge} position={[0, -h / 2 - 22, 0]}>
           <boxGeometry args={[spec.width * 0.92, 4, 4]} />
         </mesh>
@@ -170,6 +247,7 @@ export default function Exhibit({ position, yaw, accent, title, floorY, displays
   const group = useRef<THREE.Group>(null);
   const tilt = useRef({ x: 0, y: 0 });
   const hover = useMemo<HoverState>(() => ({ index: -1 }), []);
+  const focused = useMemo<FocusState>(() => ({ on: false }), []);
   const onSelect = useMemo(() => (index: number) => openInspect(gallery ? gallery() : displays.map(d => ({ src: d.src, alt: d.alt ?? `${title} screenshot` })), index), [displays, title, gallery]);
   const plinth = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0A0912', metalness: 0.15, roughness: 0.85 }), []);
   const yawRad = (yaw * Math.PI) / 180;
@@ -181,6 +259,7 @@ export default function Exhibit({ position, yaw, accent, title, floorY, displays
   useFrame(() => {
     const frame = frameRef.current;
     if (!frame || !group.current) return;
+    focused.on = !!frame.segment && focus(frame.segment.shot);
     const active = frame.segment?.kind === 'dwell' && focus(frame.segment.shot);
     const tx = active ? frame.pointer[0] * 0.035 : 0;
     const ty = active ? frame.pointer[1] * 0.018 : 0;
@@ -193,7 +272,7 @@ export default function Exhibit({ position, yaw, accent, title, floorY, displays
     <group position={position}>
       <group ref={group} rotation={[0, yawRad, 0]}>
         {displays.map((d, i) => (
-          <Display key={d.src} spec={d} index={i} accent={accentColor} floorY={floorY - position[1]} texture={textures[i]} hover={hover} onSelect={onSelect} floating={bare} />
+          <Display key={d.src} spec={d} index={i} accent={accentColor} floorY={floorY - position[1]} texture={textures[i]} hover={hover} focused={focused} onSelect={onSelect} floating={bare} />
         ))}
       </group>
       {!bare && (

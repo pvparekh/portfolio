@@ -75,13 +75,18 @@
   letter-spacing: -0.02em; margin-bottom: 16px; max-width: 520px;
 }
 .vl-proof > div > span { color: var(--vl-accent); }
-/* Request early access is the primary action (cyan); the gallery is the quieter text link. */
-.vl-showcase .vl-early-access { background: var(--vl-accent); color: #031014; }
-.vl-showcase .vl-early-access:hover, .vl-showcase .vl-early-access:focus-visible { background: #7cf0ff; }
-.vl-gallery-button { gap: 9px; cursor: pointer; background: none; border-width: 0 0 1px; border-radius: 0; font-family: inherit; }
-.vl-showcase .vl-gallery-button { border-bottom: 1px solid rgba(31, 227, 255, 0.45); }
-.vl-showcase .vl-gallery-button:hover, .vl-showcase .vl-gallery-button:focus-visible { color: var(--vl-accent); border-color: var(--vl-accent); }
-.vl-early-note { margin: 12px 0 0; max-width: 460px; color: #8793a3; font: 400 12px/1.6 'Inter', system-ui, sans-serif; }
+/* The gallery is the primary action; early access is a quiet link with its note, tucked beneath. */
+.vl-gallery-button { gap: 9px; cursor: pointer; border: 0; font-family: inherit; }
+.vl-showcase .vl-gallery-button { background: var(--vl-accent); color: #031014; }
+.vl-showcase .vl-gallery-button:hover, .vl-showcase .vl-gallery-button:focus-visible { background: #7cf0ff; }
+.vl-early { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 16px 0 0; max-width: 520px; }
+.vl-early-link {
+  display: inline-flex; align-items: center; gap: 5px; padding: 2px 0; color: var(--vl-accent) !important;
+  font: 500 10.5px/1.6 'JetBrains Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; border-bottom: 1px solid rgba(31, 227, 255, 0.35);
+}
+.vl-early-link:hover, .vl-early-link:focus-visible { border-color: var(--vl-accent); }
+.vl-early-note { color: #8793a3; font: 400 12px/1.6 'Inter', system-ui, sans-serif; }
 .vl-proof-label, .jp-exhibit--vl .jp-proof strong { color: #e6edf7; font-weight: 600; }
 
 .vl-studio { padding: clamp(28px, 3.4vw, 46px); border-left: 1px solid rgba(255, 255, 255, 0.09); background: #090a10; }
@@ -119,7 +124,7 @@
 /* Journey panels */
 .jp-exhibit.jp-exhibit--vl, .jp-architecture.jp-vl-studio { --jp-accent: #1fe3ff; }
 .jp-exhibit--vl .jp-primary { border: 0; cursor: pointer; background: var(--vl-accent); color: #031014 !important; }
-.jp-exhibit--vl .vl-early-note { margin-top: 10px; font-size: 12.5px; }
+.jp-exhibit--vl .vl-early { margin-top: 14px; }
 /* A dense contact sheet: the panel's own list rules are for the studio flow, not the thumbnails. */
 .jp-vl-studio .vl-filmstrip { padding: 0 0 18px; margin-bottom: 18px; background: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .jp-vl-studio .vl-filmstrip li { display: block; padding: 0; border: 0; }

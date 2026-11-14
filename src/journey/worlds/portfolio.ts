@@ -49,7 +49,7 @@ export const portfolioJourney: JourneyDefinition = {
     { id: 'about-profile', destination: 'about', position: at(ABOUT, [2700, 120, -1300]), yaw: -10, width: 660 },
     { id: 'exp-intro', destination: 'experience', position: EXPERIENCE, yaw: 0, width: 760 },
     ...rolePanels,
-    { id: 'projects-intro', destination: 'projects', position: at(PROJECTS, [0, 900, 4200]), yaw: 0, width: 760 },
+    { id: 'projects-intro', destination: 'projects', position: at(PROJECTS, [0, 900, 4200]), yaw: 0, width: 1080 },
     { id: 'vl-info', destination: 'projects', position: EXHIBITS.vl.info, yaw: EXHIBITS.vl.yaw, width: 640 },
     { id: 'vl-studio', destination: 'projects', position: local(EXHIBITS.vl.info, EXHIBITS.vl.yaw, [1820, 0, -260]), yaw: 8, width: 500 },
     { id: 'fv-info', destination: 'projects', position: EXHIBITS.fv.info, yaw: EXHIBITS.fv.yaw, width: 600 },
@@ -78,7 +78,7 @@ export const portfolioJourney: JourneyDefinition = {
     {
       id: 'projects', label: 'Projects', anchor: 'projects', center: PROJECTS, approach: at(PROJECTS, [-3000, 5200, 19000]),
       shots: [
-        { panel: 'projects-intro', offsetX: -0.17 },
+        { panel: 'projects-intro' },
         { panel: 'vl-info', offsetX: -0.22 },
         { panel: 'vl-studio', offsetX: 0.26 },
         { panel: 'fv-info', offsetX: -0.22 },

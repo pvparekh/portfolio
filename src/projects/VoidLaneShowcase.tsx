@@ -43,12 +43,18 @@ function GalleryButton({ className }: { className: string }) {
   );
 }
 
-/** The build is password-protected: the request opens a prefilled email instead of a dead link. */
-function EarlyAccess({ className }: { className: string }) {
+/**
+ * The build is password-protected: a quiet request link (a prefilled email)
+ * tucked under the gallery button, with the note that explains it.
+ */
+function EarlyAccessNote() {
   return (
-    <a className={className} href={VOID_LANE.earlyAccess.href}>
-      {VOID_LANE.earlyAccess.label}<ArrowUpRight size={16} aria-hidden="true" />
-    </a>
+    <p className="vl-early">
+      <a className="vl-early-link" href={VOID_LANE.earlyAccess.href}>
+        {VOID_LANE.earlyAccess.label}<ArrowUpRight size={13} aria-hidden="true" />
+      </a>
+      <span className="vl-early-note">{VOID_LANE.earlyAccess.note}</span>
+    </p>
   );
 }
 
@@ -112,10 +118,9 @@ export function VoidLaneShowcase() {
           <p className="renaissance-project-description">{VOID_LANE.description}</p>
           <ProofPoints className="renaissance-proof-points vl-proof" />
           <div className="renaissance-project-actions">
-            <EarlyAccess className="renaissance-primary-project-link vl-early-access" />
-            <GalleryButton className="renaissance-text-project-link vl-gallery-button" />
+            <GalleryButton className="renaissance-primary-project-link vl-gallery-button" />
           </div>
-          <p className="vl-early-note">{VOID_LANE.earlyAccess.note}</p>
+          <EarlyAccessNote />
         </div>
         <aside className="vl-studio" aria-label="How the Void Lane studio ships">
           <p className="vl-studio-caption">{VOID_LANE.studioCaption}</p>
@@ -143,10 +148,9 @@ export function VoidLanePanel() {
       <p className="jp-desc">{VOID_LANE.description}</p>
       <ProofPoints className="jp-proof" />
       <div className="jp-actions">
-        <EarlyAccess className="jp-primary vl-early-access" />
-        <GalleryButton className="jp-text-link vl-gallery-button" />
+        <GalleryButton className="jp-primary vl-gallery-button" />
       </div>
-      <p className="vl-early-note">{VOID_LANE.earlyAccess.note}</p>
+      <EarlyAccessNote />
       <div className="jp-tech" aria-label="Void Lane technologies">{VOID_LANE.tech.map(t => <span key={t}>{t}</span>)}</div>
     </article>
   );

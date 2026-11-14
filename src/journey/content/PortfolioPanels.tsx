@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { VOID_LANE } from '../../projects/voidLane';
 import {
   ABOUT_ACADEMICS, ABOUT_STATS, AboutBio, CONTACT_INTRO, CONTACT_LINKS, EXPERIENCE, EXPERIENCE_INTRO,
   FV_ARCHITECTURE, FV_ARCHITECTURE_URL, FV_LEAD, FV_PROOF_POINTS, GithubIcon, HERO_SUBTAGLINE, PROJECTS,
@@ -177,12 +178,28 @@ export function ExperienceGroupPanel({ index }: { index: number }) {
 
 export { VoidLanePanel, VoidLaneStudioPanel } from '../../projects/VoidLaneShowcase';
 
+/**
+ * The doorway into Projects: a wide title card with a contents line, so it reads
+ * as a transition into the exhibition rather than an exhibit of its own.
+ */
+const PROJECT_INDEX = [
+  { number: '01', name: VOID_LANE.name, kind: VOID_LANE.topline[1] },
+  { number: '02', name: PROJECTS[0].name, kind: 'DATA PLATFORM + INTERACTIVE PRODUCT' },
+  ...PROJECTS.slice(1).map((p, i) => ({ number: `0${i + 3}`, name: p.name, kind: SUPPORTING_TYPES[p.id] })),
+];
+
 export function ProjectsIntroPanel() {
   return (
-    <article className="jp-intro">
+    <article className="jp-intro jp-intro--projects">
       <Kicker>Projects</Kicker>
       <h2>Things I've <span className="jp-accent">built</span></h2>
       <p>{PROJECTS_INTRO}</p>
+      <ol className="jp-project-index" aria-label="Projects ahead">
+        {PROJECT_INDEX.map(p => (
+          <li key={p.number}><span>{p.number}</span><strong>{p.name}</strong><em>{p.kind}</em></li>
+        ))}
+      </ol>
+      <p className="jp-enter-cue" aria-hidden="true">Scroll to enter</p>
     </article>
   );
 }
