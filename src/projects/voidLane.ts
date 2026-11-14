@@ -53,7 +53,7 @@ export const VOID_LANE = {
   studioCaption: 'HOW THE STUDIO SHIPS',
   studio: [
     { code: 'S1', label: 'Plan the sprint', detail: 'I set goals and priorities and build the research base the studio works from.' },
-    { code: 'S2', label: 'Bet', detail: 'The Lead and I choose what earns build time.' },
+    { code: 'S2', label: 'Prioritize', detail: 'The Lead and I rank the work and commit what earns build time.' },
     { code: 'S3', label: 'Signed spec', detail: 'The Experience and Technical Directors sign measurable acceptance criteria.' },
     { code: 'S4', label: 'Build', detail: 'Seven build agents work in their own worktrees; a hook blocks any turn that ends on failing tests.' },
     { code: 'S5', label: 'Verify', detail: 'A fresh-context verifier and real-browser captures. Compiling is not evidence.' },
