@@ -105,7 +105,7 @@ const EXPERIENCE = [
         period: 'Sept 2026 – Present',
         current: true,
         bullets: [
-          'Built and own the production Airflow pipeline behind the company’s largest client, replacing a manual script-based batch process and cutting load time by over 60%. Integrates 66 SQL Server sources (250M+ rows) into PostgreSQL using metadata-driven dynamic task mapping, schema discovery, bulk COPY and transactional refreshes.',
+          'Built and own the production Airflow pipeline behind the company’s largest client, replacing a manual script-based batch process and cutting load time by over 60%, with zero failed loads since launch. A control table drives dynamic task mapping across 66 SQL Server sources (250M+ rows): each enabled table is bulk-COPY loaded into PostgreSQL staging, row-count validated, then published through a transactional truncate-and-load.',
           'Extended the above pipeline to Snowflake, staging all 66 sources as Parquet with SQL Server to Snowflake type mapping, then moved heavy analytical workloads onto it, cutting query runtimes from 20+ minutes in PostgreSQL to under 1 minute.',
           'Engineered and productionized an end-to-end pipeline for a major OEM client, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh (~1.8 GB / ~1.65M rows per day) using Apache Airflow, Selenium, SFTP, automated archival, source validation, and transactional full-refresh loading.',
           'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, SQL Server, and Snowflake.',
