@@ -287,8 +287,10 @@ function AboutBio() {
   return (
     <>
       <p>
-        I'm a Data Engineer with a B.S. in Computer Science and a
-        minor in Data Science from Rutgers University, currently working at{' '}
+        I’m a Data Engineer with a B.S. in Computer Science and a minor in Data Science from Rutgers University, focused on building reliable data systems and production software.
+      </p>
+      <p>
+        At{' '}
         <a
           href="https://dowc.com"
           target="_blank"
@@ -298,14 +300,13 @@ function AboutBio() {
         >
           DOWC
         </a>
-        .
+        , I build and maintain production data pipelines, ETL/ELT workflows, and analytics infrastructure with Python, SQL, Airflow, PostgreSQL, and Snowflake. I own the Airflow pipeline for the company’s largest client, and I’m helping modernize its workflows as it moves to Snowflake for warehousing, NetSuite for accounting, and Omni for BI.
       </p>
       <p>
-        I like solving problems that call for reliable, scalable, and useful systems. At work, that means building production data pipelines and automating how information moves between systems. As a Formula 1 fan, I built Formula Vision, an interactive race replay and telemetry platform spanning 170+ historical races, powered by Python data pipelines, automated validation, and a custom React/TypeScript playback engine. I also developed an autonomous code reviewer with a two-pass LLM pipeline.
+        On the software side, I’ve built full-stack applications, real-time data systems, AI-powered developer tools, APIs, and cloud deployments. Most recently, I designed and directed a studio of AI agents that built Void Lane, a Mach-speed racing game headed to Steam.
       </p>
       <p>
-        Outside of work I'm probably playing sports, working out, or hanging out with
-        friends and family.
+        I enjoy working at the intersection of software and data engineering, especially on systems that need to be reliable, scalable, and useful. Outside of work, I’m probably playing sports, working out, or hanging out with friends and family.
       </p>
     </>
   );
