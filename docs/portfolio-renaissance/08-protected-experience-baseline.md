@@ -1,6 +1,6 @@
-# 08 — Protected experience copy baseline (updated 2026-10-11)
+# 08 — Protected experience copy baseline (updated 2026-11-14)
 
-Original snapshot source: pvparekh/portfolio/src/App.tsx at `feat/solutions-client-acquisition`, commit `01e6f9510952776fcf1a39266270b686a5c224a4`, blob SHA `4f455e3278c53d4911c9b805826e212bd13f221b`. The active baseline below was synchronized with the user-edited `main` experience section on 2026-10-11.
+Original snapshot source: pvparekh/portfolio/src/App.tsx at `feat/solutions-client-acquisition`, commit `01e6f9510952776fcf1a39266270b686a5c224a4`, blob SHA `4f455e3278c53d4911c9b805826e212bd13f221b`. The active baseline below was synchronized with the user-edited `main` experience section on 2026-10-11; the Data Engineer I bullets were replaced at the user's request on 2026-11-14.
 
 This file preserves the current user-approved exact `const EXPERIENCE` source block, with its first protected snapshot captured on 2026-10-09. The fenced block below is the protected baseline, including every employer, link, role title, period, location and literal professional bullet. An automated comparison must extract the same block from future source and compare exact characters (or use an approved structured equivalence if the data model is moved). No bullets may be rewritten without explicit authorization.
 
@@ -20,10 +20,10 @@ const EXPERIENCE = [
         period: 'Sept 2026 – Present',
         current: true,
         bullets: [
-          'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, and Snowflake.',
-          'Developed a metadata-driven Airflow pipeline integrating 66 SQL Server sources into PostgreSQL using dynamic task mapping, schema discovery, bulk COPY, and transactional refreshes; validated source-to-target row counts across 3+ runs.',
-          'Engineered and productionized an end-to-end pipeline for NISSAN, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh.',
-          'Leveraged Snowflake\'s columnar architecture for complex analytical workloads on multi-million-row datasets, reducing query runtimes from 20+ minutes in PostgreSQL to under 1 minute.',
+          'Built and own the production Airflow pipeline behind the company’s largest client, replacing a manual script-based batch process and cutting load time by over 60%. Integrates 66 SQL Server sources (250M+ rows) into PostgreSQL using metadata-driven dynamic task mapping, schema discovery, bulk COPY and transactional refreshes.',
+          'Extended the above pipeline to Snowflake, staging all 66 sources as Parquet with SQL Server to Snowflake type mapping, then moved heavy analytical workloads onto it, cutting query runtimes from 20+ minutes in PostgreSQL to under 1 minute.',
+          'Engineered and productionized an end-to-end pipeline for a major OEM client, replacing a 1+ hour manual daily process with an unattended rolling 36-month Tableau-to-PostgreSQL refresh (~1.8 GB / ~1.65M rows per day) using Apache Airflow, Selenium, SFTP, automated archival, source validation, and transactional full-refresh loading.',
+          'Build and maintain production ETL/ELT pipelines, data integrations, and analytics infrastructure using Python, SQL, Apache Airflow, PostgreSQL, SQL Server, and Snowflake.',
         ],
       },
       {
