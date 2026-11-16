@@ -239,7 +239,7 @@ const SOCIAL_LINKS = [
   { href: 'https://github.com/pvparekh', label: 'GitHub', Icon: GithubIcon, download: undefined },
   { href: 'https://linkedin.com/in/parekh422', label: 'LinkedIn', Icon: LinkedinIcon, download: undefined },
   { href: 'mailto:pvparekh14@gmail.com', label: 'Email', Icon: Mail, download: undefined },
-  { href: '/Resume_11_15.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
+  { href: '/Parth_Resume_11_15.pdf', label: 'Resume', Icon: FileText, download: 'Parth_Parekh_Resume.pdf' },
 ];
 
 const EXPERIENCE_INTRO = 'I build production data pipelines, automate reporting and integrations, and develop end-to-end software. These roles trace my progression across data engineering, analytics, and application development.';
