@@ -77,10 +77,10 @@ const PROJECTS = [
     id: 'aetherflow',
     number: '04',
     name: 'AetherFlow',
-    tagline: 'Expense Data & Analytics Product',
+    tagline: 'AI Expense Leak Finder',
     description:
-      'Expense intelligence product that ingests business files, categorizes transactions with AI, computes deterministic anomalies and vendor metrics, and presents actionable analyses.',
-    tech: ['Next.js 15', 'GPT-4o', 'Supabase', 'PostgreSQL', 'TypeScript', 'Tailwind'],
+      'Finds forgotten subscriptions, price increases and double charges in uploaded statements. An open LLM categorises and writes; code computes every number, scored by evals (83.7% on 233 labelled rows).',
+    tech: ['Next.js 16', 'TypeScript', 'Open LLMs (Ollama)', 'Evals', 'Supabase', 'PostgreSQL'],
     live: 'https://aetherflow-three.vercel.app' as string | null,
     github: 'https://github.com/pvparekh/aetherflow' as string | null,
     accent: '#8B5CF6',
@@ -266,12 +266,12 @@ const FV_ARCHITECTURE = [
 
 const SUPPORTING_FLOWS: Record<string, string[]> = {
   'github-review-bot': ['Verify webhook', 'Parse pull-request diff', 'Two-pass AI review', 'Post inline feedback'],
-  aetherflow: ['Upload expense files', 'Categorize in batches', 'Compute deterministic statistics', 'Explore analysis'],
+  aetherflow: ['Parse CSV, TXT and PDF', 'Rules, history, then LLM', 'Detect leaks in code', 'Check AI wording against facts'],
 };
 
 const SUPPORTING_TYPES: Record<string, string> = {
   'github-review-bot': 'GITHUB INTEGRATION + DEVELOPER TOOLING',
-  aetherflow: 'FILE INGESTION + ANALYTICS',
+  aetherflow: 'LLM PIPELINE + ANALYTICS',
 };
 
 const CONTACT_INTRO = 'Open to full-time roles, interesting contracts, or a conversation about building something new.';
