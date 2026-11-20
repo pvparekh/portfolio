@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { Palette, SkyMotif } from '../../core/types';
 import { LITE } from '../../core/budget';
-import { frameRef } from './frame';
+import { frameRef, skyHorizon } from './frame';
 
 /*
  * The backdrop of every destination: a base gradient (the void's own colour)
@@ -358,6 +358,7 @@ export default function Atmosphere({ palettes }: { palettes: Palette[] }) {
     const B = stops[j];
     u.uTop.value.copy(A.top).lerp(B.top, f);
     u.uHorizon.value.copy(A.horizon).lerp(B.horizon, f);
+    skyHorizon.copy(u.uHorizon.value);
     u.uBottom.value.copy(A.bottom).lerp(B.bottom, f);
     u.uKA.value = A.kind; u.uA1.value.copy(A.a); u.uA2.value.copy(A.b); u.uAT.value.copy(A.toward); u.uAS.value = A.strength; u.uAG.value = A.ground;
     u.uKB.value = B.kind; u.uB1.value.copy(B.a); u.uB2.value.copy(B.b); u.uBT.value.copy(B.toward); u.uBS.value = B.strength; u.uBG.value = B.ground;

@@ -1,13 +1,12 @@
 import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { frameRef, usePresence } from '../shared/frame';
-import { EXHIBITS, PROJECTS, local, portfolioJourney } from '../../worlds/portfolio';
+import { frameRef, skyHorizon, usePresence } from '../shared/frame';
+import { EXHIBITS, PROJECTS, local } from '../../worlds/portfolio';
 import Exhibit, { type DisplaySpec } from './Exhibit';
 import { LITE } from '../../core/budget';
 import { VOID_LANE_ITEMS, VOID_LANE_MEDIA, VL_ASPECT, displaySrc } from '../../../projects/voidLane';
 
-const PROJECTS_INDEX = portfolioJourney.destinations.findIndex(d => d.id === 'projects');
 
 const FLOOR_Y = PROJECTS[1] - 1500;
 
@@ -49,15 +48,13 @@ const AETHER_DISPLAYS: DisplaySpec[] = [
 /** Where each project's main screen stands (its floor pool and plinth sit under it). */
 const ORDER = [EXHIBITS.vl, EXHIBITS.fv, EXHIBITS.bot, EXHIBITS.aether];
 const STATIONS = ORDER.map((e, i) => local(e.info, e.yaw, i === 0 ? [860, 0, -700] : [820, 0, -700]));
-/** Which exhibit each Projects shot reads (shot 0 is the overview). */
-const SHOT_STATION = [-1, 0, 0, 1, 1, 2, 3];
 
 /**
  * The exhibition floor, designed as one installation (museum lighting hierarchy):
  * - general light: a single platform whose engraved border and walkway line join
  *   all four projects, so on approach the section reads as one designed group;
- * - focal light: a neutral pool under each project, equal at the overview, then
- *   the project being read brightens while the others recede;
+ * - focal light: a neutral pool under each project, always on at one steady dim
+ *   level (nothing changes with scroll, so nothing can flicker);
  * - project colour only as a fine ring at each plinth, a detail rather than a wash.
  * Unlit and a single pass (a planar reflector re-rendered the whole scene).
  */
@@ -71,13 +68,12 @@ function ExhibitionFloor() {
         uKey: { value: new THREE.Color('#D9D3FF') },
         uPos: { value: STATIONS.map(p => new THREE.Vector2(p[0], p[2])) },
         uAccent: { value: ORDER.map(e => new THREE.Color(e.accent)) },
-        uFocus: { value: [0.5, 0.5, 0.5, 0.5] },
         uCentre: { value: centre },
         uRadii: { value: new THREE.Vector2(16400, 7200) },
         uTime: { value: 0 },
       },
       vertexShader: 'varying vec3 vWorld; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
-      fragmentShader: `uniform vec3 uBase; uniform vec3 uKey; uniform vec2 uPos[4]; uniform vec3 uAccent[4]; uniform float uFocus[4];
+      fragmentShader: `uniform vec3 uBase; uniform vec3 uKey; uniform vec2 uPos[4]; uniform vec3 uAccent[4];
         uniform vec2 uCentre; uniform vec2 uRadii; uniform float uTime; varying vec3 vWorld;
         float band(float d, float w) { return 1.0 - smoothstep(w, w + fwidth(d) * 1.5, abs(d)); }
         float segment(vec2 p, vec2 a, vec2 b) { vec2 pa = p - a, ba = b - a; return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0)); }
@@ -87,7 +83,10 @@ function ExhibitionFloor() {
           // The platform: polished, slightly lighter stone inside an engraved double border.
           float e = length((p - uCentre) / uRadii);
           float inside = 1.0 - smoothstep(0.97, 1.0, e);
-          c += uKey * 0.018 * inside;
+          c += uKey * 0.024 * inside;
+          // Ambient wash: a broad, soft light over the whole platform, brightest at its heart.
+          // Anchored to the floor (never to the camera), so it holds steady at any scroll speed.
+          c += uKey * 0.036 * exp(-e * e * 2.2) * inside;
           c += uKey * (band(e - 1.0, 0.0016) * 0.22 + band(e - 0.955, 0.0009) * 0.08);
           // The walkway: one fine line joining the projects in reading order, a soft light travelling it.
           float route = min(min(segment(p, uPos[0], uPos[1]), segment(p, uPos[1], uPos[2])), segment(p, uPos[2], uPos[3]));
@@ -95,31 +94,25 @@ function ExhibitionFloor() {
           c += uKey * band(route, 5.0) * (0.06 + 0.12 * pow(along, 8.0)) * inside;
           for (int i = 0; i < 4; i++) {
             float d = length(p - uPos[i]);
-            float w = 0.25 + 0.75 * uFocus[i];
-            // Focal pool: neutral light, wide and soft, with a brighter core.
-            c += uKey * (exp(-d * 0.0009) * 0.06 + exp(-d * 0.0032) * 0.09) * w;
+            // Always on: every pool burns at one steady, dim level wherever the camera is
+            // and whatever is being read, so no frame of a scroll can catch it changing.
+            c += uKey * (exp(-d * 0.0009) * 0.06 + exp(-d * 0.0032) * 0.09) * 0.8;
             // The project's own colour, only as a fine ring around its plinth.
-            c += uAccent[i] * band(d - 760.0, 3.0) * (0.12 + 0.35 * uFocus[i]);
+            c += uAccent[i] * band(d - 760.0, 3.0) * 0.3;
           }
-          // Faint view-dependent sheen toward the camera, like lacquer.
-          float toward = 1.0 - smoothstep(0.0, 9000.0, length(p - cameraPosition.xz));
-          c += vec3(0.05, 0.045, 0.09) * toward;
+          // Lacquer sheen, fixed to the platform rather than following the camera.
+          c += vec3(0.05, 0.045, 0.09) * 0.45 * (1.0 - smoothstep(0.2, 1.0, e));
           gl_FragColor = vec4(c, 1.0);
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
         }`,
     });
   }, []);
-  // Focus eases between projects in real time, so the light hands off as the camera moves.
-  useFrame((_, delta) => {
+  // Only ambient time moves the floor (the soft light travelling the walkway); nothing
+  // here depends on scroll position, camera or which project is being read.
+  useFrame(() => {
     const f = frameRef.current;
-    if (!f) return;
-    const shot = f.segment?.destination === PROJECTS_INDEX ? f.segment.shot : -1;
-    const station = shot >= 0 ? SHOT_STATION[shot] ?? -1 : -1;
-    const k = 1 - Math.exp(-Math.min(delta, 0.1) * 2.5);
-    const focus = floor.uniforms.uFocus.value as number[];
-    for (let i = 0; i < 4; i++) focus[i] += ((station < 0 ? 0.45 : station === i ? 1 : 0.12) - focus[i]) * k;
-    floor.uniforms.uTime.value = f.time;
+    if (f) floor.uniforms.uTime.value = f.time;
   });
   const reflector = useMemo(() => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(40000, 30000), floor);
@@ -127,15 +120,35 @@ function ExhibitionFloor() {
     return m;
   }, [floor]);
   useEffect(() => () => { reflector.geometry.dispose(); floor.dispose(); }, [reflector, floor]);
-  // Reflections read near the exhibits; with distance the floor melts into the hall's haze (no hard horizon).
+  // The platform always shows in full; beyond its border the floor melts into the hall's
+  // haze (no hard horizon). Both fades are fixed in the world: an earlier camera-relative
+  // fade made the platform appear and vanish as the camera moved (read as flicker).
   const veil = useMemo(() => new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,
-    // Far colour matches the sky dome's horizon (atmosphere x 0.55) through the same tone mapping.
-    uniforms: { uNear: { value: new THREE.Color('#06040C') }, uFar: { value: new THREE.Color('#1C1236').multiplyScalar(0.55) } },
+    // Far colour is the sky's own horizon colour, read each frame, through the same tone mapping:
+    // the haze meets the sky without a seam, also while the backdrop cross-fades between worlds.
+    uniforms: {
+      uNear: { value: new THREE.Color('#06040C') },
+      uFar: { value: skyHorizon },
+      uCentre: floor.uniforms.uCentre,
+      uRadii: floor.uniforms.uRadii,
+    },
     vertexShader: 'varying vec3 vWorld; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
-    fragmentShader: 'uniform vec3 uNear; uniform vec3 uFar; varying vec3 vWorld; void main(){ float d = length(vWorld.xz - cameraPosition.xz); float t = smoothstep(2500.0, 22000.0, d); vec3 c = mix(uNear, uFar, pow(t, 0.6)); float a = mix(0.5, 1.0, smoothstep(0.0, 0.35, t)); gl_FragColor = vec4(c, a); \n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}',
-  }), []);
+    fragmentShader: `uniform vec3 uNear; uniform vec3 uFar; uniform vec2 uCentre; uniform vec2 uRadii; varying vec3 vWorld;
+      void main() {
+        float e = length((vWorld.xz - uCentre) / uRadii);
+        float out_ = smoothstep(1.0, 1.2, e);
+        // Very far floor joins the horizon whatever the platform does (changes slowly with distance).
+        float far = smoothstep(18000.0, 60000.0, length(vWorld.xz - cameraPosition.xz));
+        float a = max(out_, far);
+        // Beyond the rim the floor glows with the horizon haze (always on, never black); only a
+        // thin shadow line remains at the edge of the platform.
+        gl_FragColor = vec4(mix(uNear, uFar, max(far, smoothstep(1.0, 1.12, e))), a);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  }), [floor]);
   return (
     <group position={[PROJECTS[0], FLOOR_Y, PROJECTS[2] - 8000]}>
       <primitive object={reflector} />

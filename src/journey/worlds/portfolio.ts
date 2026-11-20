@@ -86,7 +86,7 @@ export const portfolioJourney: JourneyDefinition = {
         { panel: 'bot-info', offsetX: -0.22 },
         { panel: 'aether-info', offsetX: -0.22 },
       ],
-      palette: { background: '#07050E', atmosphere: '#1C1236', accent: '#A78BFA', sky: { motif: 'nebula', a: '#4C2C9E', b: '#C084FC', strength: 0.75, ground: true } },
+      palette: { background: '#07050E', atmosphere: '#2A1B54', accent: '#A78BFA', sky: { motif: 'nebula', a: '#4C2C9E', b: '#C084FC', strength: 0.75, ground: true } },
     },
     {
       id: 'skills', label: 'Skills', anchor: 'skills', center: SKILLS, approach: at(SKILLS, [8000, 6000, 16000]),
