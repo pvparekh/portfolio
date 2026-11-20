@@ -249,7 +249,8 @@ export default function Exhibit({ position, yaw, accent, title, floorY, displays
   const hover = useMemo<HoverState>(() => ({ index: -1 }), []);
   const focused = useMemo<FocusState>(() => ({ on: false }), []);
   const onSelect = useMemo(() => (index: number) => openInspect(gallery ? gallery() : displays.map(d => ({ src: d.src, alt: d.alt ?? `${title} screenshot` })), index), [displays, title, gallery]);
-  const plinth = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0A0912', metalness: 0.15, roughness: 0.85 }), []);
+  // Dark stone with a faint glow of its own, so a plinth seen up close reads as stone, not a hole.
+  const plinth = useMemo(() => new THREE.MeshStandardMaterial({ color: '#14121F', emissive: '#221D38', metalness: 0.15, roughness: 0.7 }), []);
   const yawRad = (yaw * Math.PI) / 180;
   // Main display position rotated into world orientation (for plinth and light).
   const [dx, , dz] = displays[0].position;

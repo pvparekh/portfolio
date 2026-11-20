@@ -1,10 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import type { Light, Object3D } from 'three';
+import { Color, type Light, type Object3D } from 'three';
 import type { JourneyFrame } from '../../core/engine';
 
 /** The current journey frame, written by the engine right before each render. */
 export const frameRef: { current: JourneyFrame | null } = { current: null };
+
+/**
+ * The sky's horizon colour this frame (written by the atmosphere before the scene renders),
+ * so ground haze can meet the sky without a seam while palettes cross-fade.
+ */
+export const skyHorizon = new Color('#000000');
 
 /** Every world's root group with its destination index (used to warm worlds ahead of arrival). */
 export const worlds = new Map<Object3D, number>();

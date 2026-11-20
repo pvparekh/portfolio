@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { frameRef } from './frame';
@@ -60,12 +60,27 @@ function pickAt(x: number, y: number, camera: THREE.Camera) {
 
 const CONTENT = '.journey-panel > *, [data-journey-ui], nav, a, button, .journey-inspect';
 
+/** Camera speed (world units per second) above which hover is off, and below which it may return. */
+const MOVING = 60;
+const SETTLED = 15;
+/** How long the camera must stay settled before hover returns. */
+const SETTLE_MS = 180;
+
 export function Picker() {
   const { camera } = useThree();
+  // While scrolling the cursor stays still and the screens slide under it: picking then would
+  // light each screen up and dim the rest as it passes, which reads as flicker. Hover only
+  // responds once the camera has come to rest (with hysteresis, so it never chatters).
+  const rest = useMemo(() => ({ moving: false, since: 0 }), []);
 
   useFrame(() => {
     const frame = frameRef.current;
-    if (!frame || !frame.pointerRaw || frame.pointerOnContent || frame.travel > 0.2) { setHovered(null); return; }
+    if (!frame) return;
+    const now = performance.now();
+    if (frame.speed > MOVING || frame.travel > 0.2) { rest.moving = true; rest.since = now; }
+    else if (frame.speed > SETTLED) rest.since = now;
+    else if (rest.moving && now - rest.since > SETTLE_MS) rest.moving = false;
+    if (!frame.pointerRaw || frame.pointerOnContent || rest.moving) { setHovered(null); return; }
     setHovered(pickAt(frame.pointerRaw[0], -frame.pointerRaw[1], camera));
   });
 
