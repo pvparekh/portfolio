@@ -69,30 +69,30 @@ export const softwareProjects: SoftwareProject[] = [
   },
   {
     "id": "aetherflow",
-    "eyebrow": "FULL-STACK APPLICATION / INDEPENDENT",
+    "eyebrow": "AI APPLICATION / INDEPENDENT",
     "title": "AetherFlow",
     "classification": "Independent software project",
-    "description": "A complete expense-analysis application where users can upload business records and explore categorized results.",
-    "problem": "Expense records come in different formats, making it hard to review transactions, vendors and unusual activity in one place.",
-    "work": "Built file-upload and parsing workflows, authentication, PostgreSQL-backed storage, categorized transactions, computed statistics, vendor analysis and interactive dashboard views.",
-    "outcome": "A working application with file ingestion, filtering and export; arithmetic and anomaly calculations are deterministic while AI assists with categorization and explanation.",
-    "contribution": "Designed and developed the frontend, backend workflows, storage and analysis experience.",
+    "description": "An AI expense leak finder: upload card or bank statements and see forgotten subscriptions, price increases, double charges and unusual spending, with drafts to cancel or negotiate.",
+    "problem": "Leaks hide in long statements, and language models are unreliable with numbers. The product needed AI where it helps without letting it invent a single figure.",
+    "work": "Built a provider-neutral LLM layer (local Ollama or any OpenAI-compatible endpoint), rules-then-history-then-model categorisation with a failure ladder, a deterministic leak engine, a faithfulness check on generated text, natural-language questions compiled to validated queries, and an eval harness.",
+    "outcome": "Finds every planted leak in a 620-transaction demo year ($194.32 a year) and runs fully in the browser. Categorisation scores 92.3% accuracy on a 233-row hand-labelled golden set with a free hosted open model (83.7% with a 9B model on a laptop); 669 automated tests.",
+    "contribution": "Designed and built the product end to end: model layer, pipeline, analysis engine, evals and interface.",
     "architecture": [
-      "Next.js and TypeScript with Supabase authentication and PostgreSQL",
-      "CSV/TXT/PDF ingestion and batched AI-assisted classification",
-      "Deterministic analytical calculations, dashboard filtering and exports"
+      "Next.js and TypeScript with Supabase Postgres and row-level security",
+      "One JSON-schema model client: categorise, extract PDF rows, word drafts, translate questions",
+      "Pure leak engine (recurring, price changes, duplicates, robust outlier scores) and .ics calendar"
     ],
     "validation": [
-      "README identifies the email-digest preference as a placeholder, not a completed feature.",
-      "Core numerical computations are implemented in application logic, not delegated to AI."
+      "Every number shown is computed by code; model wording is checked against those numbers and replaced by a template on mismatch.",
+      "Accuracy and latency come from a recorded eval run, published on the project's How it works page."
     ],
     "stack": [
       "Next.js",
-      "React",
       "TypeScript",
+      "Ollama / open LLMs",
+      "Evals",
       "PostgreSQL",
-      "Supabase",
-      "OpenAI"
+      "Supabase"
     ],
     "liveUrl": "https://aetherflow-three.vercel.app",
     "sourceUrl": "https://github.com/pvparekh/aetherflow",

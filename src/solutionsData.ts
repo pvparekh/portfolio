@@ -53,30 +53,30 @@ export const caseStudies: PublicCaseStudy[] = [
   },
   {
     id: 'aetherflow',
-    eyebrow: '02 / FILE INGESTION + ANALYTICAL WORKFLOWS',
+    eyebrow: '02 / LLM PIPELINE + ANALYTICAL WORKFLOWS',
     title: 'AetherFlow',
     description:
-      'An expense-data application that turns uploaded business files into categorized transactions and explainable analytical views.',
+      'An AI expense leak finder that turns uploaded statements into subscriptions, price increases, double charges and unusual spending, with every figure computed by code.',
     problem:
-      'Messy, differently formatted expense exports make it difficult to see spend patterns and recurring vendor activity consistently.',
+      'Leaks hide in long, messy statements, and language models are unreliable with numbers, so AI had to help without ever producing a figure.',
     work:
-      'Built a multi-format file ingestion workflow, batch categorization, deterministic statistical calculations and vendor analysis with a PostgreSQL-backed application.',
+      'Built multi-format ingestion, rules-then-history-then-LLM categorisation with a failure ladder, a deterministic leak engine, a faithfulness check on generated text and an eval harness.',
     outcome:
-      'A working expense intelligence application that combines repeatable data ingestion, computed analytics, and a clear interface for exploring the results.',
+      'Finds every planted leak in a 620-transaction demo year and scores 92.3% categorisation accuracy on a 233-row labelled set using a free hosted open model.',
     contribution:
-      'Designed and implemented the application, data flow and analysis features.',
+      'Designed and implemented the product end to end: model layer, pipeline, analysis, evals and interface.',
     architecture: [
-      'CSV, TXT or PDF upload → format-aware parsing',
-      'Batched categorization → normalized expense records',
-      'Deterministic statistics and vendor analysis → stored results',
-      'React dashboard → filters, history and exports'
+      'CSV, TXT or PDF upload → parsing and merchant normalisation',
+      'Rules → history vote → LLM in batches of 25 → categorised expenses',
+      'Pure leak engine → subscriptions, price changes, duplicates, outliers',
+      'LLM wording checked against computed facts → drafts and answers'
     ],
     validation: [
-      'Core arithmetic is implemented in code rather than delegated to an AI model.',
-      'Vendor summaries are recalculated when the underlying uploads change.',
+      'Every number shown is computed in code; model text is checked against it.',
+      'Categorisation accuracy comes from a recorded eval run on a hand-labelled golden set.',
       'Service-role credentials are kept outside browser code.'
     ],
-    stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Supabase', 'OpenAI'],
+    stack: ['Next.js', 'TypeScript', 'Ollama / open LLMs', 'Evals', 'PostgreSQL', 'Supabase'],
     liveUrl: 'https://aetherflow-three.vercel.app',
     sourceUrl: 'https://github.com/pvparekh/aetherflow',
     classification: 'Independent public project',
