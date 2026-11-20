@@ -155,7 +155,7 @@ export function ServiceModules({ index, count }: { index: number; count: number 
 const GALLERY: Record<string, string[]> = {
   salon: ['/projects/perfect-threading-home.webp', '/projects/perfect-threading-services.webp'],
   formula: ['/projects/formula-vision-replay-map.webp', '/projects/formula-vision-chase-camera.webp'],
-  aetherflow: ['/projects/aetherflow-home.webp', '/projects/aetherflow-signup.webp'],
+  aetherflow: ['/projects/aetherflow-leaks.webp', '/projects/aetherflow-negotiation.webp'],
   'review-bot': ['/projects/review-bot-pipeline.webp', '/projects/review-bot-engineering.webp'],
   biaslens: ['/projects/biaslens-dashboard.webp', '/projects/biaslens-table.webp'],
 };
