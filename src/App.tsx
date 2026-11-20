@@ -910,11 +910,11 @@ function ProjectsSection() {
                       {flow.map((step, i) => <li key={step}><span>0{i+1}</span>{step}</li>)}
                     </ol>
                     <div className="renaissance-project-actions">
+                      {project.live && <a className="renaissance-primary-project-link" href={project.live} target="_blank" rel="noreferrer">
+                        Open Product <ArrowUpRight size={16} aria-hidden="true" />
+                      </a>}
                       {project.github && <a className="renaissance-text-project-link" href={project.github} target="_blank" rel="noreferrer">
                         Examine Repository <GithubIcon size={16} />
-                      </a>}
-                      {project.live && <a className="renaissance-text-project-link" href={project.live} target="_blank" rel="noreferrer">
-                        Open Product <ArrowUpRight size={15} aria-hidden="true" />
                       </a>}
                     </div>
                   </div>

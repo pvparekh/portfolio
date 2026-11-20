@@ -42,7 +42,8 @@ const BOT_DISPLAYS: DisplaySpec[] = [
 ];
 const AETHER_DISPLAYS: DisplaySpec[] = [
   { src: '/projects/aetherflow-home.webp', position: [820, 40, -700], width: 780, yaw: -22, aspect: 1.6, emphasis: 1 },
-  { src: '/projects/aetherflow-signup.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
+  { src: '/projects/aetherflow-leaks.webp', position: [1180, 560, -1750], width: 620, yaw: -26, aspect: 1.6, emphasis: 0.5 },
+  { src: '/projects/aetherflow-negotiation.webp', position: [560, -500, -1950], width: 560, yaw: -16, aspect: 1.6, emphasis: 0.36 },
 ];
 
 /** Where each project's main screen stands (its floor pool and plinth sit under it). */

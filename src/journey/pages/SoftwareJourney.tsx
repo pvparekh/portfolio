@@ -11,7 +11,7 @@ import { MobilePreview } from '../content/PortfolioPanels';
 const PREVIEWS: Record<string, string> = {
   salon: '/projects/perfect-threading-home.webp',
   formula: '/projects/formula-vision-replay-map.webp',
-  aetherflow: '/projects/aetherflow-home.webp',
+  aetherflow: '/projects/aetherflow-leaks.webp',
   'review-bot': '/projects/review-bot-pipeline.webp',
   biaslens: '/projects/biaslens-dashboard.webp',
 };
