@@ -43,17 +43,26 @@ function GalleryButton({ className }: { className: string }) {
   );
 }
 
+/** The playtest build on itch.io, a secondary link beside the gallery button. */
+function BuildLink({ className }: { className: string }) {
+  return (
+    <a className={className} href={VOID_LANE.build.href} target="_blank" rel="noreferrer">
+      {VOID_LANE.build.label} <ArrowUpRight size={15} aria-hidden="true" />
+    </a>
+  );
+}
+
 /**
- * The build is password-protected: a quiet request link (a prefilled email)
- * tucked under the gallery button, with the note that explains it.
+ * The build is password-protected: one quiet line under the actions says so
+ * and offers a prefilled email asking for the password.
  */
 function EarlyAccessNote() {
   return (
     <p className="vl-early">
+      <span className="vl-early-note">{VOID_LANE.earlyAccess.note}</span>
       <a className="vl-early-link" href={VOID_LANE.earlyAccess.href}>
         {VOID_LANE.earlyAccess.label}<ArrowUpRight size={13} aria-hidden="true" />
       </a>
-      <span className="vl-early-note">{VOID_LANE.earlyAccess.note}</span>
     </p>
   );
 }
@@ -119,6 +128,7 @@ export function VoidLaneShowcase() {
           <ProofPoints className="renaissance-proof-points vl-proof" />
           <div className="renaissance-project-actions">
             <GalleryButton className="renaissance-primary-project-link vl-gallery-button" />
+            <BuildLink className="renaissance-text-project-link" />
           </div>
           <EarlyAccessNote />
         </div>
@@ -149,6 +159,7 @@ export function VoidLanePanel() {
       <ProofPoints className="jp-proof" />
       <div className="jp-actions">
         <GalleryButton className="jp-primary vl-gallery-button" />
+        <BuildLink className="jp-text-link" />
       </div>
       <EarlyAccessNote />
       <div className="jp-tech" aria-label="Void Lane technologies">{VOID_LANE.tech.map(t => <span key={t}>{t}</span>)}</div>

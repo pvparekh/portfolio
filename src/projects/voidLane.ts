@@ -3,8 +3,8 @@
  *
  * Every number below is measured and documented in the game's own repository
  * (docs/status/SESSIONS.md, docs/status/STATUS.md, docs/adr, tools/size-budget,
- * reports/perf). The repository is private and the early access build is
- * password-protected, so the showcase offers an email request instead of a link.
+ * reports/perf). The repository is private; the playtest build is public on
+ * itch.io but password-protected, so its link sits beside an email request.
  */
 
 import type { LightboxItem } from '../gallery/types';
@@ -61,10 +61,14 @@ export const VOID_LANE = {
   ],
   tech: ['TypeScript', 'three.js', 'WebGL2', 'GLSL', 'Web Audio', 'Web Workers', 'Vite', 'Vitest', 'Playwright', 'Claude Code agents'],
   status: 'In development, headed to Steam. Playtest builds on itch.io.',
+  build: {
+    label: 'Play Build 1 on itch.io',
+    href: 'https://pvparekh.itch.io/void-lane',
+  },
   earlyAccess: {
-    label: 'Request early access',
-    note: "Early access build on itch.io, password-protected while I playtest. Email me and I'll send you the password.",
-    href: `mailto:${EARLY_ACCESS_EMAIL}?subject=${encodeURIComponent('Void Lane early access')}&body=${encodeURIComponent("Hi Parth, I'd like to try the Void Lane early access build.")}`,
+    note: 'Build 1 is in early access and password-protected while I playtest.',
+    label: 'Email me for the password',
+    href: `mailto:${EARLY_ACCESS_EMAIL}?subject=${encodeURIComponent('Void Lane Build 1 password')}&body=${encodeURIComponent("Hi Parth, I'd like to try Void Lane Build 1. Could you send me the password?")}`,
   },
 };
 
