@@ -60,27 +60,26 @@ function pickAt(x: number, y: number, camera: THREE.Camera) {
 
 const CONTENT = '.journey-panel > *, [data-journey-ui], nav, a, button, .journey-inspect';
 
-/** Camera speed (world units per second) above which hover is off, and below which it may return. */
-const MOVING = 60;
-const SETTLED = 15;
-/** How long the camera must stay settled before hover returns. */
-const SETTLE_MS = 180;
+/** Hover stays off this long after the last scroll event (a wheel at an ordinary pace fires every ~120 ms). */
+const SCROLL_HOLD_MS = 350;
 
 export function Picker() {
   const { camera } = useThree();
-  // While scrolling the cursor stays still and the screens slide under it: picking then would
-  // light each screen up and dim the rest as it passes, which reads as flicker. Hover only
-  // responds once the camera has come to rest (with hysteresis, so it never chatters).
-  const rest = useMemo(() => ({ moving: false, since: 0 }), []);
+  // While the visitor scrolls, the cursor stays still and the screens slide under it: picking
+  // then would light each screen up and dim the rest as it passes, which reads as flicker.
+  // Hover is off while scrolling is under way and returns shortly after it stops.
+  const scroll = useMemo(() => ({ last: -Infinity }), []);
+  useEffect(() => {
+    const onScroll = () => { scroll.last = performance.now(); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [scroll]);
 
   useFrame(() => {
     const frame = frameRef.current;
     if (!frame) return;
-    const now = performance.now();
-    if (frame.speed > MOVING || frame.travel > 0.2) { rest.moving = true; rest.since = now; }
-    else if (frame.speed > SETTLED) rest.since = now;
-    else if (rest.moving && now - rest.since > SETTLE_MS) rest.moving = false;
-    if (!frame.pointerRaw || frame.pointerOnContent || rest.moving) { setHovered(null); return; }
+    const scrolling = performance.now() - scroll.last < SCROLL_HOLD_MS;
+    if (!frame.pointerRaw || frame.pointerOnContent || frame.travel > 0.2 || scrolling) { setHovered(null); return; }
     setHovered(pickAt(frame.pointerRaw[0], -frame.pointerRaw[1], camera));
   });
 
