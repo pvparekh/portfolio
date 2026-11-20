@@ -203,8 +203,8 @@ for (const path of only === 'touch' ? [] : ['/', '/solutions', '/software']) {
     await page.goto(base + '/?layout=spatial', { waitUntil: 'networkidle' });
     await page.waitForFunction(() => document.documentElement.classList.contains('journey-gl-ready'), null, { timeout: 30000 });
     await toRest(3000);
-    await page.locator('.portfolio-desktop-nav a[href="/solutions"]').click();
-    await page.waitForFunction(() => document.querySelector('.journey--solutions') && document.documentElement.classList.contains('journey-gl-ready'), null, { timeout: 30000 });
+    await page.locator('.portfolio-desktop-nav a[href="/software"]').click();
+    await page.waitForFunction(() => document.querySelector('.journey--software') && document.documentElement.classList.contains('journey-gl-ready'), null, { timeout: 30000 });
     await page.waitForTimeout(800);
     await toRest(2000);
     await page.goBack();
@@ -212,7 +212,7 @@ for (const path of only === 'touch' ? [] : ['/', '/solutions', '/software']) {
     await page.waitForTimeout(1200);
     const back = await page.evaluate(() => Math.round(scrollY));
     await page.goForward();
-    await page.waitForFunction(() => document.querySelector('.journey--solutions') && document.documentElement.classList.contains('journey-gl-ready'), null, { timeout: 30000 });
+    await page.waitForFunction(() => document.querySelector('.journey--software') && document.documentElement.classList.contains('journey-gl-ready'), null, { timeout: 30000 });
     await page.waitForTimeout(1200);
     const forward = await page.evaluate(() => Math.round(scrollY));
     check(Math.abs(back - 3000) < 5 && Math.abs(forward - 2000) < 5, 'back/forward: positions restored', { back, forward });

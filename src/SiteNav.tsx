@@ -407,7 +407,8 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
                 navigate('portfolio');
               }}>Portfolio</a>
           )}
-          {page === 'solutions' && solutionsDropdownReady ? dropdown(groups[1]) : (
+          {/* Data Solutions is unlisted: it keeps its own nav entry on its page but is not linked from the rest of the site. */}
+          {page === 'solutions' && (solutionsDropdownReady ? dropdown(groups[1]) : (
             <a
               ref={solutionsLinkRef}
               href="/solutions"
@@ -434,7 +435,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
             >
               Data Solutions
             </a>
-          )}
+          ))}
           {page === 'software' && softwareDropdownReady ? dropdown(groups[2]) : (
             <a ref={softwareLinkRef} href="/software"
               className="nav-link font-mono text-xs tracking-widest uppercase"
@@ -511,21 +512,7 @@ export default function SiteNav({ page, navigate, goToSection }: SiteNavProps) {
                   Portfolio <ArrowUpRight size={14} aria-hidden="true" />
                 </a>
               )}
-              {page === 'solutions' ? mobileDisclosure(groups[1]) : (
-                <a
-                  href="/solutions"
-                  className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
-                  style={{ color: 'var(--accent)' }}
-                  onClick={event => {
-                    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                    event.preventDefault();
-                    setMobileOpen(false);
-                    navigate('solutions');
-                  }}
-                >
-                  Data Solutions <ArrowUpRight size={14} aria-hidden="true" />
-                </a>
-              )}
+              {page === 'solutions' && mobileDisclosure(groups[1])}
               {page === 'software' ? mobileDisclosure(groups[2]) : (
                 <a href="/software" className="portfolio-mobile-solutions font-mono text-xs tracking-widest uppercase"
                   style={{color:'var(--accent)'}} onClick={event => followGroup('software',event)}>

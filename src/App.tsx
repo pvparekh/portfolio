@@ -1143,7 +1143,7 @@ function SkillsSection() {
    CONTACT
 ───────────────────────────────────────────────────────────── */
 
-function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
+function ContactSection() {
   return (
     <section
       id="contact"
@@ -1182,11 +1182,6 @@ function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => vo
             >
               {CONTACT_INTRO}
             </p>
-            <div className="flex justify-center -mt-8 mb-11">
-              <button type="button" onClick={onNavigateSolutions} className="renaissance-solutions-text-link">
-                Explore Data Solutions <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
-              </button>
-            </div>
           </FadeInSection>
 
           <FadeInSection delay={0.3}>
@@ -1262,7 +1257,7 @@ function Footer() {
    ROOT
 ───────────────────────────────────────────────────────────── */
 
-export default function App({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
+export default function App() {
   return (
     <>
       <main>
@@ -1271,7 +1266,7 @@ export default function App({ onNavigateSolutions }: { onNavigateSolutions: () =
         <ExperienceSection />
         <ProjectsSection />
         <SkillsSection />
-        <ContactSection onNavigateSolutions={onNavigateSolutions} />
+        <ContactSection />
       </main>
       <Footer />
       <Lightbox />

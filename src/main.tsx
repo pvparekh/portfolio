@@ -159,8 +159,8 @@ function PortfolioSite() {
           : <SolutionsPage onBackToPortfolio={() => navigate('portfolio')} />
       ) : (
         JOURNEY
-          ? <PortfolioJourney onNavigateSolutions={() => navigate('solutions')} />
-          : <App onNavigateSolutions={() => navigate('solutions')} />
+          ? <PortfolioJourney />
+          : <App />
       )}
     </>
   );
