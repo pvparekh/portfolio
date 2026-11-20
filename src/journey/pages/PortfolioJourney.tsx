@@ -16,7 +16,7 @@ function Telemetry() {
         <div key={item.label}>
           <span>{item.label}</span>
           <span aria-hidden="true" />
-          <span className={item.label === 'STATUS' ? 'is-status' : undefined}>{item.value}</span>
+          <span>{item.value}</span>
         </div>
       ))}
     </div>

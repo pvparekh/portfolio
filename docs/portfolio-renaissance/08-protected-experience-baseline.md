@@ -89,7 +89,7 @@ The user directly requested replacement of **only** the Junior Data Engineer and
 
 
 ## Approved copy adjustments, 2026-10-09 (follow-up)
-- Shortened the Junior Data Engineer NESNA pipeline bullet to the user-provided one-sentence version.
+- Shortened the Junior Data Engineer OEM pipeline bullet to the user-provided one-sentence version.
 - Removed the user-specified Snowflake / broader modernization bullet from the Data Analytics Intern role.
 - Split the Perfect Threading Salon booking-system bullet into two factual accomplishments: booking platform delivery and Calendly integration/workload reduction. The ~30% figure was already user-provided in the original and is not independently verified.
 - All other protected professional experience entries remain unchanged.
@@ -100,7 +100,7 @@ Salon bullet copy was expanded to highlight collaboration with ownership on the 
 
 
 ## User-approved copy revision, 2026-10-11
-Synchronized the protected baseline with the latest main-branch DOWC experience bullets, including the 66-source SQL Server pipeline, the updated NESNA bullet, the Snowflake analytical performance bullet, and the removal of the redundant Tableau-internship bullet. The Snowflake possessive is an escaped TypeScript apostrophe (`Snowflake\'s`), rendered as `Snowflake's`. Other employers and roles were not modified. This update retains the build guard and reflects user-reported technical outcomes, not independent verification.
+Synchronized the protected baseline with the latest main-branch DOWC experience bullets, including the 66-source SQL Server pipeline, the updated OEM pipeline bullet, the Snowflake analytical performance bullet, and the removal of the redundant Tableau-internship bullet. The Snowflake possessive is an escaped TypeScript apostrophe (`Snowflake\'s`), rendered as `Snowflake's`. Other employers and roles were not modified. This update retains the build guard and reflects user-reported technical outcomes, not independent verification.
 
 
 ## Approved logo-only adjustment, 2026-10-11
