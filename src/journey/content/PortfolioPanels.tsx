@@ -294,8 +294,8 @@ export function SupportingPanel({ id }: { id: 'github-review-bot' | 'aetherflow'
         {flow.map((step, i) => <li key={step}><span>0{i + 1}</span>{step}</li>)}
       </ol>
       <div className="jp-actions">
+        {project.live && <a className="jp-primary" href={project.live} target="_blank" rel="noreferrer">Open Product <ArrowUpRight size={16} aria-hidden="true" /></a>}
         {project.github && <a className="jp-text-link" href={project.github} target="_blank" rel="noreferrer">Examine Repository <GithubIcon size={16} /></a>}
-        {project.live && <a className="jp-text-link" href={project.live} target="_blank" rel="noreferrer">Open Product <ArrowUpRight size={15} aria-hidden="true" /></a>}
       </div>
       <div className="jp-tech" aria-label={`${project.name} technologies`}>{project.tech.map(t => <span key={t}>{t}</span>)}</div>
     </article>
