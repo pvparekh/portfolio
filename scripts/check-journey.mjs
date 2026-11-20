@@ -150,8 +150,10 @@ try {
   // 7. Routes: each page mounts its own world; one canvas at a time; back works.
   await page.goto(journeyUrl('/'), { waitUntil: 'networkidle' });
   await glReady(page);
-  await page.locator('.portfolio-desktop-nav a[href="/solutions"]').click();
-  await page.waitForFunction(() => document.querySelector('.journey--solutions'));
+  // Data Solutions is unlisted: reachable by URL, never linked from the portfolio.
+  assert.equal(await page.locator('a[href="/solutions"]').count(), 0, 'the portfolio does not link to Data Solutions');
+  await page.locator('.portfolio-desktop-nav a[href="/software"]').click();
+  await page.waitForFunction(() => document.querySelector('.journey--software'));
   await glReady(page);
   assert.equal(await page.locator('canvas').count(), 1, 'single canvas after navigation');
   await page.goBack();

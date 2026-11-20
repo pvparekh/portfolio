@@ -16,14 +16,14 @@ function Telemetry() {
         <div key={item.label}>
           <span>{item.label}</span>
           <span aria-hidden="true" />
-          <span className={item.label === 'STATUS' ? 'is-status' : undefined}>{item.value}</span>
+          <span>{item.value}</span>
         </div>
       ))}
     </div>
   );
 }
 
-export default function PortfolioJourney({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
+export default function PortfolioJourney() {
   const returnToOrigin = useCallback(() => window.scrollTo({ top: 0, behavior: 'smooth' }), []);
   const renderPanel = useCallback((id: string) => {
     switch (id) {
@@ -38,12 +38,12 @@ export default function PortfolioJourney({ onNavigateSolutions }: { onNavigateSo
       case 'bot-info': return <SupportingPanel id="github-review-bot" />;
       case 'aether-info': return <SupportingPanel id="aetherflow" />;
       case 'skills': return <SkillsPanel />;
-      case 'contact': return <ContactPanel onNavigateSolutions={onNavigateSolutions} onReturn={returnToOrigin} />;
+      case 'contact': return <ContactPanel onReturn={returnToOrigin} />;
       default:
         if (id.startsWith('role-')) return <ExperienceGroupPanel index={Number(id.slice(5))} />;
         return null;
     }
-  }, [onNavigateSolutions, returnToOrigin]);
+  }, [returnToOrigin]);
 
   return (
     <JourneyStage

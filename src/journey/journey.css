@@ -350,7 +350,6 @@ html.journey-active body {
 .journey-telemetry > div { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .journey-telemetry > div > span:nth-child(2) { width: 12px; height: 1px; background: rgba(255, 255, 255, 0.1); }
 .journey-telemetry > div > span:last-child { color: var(--jp-ink-2); }
-.journey-telemetry .is-status { color: #22c55e !important; }
 
 /* ── Narrow screens: dedicated compositions ────────────────── */
 @media (max-width: 819px) {

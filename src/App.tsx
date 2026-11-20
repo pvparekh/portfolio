@@ -220,7 +220,6 @@ const TELEMETRY = [
   { label: 'EDUCATION', value: "CS + DS @ Rutgers-NB" },
   { label: 'STACK',  value: 'PYTHON + SQL + AIRFLOW + SNOWFLAKE' },
   { label: 'FOCUS', value: 'DATA + SOFTWARE + AI/ML' },
-  { label: 'STATUS', value: 'AVAILABLE' },
 ];
 
 const ABOUT_STATS = [
@@ -274,7 +273,7 @@ const SUPPORTING_TYPES: Record<string, string> = {
   aetherflow: 'LLM PIPELINE + ANALYTICS',
 };
 
-const CONTACT_INTRO = 'Open to full-time roles, interesting contracts, or a conversation about building something new.';
+const CONTACT_INTRO = 'Open to full-time roles or a conversation about building something new.';
 
 const CONTACT_LINKS = [
   { href: 'mailto:pvparekh14@gmail.com', Icon: Mail, label: 'pvparekh14@gmail.com', sub: 'Primary inbox' },
@@ -634,7 +633,7 @@ function HeroSection() {
             <div key={item.label} className="hero-telemetry-item flex shrink-0 items-center gap-1.5 lg:gap-2 whitespace-nowrap">
               <span style={{ color: 'var(--text-3)' }}>{item.label}</span>
               <span className="h-px w-2 lg:w-3 shrink-0" style={{ background: 'var(--border)' }} />
-              <span style={{ color: item.label === 'STATUS' ? '#22C55E' : 'var(--text-2)' }}>
+              <span style={{ color: 'var(--text-2)' }}>
                 {item.value}
               </span>
             </div>
@@ -1143,7 +1142,7 @@ function SkillsSection() {
    CONTACT
 ───────────────────────────────────────────────────────────── */
 
-function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
+function ContactSection() {
   return (
     <section
       id="contact"
@@ -1182,11 +1181,6 @@ function ContactSection({ onNavigateSolutions }: { onNavigateSolutions: () => vo
             >
               {CONTACT_INTRO}
             </p>
-            <div className="flex justify-center -mt-8 mb-11">
-              <button type="button" onClick={onNavigateSolutions} className="renaissance-solutions-text-link">
-                Explore Data Solutions <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
-              </button>
-            </div>
           </FadeInSection>
 
           <FadeInSection delay={0.3}>
@@ -1262,7 +1256,7 @@ function Footer() {
    ROOT
 ───────────────────────────────────────────────────────────── */
 
-export default function App({ onNavigateSolutions }: { onNavigateSolutions: () => void }) {
+export default function App() {
   return (
     <>
       <main>
@@ -1271,7 +1265,7 @@ export default function App({ onNavigateSolutions }: { onNavigateSolutions: () =
         <ExperienceSection />
         <ProjectsSection />
         <SkillsSection />
-        <ContactSection onNavigateSolutions={onNavigateSolutions} />
+        <ContactSection />
       </main>
       <Footer />
       <Lightbox />

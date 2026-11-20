@@ -322,15 +322,12 @@ export function SkillsPanel() {
   );
 }
 
-export function ContactPanel({ onNavigateSolutions, onReturn }: { onNavigateSolutions: () => void; onReturn: () => void }) {
+export function ContactPanel({ onReturn }: { onReturn: () => void }) {
   return (
     <article className="jp-contact">
       <Kicker>Contact</Kicker>
       <h2>Let's build something<br /><span className="jp-warm">together</span></h2>
       <p>{CONTACT_INTRO}</p>
-      <button type="button" onClick={onNavigateSolutions} className="jp-text-link jp-solutions-link">
-        Explore Data Solutions <ArrowUpRight size={16} strokeWidth={2} aria-hidden="true" />
-      </button>
       <div className="jp-contact-links">
         {CONTACT_LINKS.map(({ href, Icon, label, sub }) => (
           <a key={href} href={href} target="_blank" rel="noreferrer">

@@ -54,7 +54,7 @@ try {
   assert.equal(await desktop.locator('.sol-service details').first().evaluate(el=>el.open),true);
   await desktop.locator('.sol-service details summary').first().click();
   assert.equal(await desktop.locator('.sol-service details').first().evaluate(el=>el.open),false);
-  await desktop.locator('.portfolio-desktop-nav a[href="/solutions"]').click();
+  await desktop.goto(base+'/solutions',{waitUntil:'networkidle'});
   await desktop.locator('h1').waitFor();
   assert.match(await desktop.locator('h1').innerText(),/manual data work/i);
   await desktop.locator('.portfolio-desktop-nav a[href="/software"]').click();
@@ -115,7 +115,7 @@ try {
   await desktop.waitForFunction(() => window.scrollY <= 2);
   await desktop.reload();
   await desktop.waitForFunction(() => window.scrollY <= 2);
-  await desktop.locator('.portfolio-desktop-nav a[href="/solutions"]').click();
+  await desktop.goto(base+'/solutions',{waitUntil:'networkidle'});
   assert.match(await desktop.locator('h1').innerText(),/manual data work/i);
   assert.equal(await desktop.locator('.portfolio-desktop-nav button[aria-label="Show Portfolio sections"]').count(),0);
   await desktop.locator('.site-shared-brand').click();
