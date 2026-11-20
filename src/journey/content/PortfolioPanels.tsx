@@ -286,7 +286,7 @@ export function SupportingPanel({ id }: { id: 'github-review-bot' | 'aetherflow'
   return (
     <article className={`jp-exhibit ${id === 'aetherflow' ? 'jp-exhibit--aether' : 'jp-exhibit--bot'}`}>
       <p className="jp-topline"><span>{project.number} / ENGINEERING PROJECT</span><span>{SUPPORTING_TYPES[project.id]}</span></p>
-      <MobilePreview src={id === 'aetherflow' ? '/projects/aetherflow-home.webp' : '/projects/review-bot-pipeline.webp'} alt={id === 'aetherflow' ? 'AetherFlow money-leaks view: $194.32 a year found in the demo year' : 'GitHub Review Bot pipeline, from its repository README'} />
+      <MobilePreview src={id === 'aetherflow' ? '/projects/aetherflow-leaks.webp' : '/projects/review-bot-pipeline.webp'} alt={id === 'aetherflow' ? 'AetherFlow money-leaks view: $194.32 a year found in the demo year' : 'GitHub Review Bot pipeline, from its repository README'} />
       <p className="jp-overline">{project.tagline}</p>
       <h3>{project.name}</h3>
       <p className="jp-desc">{project.description}</p>

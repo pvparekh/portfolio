@@ -12,7 +12,7 @@ import { LITE } from '../../core/budget';
 /** Beside the products intro: the independent products, floating (hover lifts, click inspects). */
 const PRODUCT_TEASER: DisplaySpec[] = [
   { src: '/projects/formula-vision-replay-map.webp', position: [930, 30, -1500], width: 660, yaw: -14, aspect: 1.6, emphasis: 1, alt: 'Formula Vision screenshot' },
-  { src: '/projects/aetherflow-home.webp', position: [1320, 380, -2700], width: 580, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'AetherFlow screenshot' },
+  { src: '/projects/aetherflow-scoreboard.webp', position: [1320, 380, -2700], width: 580, yaw: -18, aspect: 1.6, emphasis: 0.6, alt: 'AetherFlow eval scoreboard: 92.3% categorisation accuracy on 233 hand-labelled transactions' },
 ];
 
 /* Colour carries meaning on this page: amber is raw, manual data; cyan is validated. */
