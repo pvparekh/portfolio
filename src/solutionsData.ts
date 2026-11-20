@@ -62,7 +62,7 @@ export const caseStudies: PublicCaseStudy[] = [
     work:
       'Built multi-format ingestion, rules-then-history-then-LLM categorisation with a failure ladder, a deterministic leak engine, a faithfulness check on generated text and an eval harness.',
     outcome:
-      'Finds every planted leak in a 620-transaction demo year and scores 83.7% categorisation accuracy on a 233-row labelled set using a free local model.',
+      'Finds every planted leak in a 620-transaction demo year and scores 92.3% categorisation accuracy on a 233-row labelled set using a free hosted open model.',
     contribution:
       'Designed and implemented the product end to end: model layer, pipeline, analysis, evals and interface.',
     architecture: [

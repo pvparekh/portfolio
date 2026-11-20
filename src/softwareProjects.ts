@@ -75,7 +75,7 @@ export const softwareProjects: SoftwareProject[] = [
     "description": "An AI expense leak finder: upload card or bank statements and see forgotten subscriptions, price increases, double charges and unusual spending, with drafts to cancel or negotiate.",
     "problem": "Leaks hide in long statements, and language models are unreliable with numbers. The product needed AI where it helps without letting it invent a single figure.",
     "work": "Built a provider-neutral LLM layer (local Ollama or any OpenAI-compatible endpoint), rules-then-history-then-model categorisation with a failure ladder, a deterministic leak engine, a faithfulness check on generated text, natural-language questions compiled to validated queries, and an eval harness.",
-    "outcome": "Finds every planted leak in a 620-transaction demo year ($194.32 a year) and runs fully in the browser. Categorisation scores 83.7% accuracy on a 233-row hand-labelled golden set with a free local 9B model; 669 automated tests.",
+    "outcome": "Finds every planted leak in a 620-transaction demo year ($194.32 a year) and runs fully in the browser. Categorisation scores 92.3% accuracy on a 233-row hand-labelled golden set with a free hosted open model (83.7% with a 9B model on a laptop); 669 automated tests.",
     "contribution": "Designed and built the product end to end: model layer, pipeline, analysis engine, evals and interface.",
     "architecture": [
       "Next.js and TypeScript with Supabase Postgres and row-level security",

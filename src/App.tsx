@@ -79,7 +79,7 @@ const PROJECTS = [
     name: 'AetherFlow',
     tagline: 'AI Expense Leak Finder',
     description:
-      'Finds forgotten subscriptions, price increases and double charges in uploaded statements. An open LLM categorises and writes; code computes every number, scored by evals (83.7% on 233 labelled rows).',
+      'Finds forgotten subscriptions, price increases and double charges in uploaded statements. An open LLM categorises and writes; code computes every number, scored by evals (92.3% on 233 labelled rows).',
     tech: ['Next.js 16', 'TypeScript', 'Open LLMs (Ollama)', 'Evals', 'Supabase', 'PostgreSQL'],
     live: 'https://aetherflow-three.vercel.app' as string | null,
     github: 'https://github.com/pvparekh/aetherflow' as string | null,
